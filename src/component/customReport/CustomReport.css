@@ -1,0 +1,64 @@
+.customButton {
+    display: inline-block !important;
+    padding: 0px 25px !important;
+    border-radius: 10px 0px 10px 0px !important;
+    background: #2B60AD !important;
+    color: #fff !important;
+    border: 1px solid #2B60AD !important;
+    line-height: 40px !important;
+    min-height: 40px;
+    min-width: 175px;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    width: 100%;
+    text-decoration: none;
+}
+.customButton:hover {
+    background: #fff !important;
+    color: #f66e2d !important;
+    border-radius: 0px 10px 0px 10px !important;
+}
+.Filter-heading {
+    font-weight: 700 !important;
+    font-size: 30px !important;
+     color: #f66e2d !important;
+    margin-bottom: 20px!important;
+}
+.icon-heading {
+    font-weight: 700 !important;
+    font-family: "sans-serif !important";
+    font-size: 20px !important;
+}
+.icon-heading-des {
+    font-size: 17px!important;
+    font-family: "sans-serif !important";
+    
+}
+.icon-service {
+    display: inline-flex;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px!important;
+    text-align: center;
+    border-radius: 50%;
+    align-items: center;
+    background-image: linear-gradient(87deg, #e76e23 0, #f66e2d 100%) !important;
+    justify-content: center;
+}
+.icon-font {
+    color: #fff;
+    font-size: 30px;
+}
+.customButtonwidth
+{
+    width: 280px !important;
+    float: left;
+    margin-top: -13px !important;
+}
+
+

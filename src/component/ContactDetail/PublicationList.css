@@ -1,0 +1,13 @@
+.table-heading th {
+    background-color: rgb(172, 162, 150);
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    font-size:1rem;
+    font-weight: 600;
+
+} 
+
+.table-data td {
+    text-align: center;
+}

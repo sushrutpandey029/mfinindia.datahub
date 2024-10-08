@@ -1,0 +1,109 @@
+.container-outs {
+  display: flex;
+  width: auto;
+  margin-top: 6%;
+   }
+
+.container-ins {
+  border:1px solid #f05d5f;
+  border-radius: 10px;
+  margin-bottom: 1.6rem;
+  margin-left: 0rem;
+  position: relative;
+}
+
+.top-contents {
+position: absolute;
+width: 100%;
+top:0;
+z-index: 11;
+ 
+ p {
+  font-weight: 600;
+  text-align: right; 
+  margin-bottom: 0px;
+  button {
+    border: none;
+    color: rgb(255 255 255);
+    background-color: #f05d5f;
+    font-weight: 600;
+    border-radius: 0px 8px 0px 15px;
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+ }
+
+}
+
+.backimgs {
+ position: relative;
+ height: 20rem;
+
+}
+.data{
+  position : absolute;
+  margin-top: 30%;
+  background-color: #2a62ac;
+  width: 100%;
+  height: 1.8rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+ 
+
+ p {
+  margin-top: 3px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  }
+}
+.micrometer-title p{    border: none;
+  color: rgb(255 255 255);
+  background-color: #f05d5f;
+  font-weight: 600;
+  border-radius: 0px 0px 8px 8px;
+  padding: 5px 6px;
+  font-size: 13px;}
+.bottom-content {
+ background-color: rgb(33, 232, 222);
+ color: white;
+ font-size: 15px;
+ font-weight: 600;
+ 
+  p {
+    button{
+      border: none;
+      background-color: rgb(33, 232, 222);
+      color: rgb(228, 22, 22);
+      margin-left: 3rem;
+      font-size: 15px;
+      font-weight: 600;
+   }
+  }
+
+}
+
+
+
+.container-outs {
+  display: flex;
+  width: auto;
+  margin-top: 6%;
+   }
+
+
+
+
+
+.micro-meter .gocYik {
+  background-color: #2b60ad;
+  color: #ffffff;
+  font-size: 15px;
+}
+.micro-meter .get_report{background: none;
+  color: #2b60ad;
+  border: 1px solid #2b60ad;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 13px; transition: 0.5s;}
+  .micro-meter button:hover{background-color:#2b60ad; color: #fff;}

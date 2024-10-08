@@ -1,0 +1,187 @@
+.App {
+  text-align: center;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+.MuiBreadcrumbs-li a
+{
+  color: #2B60AD !important;
+    text-decoration: none !important;
+}
+.MuiBreadcrumbs-li a:hover
+{
+  color: #2B60AD !important;
+  text-decoration: underline !important; 
+}
+.css-18lrjg1-MuiCircularProgress-root
+{
+  color: #2B60AD !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+.htmlToExcel
+{
+    background: none !important;
+    border: none !important;
+    font-weight: 100 !important;
+    text-transform: inherit !important;
+    margin-left: -10px !important;
+    color: #000000 !important;
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.BackButton
+{
+  float: right;
+  margin-top: -22px;
+  margin-right: 1%;
+  text-decoration: none !important;
+  color: #f66e2d !important;
+}
+.App-link {
+  color: #f66e2d;
+}
+
+.AppTable {
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  line-height: 1.42857;
+  text-rendering: optimizeLegibility;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.tableMinHieht
+{
+  height: 375px;
+  margin-top: 15px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.IframeApp
+{
+  padding-top: 20px;
+  margin: auto 0px;
+}
+
+.tab-toolbar .tabToolbarButton .tabToolbarButtonImg {
+  display: none !important;
+}
+
+#hide-iframe .tab-toolbar .tabToolbarButton .tabToolbarButtonImg {
+  display: none !important;
+}
+
+#toolbar-container .tab-toolbar .tabToolbarButton .tabToolbarButtonImg {
+  display: none !important;
+}
+
+
+.popupscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of other content */
+  pointer-events: none; /* Prevent interaction when not visible */
+}
+
+.popupscreen.active {
+  pointer-events: auto; /* Enable interaction when visible */
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  pointer-events: auto;
+  z-index: 1000;
+}
+
+.popbutton {
+  position: fixed;
+  transform: rotate(90deg);
+  bottom: 15%;
+  right: -43px;
+  z-index: 1000;
+   button {
+    width: 8rem;
+    font-weight: 600;
+    font-size: large;
+    z-index: 1000;
+    background: #2b60ad;
+    color: #fff;
+    border: none;
+    padding: 7px 8px;
+    border-radius: 0px 0px 16px 16px;
+    transition: 0.5s;
+   }
+   button:hover{background: #39afac;}
+}
+
+.MiniDrawer-drawerOpen-9::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.MiniDrawer-drawerOpen-9::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+/* Handle */
+.MiniDrawer-drawerOpen-9::-webkit-scrollbar-thumb {
+  background: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+.MiniDrawer-drawerClose-10::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.MiniDrawer-drawerClose-10::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+/* Handle */
+.MiniDrawer-drawerClose-10::-webkit-scrollbar-thumb {
+  background: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+.MiniDrawer-drawerClose-10 {
+  width: 70px !important;
+}
+
+.css-jsw5pr {
+  margin-top: 120px !important;
+}
+

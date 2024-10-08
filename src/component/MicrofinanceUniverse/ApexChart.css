@@ -1,0 +1,10 @@
+.apexcharts-legend.apx-legend-position-bottom.apexcharts-align-right, .apexcharts-legend.apx-legend-position-top.apexcharts-align-right {
+    justify-content: flex-end;
+    margin-bottom: 12px !important;
+    margin-top: 12px !important;
+}
+
+.data-table-extensions-filter
+{
+    display: none !important;
+}

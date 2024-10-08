@@ -1,0 +1,32 @@
+popcontainer {
+    padding: 15px;
+    border: 1px solid cadetblue;
+    border-radius: 10px;
+    /* width: 90rem; */
+    background-color: cadetblue;
+}
+
+.container-out {
+    background-color:white;
+    width: 80rem;
+    /* padding: 30px 40px; */
+}
+
+.btn-close{    position: absolute;
+    right: -26px;
+    top: -26px;
+    opacity: 1;
+    background-color: #fff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    padding: 4px !important;
+    border: 7px solid #ffffff;
+    box-shadow: rgb(0 0 0 / 37%) 0px 7px 29px 0px;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
