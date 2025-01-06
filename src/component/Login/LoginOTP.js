@@ -63,29 +63,44 @@ export default function LoginOTP() {
   const [otp_number, setOTP] = useState("");
   const [loader, setLoader] = useState(false)
   var userdetails = JSON.parse(localStorage.getItem('user'));
+
   const handlClick = async (e) => {
     e.preventDefault()
     setLoader(true);
     const body = {
       otp_number: otp_number,
-      user_id: userdetails.data.user.id
+      user_id:userdetails.data.user.id
     }
-    let response = await authLoginOTP(body)
-    console.log("authOTPlogin", response);
-    if (response.data.access_status === true) {
-      localStorage.setItem("loggedIn", true);
-      localStorage.setItem("mobile_verify", true);
-      setLoader(false);
-      SuccessToastMessage("OTP Number has been successfully verified", "success1");
-      navigate('/');
-      navigate(0);
-    } else {
-      setLoader(false);
-      alert("Invalid OTP Number");
-      console.log("dadsadsdsd");
-      ErrorToastMessage("Invalid OTP Number", "failed");
+
+    try {
+      let response = await authLoginOTP(body)
+      console.log("authOTPlogin",response);
+      if (response.data.access_status === true) {
+        localStorage.setItem("loggedIn", true);
+        localStorage.setItem("mobile_verify", true);
+        setLoader(false);
+        SuccessToastMessage("OTP Number has been successfully verified", "success1");
+        navigate('/');
+        navigate(0);
+      } else {
+        setLoader(false);
+        alert("Invalid OTP Number");
+        console.log("dadsadsdsd");
+        ErrorToastMessage("Invalid OTP Number", "failed");
+      }
+
+    }catch(error) {
+      console.log('login-otp-error',error);
+
+      if(error.response) {
+       if(error.response.data && error.response.data.access_status === false ) {
+          alert(error.response.data.message);
+      }
+      }
     }
+   
   }
+
   return (
     <div className="form-body iofrm-layout">
       <div className="img-holder">

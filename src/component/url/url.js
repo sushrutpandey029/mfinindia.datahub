@@ -6,6 +6,7 @@ export const loginApi = "api/auth/login";
 export const loginOTOApi = "api/auth/loginOTP";
 export const ChangePasswordApi = "api/auth/change-password";
 export const ForgotPasswordApi = "api/auth/forgotPassword";
+export const ChangePhoneApi = "api/auth/change-phone";
 export const DRIMapApi = "api/auth/update-dri-frame";
 export const getContactListApi = "api/auth/contacts";
 export const addContactApi = "api/auth/add-contacts";
@@ -13,6 +14,7 @@ export const getContactDetailsApi = "api/auth/contact-details";
 export const importContactApi = "api/auth/contacts";
 export const importDRIStateApi = "api/auth/dri-states-import";
 export const importDRIDistrictApi = "api/auth/dri-district-import";
+export const importDRIMapDataApi = "api/auth/importCsvdatamap"
 // cb 
 export const importCbDistrict = "api/auth/cb-district-master";
 export const importCbState = "api/auth/cb-state-master";

@@ -1,0 +1,76 @@
+/* General SVG Styling */
+svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* State Path Styling */
+.state {
+    fill: #d3d3d3; /* Default state color */
+    stroke: #ffffff; /* State border color */
+    stroke-width: 1px;
+    cursor: pointer;
+    transition: fill 0.3s ease; /* Smooth color transition */
+}
+
+.state:hover {
+    fill: #00aaff; /* Highlighted state color on hover */
+}
+
+/* State Labels Styling */
+.state-label {
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    fill: black; /* Label text color */
+    pointer-events: none; /* Allow mouse events to pass through labels */
+    text-anchor: middle; /* Center align text */
+}
+
+/* Tooltip Styling */
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    color: #ffffff; /* White text */
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
+    pointer-events: none; /* Prevent tooltip from blocking interactions */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease; /* Smooth fade-in/out */
+    z-index: 1000; /* Ensure tooltip appears above other elements */
+}
+
+/* Tooltip Positioning */
+.tooltip.visible {
+    opacity: 1; /* Make tooltip visible */
+}
+
+/* Example Tooltip Content */
+.map_data {
+    margin-bottom: 8px;
+}
+
+.map_data strong {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.map_data:last-child {
+    margin-bottom: 0;
+}
+
+.boxContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px; /* Add spacing between the children */
+    align-items: center; /* Align items vertically */
+  }
+
+
+  button {
+    align-self: flex-start; /* Align button to the start */
+  }

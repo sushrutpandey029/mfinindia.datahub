@@ -33,6 +33,7 @@ import authHeaders from "../Service/AuthHeaders";
 import { BaseUrl } from "../url/url";
 import { RolePermissionList } from './RoleRecord';
 import { useEffect } from "react";
+import "./RolePermission.css"
 const useStyle = makeStyles((theme) =>
   createStyles({
     Buttonbg: {

@@ -30,10 +30,13 @@ import { useState, useEffect } from "react";
 const useStyle = makeStyles((theme) => createStyles({}));
 
 const ChangePasswordFormUpdate = () => {
+  
   const [loader, setLoader] = useState(false);
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
   const navigate = useNavigate();
+
+  var userdetails =  JSON.parse(localStorage.getItem("user"));
  
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -41,8 +44,11 @@ const ChangePasswordFormUpdate = () => {
     const body = {
     password: password,
     cpassword: cpassword,
+    user_id: userdetails.data.user.id
     };
-    let response = await authChangePassword(body);
+
+    try {
+      let response = await authChangePassword(body);
     if (response.data.status === 200) {
       setLoader(false);
       SuccessToastMessage("Change Updated successfully", "success1");
@@ -53,6 +59,16 @@ const ChangePasswordFormUpdate = () => {
       SuccessFailedMessage("Unable to change password", "failed");
       window.location.reload(true);
     }
+    }catch(error) {
+      console.log('change-password-error',error);
+      if(error.response) {
+         if(error.response.data && error.response.data.error) {
+           alert(error.response.data.error.cpassword);
+           window.location.reload(true);
+         }
+      }
+    }
+    
   };
   
   

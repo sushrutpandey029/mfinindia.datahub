@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseUrl,loginApi,loginOTOApi,DRIMapApi, ChangePasswordApi,ForgotPasswordApi } from "../../url/url";
+import { BaseUrl,loginApi,loginOTOApi,DRIMapApi, ChangePasswordApi,ForgotPasswordApi, ChangePhoneApi } from "../../url/url";
 import axios from "axios";
 
 export const authLogin = async (request) =>{
@@ -22,6 +22,11 @@ export const authChangePassword = async (request) =>{
     const api = `${ChangePasswordApi}`;
     return await axios.post(`${BaseUrl}/${api}`,request);
 
+}
+
+export const authChangePhone = async (request) => {
+    const api = `${ChangePhoneApi}`;
+    return await axios.post(`${BaseUrl}/${api}`,request);
 }
 
 

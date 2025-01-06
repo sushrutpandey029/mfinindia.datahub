@@ -100,7 +100,7 @@ const MicromirrorResource = () => {
             }
              }>Latest report</h2>
         {filterData.length > 0 && (
-          <div className="container-in">
+          <div className="container-in-matter">
             <div className="top-content">
               <p>
                 <button onClick={() => handlePDFDownload(filterData[0].pdf_file)}>

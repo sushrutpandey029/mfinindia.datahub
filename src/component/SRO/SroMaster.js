@@ -157,6 +157,14 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
   const [rbiYOYData, setRBIYOYData] = useState([]);
   const [rbiHouseholdData, setRBIHouseholdData] = useState([]);
 
+  // end RBI report information
+
+  //RBI-Others information start here
+  const [rbiOthersData, setRBIOthersData] = useState([]);
+
+
+  //RBI-Others information end here
+
   const [ebMemberMonthlySubmission, setEbMemberMonthlySubmission] =
     useState("");
   const [ebIndustryMonthlySubmission, setEbIndustryMonthlySubmission] =
@@ -383,38 +391,86 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
   // sro -RBI report start here
         // get rbi quaterly data
 
-        const getRBIQuarterlyData = async () => {
-          await axios.get(`${BaseUrl}/api/auth/quarterly-data-report-highlights`,
-            {headers: authHeaders()})
-          .then((response) => {
-            setRBIIndexData(parse(response.data.data))
-            console.log('sro-rbi-data',response);
-          })
-          .catch((error) => {
-            console.log('rbi quaterly error', error);
-          })
-    
-          await axios.get(`${BaseUrl}/api/auth/quarterly-yoy-report-highlights`,
-            {headers: authHeaders()})
-          .then((response) => {
-            setRBIYOYData(parse(response.data.data))
-            console.log('sro-rbi-yoy-data',response);
-          })
-          .catch((error) => {
-            console.log('rbi quaterly error', error);
-          })
+         
 
-          await axios.get(`${BaseUrl}/api/auth/calculate-HHIIndebtedness`,
-            {headers: authHeaders()})
-          .then((response) => {
-            setRBIHouseholdData(parse(response.data.data))
-            console.log('sro-rbi-household-data',response);
-          })
-          .catch((error) => {
-            console.log('rbi quaterly error', error);
-          })
-          
-        }
+        const getRBIQuarterlyData = async () => {
+          console.log('formstate_member_b',formState.member);
+         console.log('formstate_quatar_b', formState.Quatar);
+         
+         await axios.get(`${BaseUrl}/api/auth/quarterly-data-report-highlights?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+           {
+             headers: authHeaders(),
+           })
+         .then((response) => {
+           setRBIIndexData(parse(response.data.data))
+           console.log('sro-rbi-data',response);
+         })
+         .catch((error) => {
+           console.log('rbi quaterly error', error);
+           setRBIIndexData(error.response.data.message);
+           // console.log('err-mess',error.response.data.message);
+         })
+   
+         await axios.get(`${BaseUrl}/api/auth/quarterly-yoy-report-highlights?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+           {headers: authHeaders()})
+         .then((response) => {
+           setRBIYOYData(parse(response.data.data))
+           console.log('sro-rbi-yoy-data',response);
+         })
+         .catch((error) => {
+           console.log('rbi quaterly error', error);
+           setRBIYOYData(error.response.data.message)
+         })
+   
+         //     -----household income and indebtedness data-----
+   
+         await axios.get(`${BaseUrl}/api/auth/calculate-HHIIndebtedness?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+           {headers: authHeaders()})
+         .then((response) => {
+           setRBIHouseholdData(parse(response.data.data))
+           console.log('sro-rbi-household-data',response);
+         })
+         .catch((error) => {
+           console.log('rbi quaterly error', error);
+           setRBIHouseholdData(error.response.data.message)
+         })
+         
+       }
+
+       const filterRBIReportHandler = async () => {
+        setFormState((prevState) => ({
+          ...prevState,
+          ["isLoader"]: true,
+          ["isDisabled"]: true,
+        }));
+
+        await getRBIQuarterlyData();
+
+        setFormState((prevState) => ({
+          ...prevState,
+          ["isLoader"]: false,
+          ["isDisabled"] : false,
+        }))
+
+ 
+    }
+
+    // sbi rbi report end here
+
+    // RBI-Others start here
+          const getRBIOthersData = async () => {
+            await axios.get(`${BaseUrl}/api/auth/getQuarterlyYOYReport`,
+              {headers: authHeaders()})
+            .then((response) => {
+              setRBIOthersData( parse(response.data.table))
+              console.log('rbi_others_data',response);
+            })
+            .catch((error) => {
+              console.log('rbi_others_error', error);
+              // setRBIOthersData(error.response.data.message)
+            })
+          }
+    //RBI-Others end here
 
   const handleToDateChange = (date) => {
     setFormState({ ...formState, ["toMonth"]: date });
@@ -639,8 +695,14 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
     getQuatarList();
   }, []);
 
-  useEffect(() => {
-    getRBIQuarterlyData();
+//   useEffect(() => {
+//     getRBIQuarterlyData();
+// },[])
+
+useEffect(() => {
+  getRBIQuarterlyData();
+  getRBIOthersData();
+  filterRBIReportHandler();
 },[])
 
   return (
@@ -1224,7 +1286,7 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
                                 sx={{ m: 2, minWidth: 315 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  Choose Lender Name
+                                Choose Short Name
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-standard-label"
@@ -1251,7 +1313,7 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
                                 sx={{ minWidth: "100%" }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                  Choose quater
+                                   Choose Month
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-standard-label"
@@ -1282,7 +1344,7 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
                                 }}
                                 sx={{ mt: 3, mb: 2 }}
                                 disabled={formState.isDisabled}
-                                onClick={filterEBHandler}
+                                onClick={filterRBIReportHandler}
                               >
                                 Filter
                                 <Loader loader={formState.isLoader} size={15} />
@@ -1391,7 +1453,7 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
 
                     {/* Date of monthly submission to CICs */}
 
-                    <RBIOthersIndex />
+                    <RBIOthersIndex rbiOthersData={rbiOthersData} />
 
                     {/* Date of monthly submission to CICs */}
                   </Grid>

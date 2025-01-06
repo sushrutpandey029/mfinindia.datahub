@@ -25,18 +25,20 @@ import Breadcrumb from "../common/Breadcrumb";
 import { BaseUrl } from "../url/url";
 import axios from "axios";
 import authHeaders from "../Service/AuthHeaders";
-import { authChangePassword } from "../Service/Login/AuthService";
-import { useState, useEffect } from "react";
+ import {authChangePhone} from "../Service/Login/AuthService";
+ import { useState, useEffect } from "react";
 const useStyle = makeStyles((theme) => createStyles({}));
 
 const ChangePhoneForm = () => {
-  
+  var userdetails =  JSON.parse(localStorage.getItem("user"));
+  console.log('phone-userdetails',userdetails);
   const navigate = useNavigate();
   const [values, setValues] = useState({
     phone:'',
     cphone:''
-  })
+  });
 
+  
   const handleChange = async(e) => {
     e.preventDefault();
     setValues({...values,[e.target.name]: e.target.value})
@@ -44,15 +46,26 @@ const ChangePhoneForm = () => {
 
   const handlePhoneChange = async (e) => {
     e.preventDefault();
-    var userdetails = await JSON.parse(localStorage.getItem("users"));
+   
     var formData = new FormData();
+   
 
     try{
         formData.append("phone",values.phone);
         formData.append("cphone",values.cphone);
         formData.append("user_id",userdetails.data.user.id);
+
+        let response = await authChangePhone(formData);
+        if(response && response.data.status === 200) {
+          alert(response.data.message);
+          window.location.reload(true);
+        }
+        console.log('phone-resp',response);
     }catch(err){
-        console.log('err',err);
+        console.log('phone-err',err);
+        if(err.response) {
+          alert(err.response.data.error.phone);
+        }
     }
    
 

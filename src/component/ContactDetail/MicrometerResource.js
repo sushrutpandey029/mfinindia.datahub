@@ -225,7 +225,7 @@ const MicrometerResource = () => {
             }
              }>Latest Report</h2>
         {filterData.length > 0 && (
-          <div className="container-in w-75">
+          <div className="container-in-matter w-75">
             <div className="top-content">
               <p>
                 <button onClick={() => handlePDFDownload(filterData[0].pdf_file)}>

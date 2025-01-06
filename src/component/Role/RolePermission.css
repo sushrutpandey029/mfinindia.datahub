@@ -1,0 +1,15 @@
+.css-y2dtj {
+    padding: 16px !important;
+    width: 80%;
+    overflow: auto;
+    height: 550px;
+}
+
+
+
+
+@media (min-width: 900px) {
+    .css-1a1o02x-MuiGrid2-root {
+        padding: 0px 8px;
+    }
+}

@@ -61,31 +61,49 @@ export default function Login() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState(false);
-  const handlClick = async (e) => {
-    e.preventDefault()
+
+ const handlClick = async (e) => {
+    e.preventDefault();
     setIsDisabled(true);
     setLoader(true);
     const body = {
       email: email,
       password: password,
     }
-    let response = await authLogin(body)
-    console.log("authlogin",response);
-    if (response.data.status === true) {
-      localStorage.setItem("login_screen", true);
-      localStorage.setItem("access_token", response.data.data.access_token)
-      localStorage.setItem("user", JSON.stringify(response.data));
-      setLoader(false);
-      alert(response.data.message);
-      //SuccessToastMessage(response.data.message, "success1");
-      navigate('/login-otp');
-      ///navigate(0);
-    } else {
-     // setLoader(false);
-     console.log("aasasa",response.data.message);
-      alert(response.data.message);
-     // ErrorToastMessage("Invalid Email Address and Password.", "failed");
+
+    try {
+      const response = await authLogin(body)
+
+      console.log("authlogin",response);
+      console.log('login-response', response);
+  
+      if (response.data.status === true) {
+        localStorage.setItem("login_screen", true);
+        localStorage.setItem("access_token", response.data.data.access_token)
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setLoader(false);
+        alert(response.data.message);
+        //SuccessToastMessage(response.data.message, "success1");
+        navigate('/login-otp');
+        ///navigate(0);
+      } else {
+       // setLoader(false);
+       console.log("aasasa",response.data.message);
+        alert(response.data.message);
+       // ErrorToastMessage("Invalid Email Address and Password.", "failed");
+      }
+
+    }catch (error) {
+      console.error("Login Error", error);
+
+      if(error.response) {
+        if(error.response.data && error.response.data.status === false) {
+          alert(error.response.data.message);
+         }
+      }
+        // window.location.reload();
     }
+   
   }
 
   const handleForgotClick = async (e) => {

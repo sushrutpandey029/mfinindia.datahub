@@ -29,44 +29,48 @@ import authHeaders from "../Service/AuthHeaders";
 import parse from "html-react-parser";
 import { useState, useEffect } from "react";
 import Tableau from './Tableau';
+import InteractiveStateAndCityMap from "./InteractiveStateAndCityMap";
+
 const useStyle = makeStyles((theme) => createStyles({}));
 
 const DRIStatesMap = () => {
   const [GetIframInfo, setGetIframInfo] = useState("");
-const getIframeData = async () => {
+  const getIframeData = async () => {
 
-  await axios
-  .get(
-    `${BaseUrl}/api/auth/get-dri-iframe`,
-    { headers: authHeaders() }
-  )
-  .then((response) => {
-    setGetIframInfo(response.data.data[0].DRI_Frame);
-  })
-  .catch((error) => {
-    console.log("err", error);
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/get-dri-iframe`,
+        { headers: authHeaders() }
+      )
+      .then((response) => {
+        setGetIframInfo(response.data.data[0].DRI_Frame);
+      })
+      .catch((error) => {
+        console.log("err", error);
+      });
+
+  };
+  useEffect(() => {
+    getIframeData();
   });
-
-};
-useEffect(() => {
-  getIframeData();
-});
   const classes = useStyle();
   console.log("Iframe", GetIframInfo);
   return (
     <Box sx={{ flexGrow: 1 }} mt={10}>
       <div role="presentation">
-      <Breadcrumb title="District Risk Index (DRI)" icon={GrassIcon} />
-     
-    </div>
-<Grid xs={12} sm={12} md={12}>
+        <Breadcrumb title="District Risk Index (DRI)" icon={GrassIcon} />
 
-  
-{/* <StateMapData /> */} 
- <Tableau 
- GetIframInfo={GetIframInfo}
- />  
-     </Grid>
+      </div>
+      <Grid xs={12} sm={12} md={12}>
+
+
+        {/* <StateMapData /> */}
+        {/* <Tableau
+          GetIframInfo={GetIframInfo}
+        /> */}
+
+        <InteractiveStateAndCityMap/>
+      </Grid>
     </Box>
   );
 };

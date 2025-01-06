@@ -22,8 +22,9 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PortfolioQualityRBILine from './PortfolioQualityRBILine';
 import CostBorrowingInterestRatesRBI from './CostBorrowingInterestRatesRBI';
 import { VerticalAlignCenter } from "@material-ui/icons";
-function RBIOthersIndex() {
-  const [open, setOpen] = useState(false);
+
+function RBIOthersIndex(props) {
+   const [open, setOpen] = useState(false);
   const downloadPdfMudraBankWise = () => {
     const pdf = new jsPDF();
     pdf.autoTable({
@@ -61,7 +62,7 @@ function RBIOthersIndex() {
                             filename="custom-report-export-excel"
                             filetype="xls"
                             sheet="Mudra Bank Wise Report"
-                            buttonText="Excel Format" />
+                            buttonText="Excel Format"/>
                         </Button>
                       </DropdownMenuItem>,
                       <DropdownMenuItem>
@@ -75,7 +76,8 @@ function RBIOthersIndex() {
             </Typography>
   
             <Table striped bordered hover style={{marginTop:"30px",textAlign:"left"}}>
-              <thead>
+              {(props.rbiOthersData)}
+              {/* <thead>
                 <tr>
                   <th>Sr.</th>
                   <th>Parameters ((YOY change))</th>
@@ -114,7 +116,7 @@ function RBIOthersIndex() {
                   <td>00.0</td>
                 </tr>
                
-              </tbody>
+              </tbody> */}
             </Table>
           </CardContent>
         </CardActionArea>

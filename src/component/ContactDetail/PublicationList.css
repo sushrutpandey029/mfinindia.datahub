@@ -11,3 +11,12 @@
 .table-data td {
     text-align: center;
 }
+
+.lla-dnC {
+    display: grid !important ;
+    min-width: initial !important;
+}
+
+.btn-primary {
+    background-color: #F78F6D !important;
+}

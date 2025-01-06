@@ -19,7 +19,14 @@ import Loader from "../common/Loader"
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import authHeaders from "../Service/AuthHeaders";
-import { BaseUrl, importContactApi, importDRIStateApi, importDRIDistrictApi, importCbDistrict, importCbState, importMemberAssociateMaster, importMudraBankWise, importMudraDistrictWise, importRadarExternalInciterApi, importRadarNegativeAreaApi, importRadarRiskyAreaApi, importRadarRingLeaderApi, importMmStateMasterApi, importMmMasterDataApi, importSROEBDataApi, importSROCBDataApi, importSROQARDataApi, importSROCGRMDataApi, importALMDataApi, importRBIMasterDataApi, importMmMasterBorrowingsDataApi } from "../url/url";
+import {
+  BaseUrl, importContactApi, importDRIStateApi,
+  importDRIDistrictApi, importCbDistrict, importCbState,
+  importMemberAssociateMaster, importMudraBankWise, importMudraDistrictWise,
+  importRadarExternalInciterApi, importRadarNegativeAreaApi, importRadarRiskyAreaApi,
+  importRadarRingLeaderApi, importMmStateMasterApi, importMmMasterDataApi, importSROEBDataApi,
+  importSROCBDataApi, importSROQARDataApi, importSROCGRMDataApi, importALMDataApi, importRBIMasterDataApi, importMmMasterBorrowingsDataApi, importDRIMapDataApi
+} from "../url/url";
 import { SuccessFailedMessage, SuccessToastMessage, ErrorToastMessage } from "../common/SuccessFailedMessage";
 const useStyle = makeStyles((theme) =>
   createStyles({
@@ -78,6 +85,7 @@ const ImportTables = () => {
   const refMasterBorrowings = useRef(null);
   const refCbState = useRef(null);
   const refCbDistrict = useRef(null);
+  const refDRIMapData = useRef(null);
   const refAssociateMaster = useRef(null);
   const refContactDetails = useRef(null);
   const refDRIState = useRef(null);
@@ -129,7 +137,7 @@ const ImportTables = () => {
       setMicrometerMaster(micrometerMasterInitialState);
 
       refMicrometerMaster.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setMicrometerMaster(micrometerMasterInitialState);
       refMicrometerMaster.current.value = null;
@@ -175,66 +183,66 @@ const ImportTables = () => {
     if (res.status === 200) {
       SuccessToastMessage(res.data.message, "success1");
       setCbState(cbStateInitialState);
-      refCbState.current.value=null
-    } else if(res.status === 401){
+      refCbState.current.value = null
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setCbState(cbStateInitialState);
-      refCbState.current.value=null
+      refCbState.current.value = null
     } else {
       if (res.data.message !== undefined) {
         ErrorToastMessage(res.data.message, "failedasdasda");
         setCbState(cbStateInitialState);
-        refCbState.current.value=null
+        refCbState.current.value = null
       }
     }
   }
 
-    /* Master Borrowings State */
-    const masterBorrowingsInitialState = {
-      isLoader: false,
-      isDisabled: true,
-      csv_import: null
+  /* Master Borrowings State */
+  const masterBorrowingsInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
+  }
+
+  const [masterBorrowings, setMasterBorrowings] = useState(masterBorrowingsInitialState);
+  const changeImportMasterBorrowingsCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setMasterBorrowings({ ...masterBorrowings, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setMasterBorrowings({ ...masterBorrowings, ['csv_import']: null, ['isDisabled']: true });
     }
-  
-    const [masterBorrowings, setMasterBorrowings] = useState(masterBorrowingsInitialState);
-    const changeImportMasterBorrowingsCsv = (event) => {
-      if (event.target.files[0] && event.target.files[0] !== undefined) {
-        setMasterBorrowings({ ...masterBorrowings, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-      } else {
-        setMasterBorrowings({ ...masterBorrowings, ['csv_import']: null, ['isDisabled']: true });
+  }
+
+  const btnImportMasterBorrowings = async () => {
+    setMasterBorrowings({ ...masterBorrowings, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      masterBorrowings.csv_import,
+      masterBorrowings.csv_import.name
+    );
+    const api = `${importMmMasterBorrowingsDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
+      setMasterBorrowings(masterBorrowingsInitialState);
+      refMasterBorrowings.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setMasterBorrowings(masterBorrowingsInitialState);
+      refMasterBorrowings.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setMasterBorrowings(masterBorrowingsInitialState);
+        refMasterBorrowings.current.value = null
       }
     }
-  
-    const btnImportMasterBorrowings = async () => {
-      setMasterBorrowings({ ...masterBorrowings, ['isDisabled']: true, ['isLoader']: true });
-      const formData = new FormData();
-      formData.append(
-        "csv_import",
-        masterBorrowings.csv_import,
-        masterBorrowings.csv_import.name
-      );
-      const api = `${importMmMasterBorrowingsDataApi}`;
-      const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-        return response;
-      }).catch((error) => {
-        return error.response;
-      });
-      if (res.status === 200) {
-        SuccessToastMessage(res.data.message, "success1");
-        setMasterBorrowings(masterBorrowingsInitialState);
-        refMasterBorrowings.current.value=null
-      } else if(res.status === 401){
-        ErrorToastMessage(res.data.error.csv_import[0], "failed");
-        setMasterBorrowings(masterBorrowingsInitialState);
-        refMasterBorrowings.current.value=null
-      } else {
-        if (res.data.message !== undefined) {
-          ErrorToastMessage(res.data.message, "failedasdasda");
-          setMasterBorrowings(masterBorrowingsInitialState);
-          refMasterBorrowings.current.value=null
-        }
-      }
-    }
+  }
 
   /* CB District  */
   const cbDistrictInitialState = {
@@ -270,7 +278,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setCbDistrict(cbDistrictInitialState);
       refCbDistrict.current.value = null
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setCbDistrict(cbDistrictInitialState);
       refCbDistrict.current.value = null
@@ -317,7 +325,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setAssociateMaster(associateMasterInitialState);
       refAssociateMaster.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setAssociateMaster(associateMasterInitialState);
       refAssociateMaster.current.value = null;
@@ -330,100 +338,163 @@ const ImportTables = () => {
     }
   }
 
-      /* DRI State Import  */
-      const DRIStateInitialState = {
-        isLoader: false,
-        isDisabled: true,
-        csv_import: null
-      }
-    
-      const [DRIState, setDRIState] = useState(DRIStateInitialState);
-      const changeImportDRIStateCsv = (event) => {
-        if (event.target.files[0] && event.target.files[0] !== undefined) {
-          setDRIState({ ...DRIState, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-        } else {
-          setDRIState({ ...DRIState, ['csv_import']: null, ['isDisabled']: true });
-        }
-      }
-      
-    const btnImportDRIState = async () => {
-      setDRIState({ ...DRIState, ['isDisabled']: true, ['isLoader']: true });
-      const formData = new FormData();
-      formData.append(
-        "csv_import",
-        DRIState.csv_import,
-        DRIState.csv_import.name
-      );
-      const api = `${importDRIStateApi}`;
-      const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-        return response;
-      }).catch((error) => {
-        return error.response;
-      });
-      if (res.status === 200) {
-        SuccessToastMessage(res.data.message, "success1");
-        setDRIState(DRIStateInitialState);
-        refDRIState.current.value = null;
-      } else if(res.status === 401){
-        ErrorToastMessage(res.data.error.csv_import[0], "failed");
-        setDRIState(DRIStateInitialState);
-        refDRIState.current.value = null;
-      } else {
-        if (res.data.message !== undefined) {
-          ErrorToastMessage(res.data.message, "failedasdasda");
-          setDRIState(DRIStateInitialState);
-          refDRIState.current.value = null;
-        }
-      }
-    }
+  /* DRI State Import  */
+  const DRIStateInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
+  }
 
-    
-      /* DRI State Import  */
-      const DRIDistrictInitialState = {
-        isLoader: false,
-        isDisabled: true,
-        csv_import: null
-      }
-    
-      const [DRIDistrict, setDRIDistrict] = useState(DRIDistrictInitialState);
-      const changeImportDRIDistrictCsv = (event) => {
-        if (event.target.files[0] && event.target.files[0] !== undefined) {
-          setDRIDistrict({ ...DRIDistrict, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-        } else {
-          setDRIDistrict({ ...DRIDistrict, ['csv_import']: null, ['isDisabled']: true });
-        }
-      }
-      
-    const btnImportDRIDistrict = async () => {
-      setDRIDistrict({ ...DRIDistrict, ['isDisabled']: true, ['isLoader']: true });
-      const formData = new FormData();
-      formData.append(
-        "csv_import",
-        DRIDistrict.csv_import,
-        DRIDistrict.csv_import.name
-      );
-      const api = `${importDRIDistrictApi}`;
-      const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-        return response;
-      }).catch((error) => {
-        return error.response;
-      });
-      if (res.status === 200) {
-        SuccessToastMessage(res.data.message, "success1");
-        setDRIDistrict(DRIDistrictInitialState);
-        refDRIDistrict.current.value = null;
-      } else if(res.status === 401){
-        ErrorToastMessage(res.data.error.csv_import[0], "failed");
-        setDRIDistrict(DRIDistrictInitialState);
-        refDRIDistrict.current.value = null;
-      } else {
-        if (res.data.message !== undefined) {
-          ErrorToastMessage(res.data.message, "failedasdasda");
-          setDRIDistrict(DRIDistrictInitialState);
-          refDRIDistrict.current.value = null;
-        }
+  const [DRIState, setDRIState] = useState(DRIStateInitialState);
+  const changeImportDRIStateCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setDRIState({ ...DRIState, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setDRIState({ ...DRIState, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportDRIState = async () => {
+    setDRIState({ ...DRIState, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      DRIState.csv_import,
+      DRIState.csv_import.name
+    );
+    const api = `${importDRIStateApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
+      setDRIState(DRIStateInitialState);
+      refDRIState.current.value = null;
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setDRIState(DRIStateInitialState);
+      refDRIState.current.value = null;
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setDRIState(DRIStateInitialState);
+        refDRIState.current.value = null;
       }
     }
+  }
+
+
+  /* DRI State Import  */
+  const DRIDistrictInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
+  }
+
+  const [DRIDistrict, setDRIDistrict] = useState(DRIDistrictInitialState);
+  const changeImportDRIDistrictCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setDRIDistrict({ ...DRIDistrict, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setDRIDistrict({ ...DRIDistrict, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportDRIDistrict = async () => {
+    setDRIDistrict({ ...DRIDistrict, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      DRIDistrict.csv_import,
+      DRIDistrict.csv_import.name
+    );
+    const api = `${importDRIDistrictApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
+      setDRIDistrict(DRIDistrictInitialState);
+      refDRIDistrict.current.value = null;
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setDRIDistrict(DRIDistrictInitialState);
+      refDRIDistrict.current.value = null;
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setDRIDistrict(DRIDistrictInitialState);
+        refDRIDistrict.current.value = null;
+      }
+    }
+  }
+
+  /* DRI Map Data Import  */
+
+  const DRIMapDataInitialState = {
+    isLoader : false,
+    isDisabled: true,
+    csv_import : null
+  }
+
+  const [DRIMapData, setDRIMapData] = useState(DRIMapDataInitialState);
+   
+  const changeImportDRIMapDataCsv = (event) => {
+    if(event.target.files[0] && event.target.files[0] !== undefined) {
+      setDRIMapData({
+        ...DRIMapData,
+        ["csv_import"] : event.target.files[0],
+        ["isDisabled"] : false
+      })
+    } else {
+      setDRIMapData({
+        ...DRIMapData,
+        ["csv_import"] : null,
+        ["isDisabled"] : true
+      })
+    }
+  }
+
+  const btnImportDRIMapData = async () => {
+    setDRIMapData({
+      ...DRIMapData,
+      ["isDisabled"] : true,
+      ["isLoader"]  :true
+    });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      DRIMapData.csv_import,
+      DRIMapData.csv_import.name
+    );
+    const api = `${importDRIMapDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`,formData, {headers: authHeaders()})
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      return error.response
+    });
+    if(res.status === 200) {
+      SuccessToastMessage(res.data.message, "Success1");
+      setDRIMapData(DRIMapDataInitialState);
+      refDRIMapData.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed")
+      setDRIMapData(DRIMapDataInitialState)
+      refDRIMapData.current.value = null
+    } else {
+      if(res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message,"failed")
+        setDRIMapData(DRIMapDataInitialState);
+        refDRIMapData.current.value = null
+      }
+    }
+  }
 
   /* Contact Details  */
   const contactDetailsInitialState = {
@@ -459,7 +530,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setContactDetails(contactDetailsInitialState);
       refContactDetails.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setContactDetails(contactDetailsInitialState);
       refContactDetails.current.value = null;
@@ -506,7 +577,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setMudraDistrictkWise(mudraDistrictkWiseInitialState);
       refMudraDistrictkWise.current.value = null
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setMudraDistrictkWise(mudraDistrictkWiseInitialState);
       refMudraDistrictkWise.current.value = null
@@ -553,7 +624,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setMudraBankWise(mudraBankWiseInitialState);
       refMudraBankWise.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setMudraBankWise(mudraBankWiseInitialState);
       refMudraBankWise.current.value = null;
@@ -600,7 +671,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setRadarExternalInciter(radarExternalInciterInitialState);
       refRadarExternalInciter.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setRadarExternalInciter(radarExternalInciterInitialState);
       refRadarExternalInciter.current.value = null;
@@ -647,7 +718,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setRadarNegativeArea(radarNegativeAreaInitialState);
       refRadarNegativeArea.current.value = null;
-    }  else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setRadarNegativeArea(radarNegativeAreaInitialState);
       refRadarNegativeArea.current.value = null;
@@ -694,7 +765,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setRadarRiskyArea(radarRiskyAreaInitialState);
       refRadarRiskyArea.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setRadarRiskyArea(radarRiskyAreaInitialState);
       refRadarRiskyArea.current.value = null;
@@ -741,7 +812,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setRadarRingLeader(radarRingLeaderInitialState);
       refRadarRingLeader.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setRadarRingLeader(radarRingLeaderInitialState);
       refRadarRingLeader.current.value = null;
@@ -788,7 +859,7 @@ const ImportTables = () => {
       SuccessToastMessage(res.data.message, "success1");
       setmmStateMaster(mmStateMasterInitialState);
       refMmStateMaster.current.value = null;
-    } else if(res.status === 401){
+    } else if (res.status === 401) {
       ErrorToastMessage(res.data.error.csv_import[0], "failed");
       setmmStateMaster(mmStateMasterInitialState);
       refMmStateMaster.current.value = null;
@@ -802,357 +873,357 @@ const ImportTables = () => {
   }
 
   /* SRO CGRM start from here */
-const SROCGRMInitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
-}
-
-const [SROCGRM, setSROCGRM] = useState(SROCGRMInitialState);
-const changeImportSROCGRMCsv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setSROCGRM({ ...SROCGRM, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setSROCGRM({ ...SROCGRM, ['csv_import']: null, ['isDisabled']: true });
+  const SROCGRMInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
   }
-}
 
-const btnImportSROCGRM = async () => {
-  setSROCGRM({ ...SROCGRM, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    SROCGRM.csv_import,
-    SROCGRM.csv_import.name
-  );
-  const api = `${importSROCGRMDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setSROCGRM(SROCGRMInitialState);
-    refSROCGRM.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setSROCGRM(SROCGRMInitialState);
-    refSROCGRM.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
+  const [SROCGRM, setSROCGRM] = useState(SROCGRMInitialState);
+  const changeImportSROCGRMCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setSROCGRM({ ...SROCGRM, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setSROCGRM({ ...SROCGRM, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportSROCGRM = async () => {
+    setSROCGRM({ ...SROCGRM, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      SROCGRM.csv_import,
+      SROCGRM.csv_import.name
+    );
+    const api = `${importSROCGRMDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
       setSROCGRM(SROCGRMInitialState);
-      refSROCGRM.current.value=null
+      refSROCGRM.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setSROCGRM(SROCGRMInitialState);
+      refSROCGRM.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setSROCGRM(SROCGRMInitialState);
+        refSROCGRM.current.value = null
+      }
     }
   }
-}
 
-/* SRO CGRM end here */
+  /* SRO CGRM end here */
 
-/* SRO QAR start from here */
-const SROQARInitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
-}
-
-const [SROQAR, setSROQAR] = useState(SROQARInitialState);
-const changeImportSROQARCsv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setSROQAR({ ...SROQAR, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setSROQAR({ ...SROQAR, ['csv_import']: null, ['isDisabled']: true });
+  /* SRO QAR start from here */
+  const SROQARInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
   }
-}
 
-const btnImportSROQAR = async () => {
-  setSROQAR({ ...SROQAR, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    SROQAR.csv_import,
-    SROQAR.csv_import.name
-  );
-  const api = `${importSROQARDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setSROQAR(SROQARInitialState);
-    refSROQAR.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setSROQAR(SROQARInitialState);
-    refSROQAR.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
+  const [SROQAR, setSROQAR] = useState(SROQARInitialState);
+  const changeImportSROQARCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setSROQAR({ ...SROQAR, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setSROQAR({ ...SROQAR, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportSROQAR = async () => {
+    setSROQAR({ ...SROQAR, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      SROQAR.csv_import,
+      SROQAR.csv_import.name
+    );
+    const api = `${importSROQARDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
       setSROQAR(SROQARInitialState);
-      refSROQAR.current.value=null
+      refSROQAR.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setSROQAR(SROQARInitialState);
+      refSROQAR.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setSROQAR(SROQARInitialState);
+        refSROQAR.current.value = null
+      }
     }
   }
-}
 
-/* SRO QAR end here */
+  /* SRO QAR end here */
 
-/* SRO CB start from here */
-const SROCBInitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
-}
-
-const [SROCB, setSROCB] = useState(SROCBInitialState);
-const changeImportSROCBCsv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setSROCB({ ...SROCB, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setSROCB({ ...SROCB, ['csv_import']: null, ['isDisabled']: true });
+  /* SRO CB start from here */
+  const SROCBInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
   }
-}
 
-const btnImportSROCB = async () => {
-  setSROCB({ ...SROCB, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    SROCB.csv_import,
-    SROCB.csv_import.name
-  );
-  const api = `${importSROCBDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setSROCB(SROCBInitialState);
-    refSROCB.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setSROCB(SROCBInitialState);
-    refSROCB.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
+  const [SROCB, setSROCB] = useState(SROCBInitialState);
+  const changeImportSROCBCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setSROCB({ ...SROCB, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setSROCB({ ...SROCB, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportSROCB = async () => {
+    setSROCB({ ...SROCB, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      SROCB.csv_import,
+      SROCB.csv_import.name
+    );
+    const api = `${importSROCBDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
       setSROCB(SROCBInitialState);
-      refSROCB.current.value=null
+      refSROCB.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setSROCB(SROCBInitialState);
+      refSROCB.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setSROCB(SROCBInitialState);
+        refSROCB.current.value = null
+      }
     }
   }
-}
 
-/* SRO CB end here */
+  /* SRO CB end here */
 
-/* SRO EB1 start from here */
-const SROEB1InitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
- }
- 
- const [SROEB1, setSROEB1] = useState(SROEB1InitialState);
- const changeImportSROEB1Csv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setSROEB1({ ...SROEB1, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setSROEB1({ ...SROEB1, ['csv_import']: null, ['isDisabled']: true });
+  /* SRO EB1 start from here */
+  const SROEB1InitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
   }
- }
- 
- const btnImportSROEB1 = async () => {
-  setSROEB1({ ...SROEB, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    SROEB1.csv_import,
-    SROEB1.csv_import.name
-  );
-  const api = `${importSROCBDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setSROEB(SROEB1InitialState);
-    refSROEB1.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setSROEB(SROEB1InitialState);
-    refSROEB1.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
-      setSROEB1(SROEB1InitialState);
-      refSROEB1.current.value=null
+
+  const [SROEB1, setSROEB1] = useState(SROEB1InitialState);
+  const changeImportSROEB1Csv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setSROEB1({ ...SROEB1, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setSROEB1({ ...SROEB1, ['csv_import']: null, ['isDisabled']: true });
     }
   }
- }
- 
- /* SRO EB1 end here */
 
- /* SRO EB start from here */
- const SROEBInitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
-}
-
-const [SROEB, setSROEB] = useState(SROEBInitialState);
-const changeImportSROEBCsv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setSROEB({ ...SROEB, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setSROEB({ ...SROEB, ['csv_import']: null, ['isDisabled']: true });
+  const btnImportSROEB1 = async () => {
+    setSROEB1({ ...SROEB, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      SROEB1.csv_import,
+      SROEB1.csv_import.name
+    );
+    const api = `${importSROCBDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
+      setSROEB(SROEB1InitialState);
+      refSROEB1.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setSROEB(SROEB1InitialState);
+      refSROEB1.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setSROEB1(SROEB1InitialState);
+        refSROEB1.current.value = null
+      }
+    }
   }
-}
 
-const btnImportSROEB = async () => {
-  setSROEB({ ...SROEB, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    SROEB.csv_import,
-    SROEB.csv_import.name
-  );
-  const api = `${importSROEBDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setSROEB(SROEBInitialState);
-    refSROEB.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setSROEB(SROEBInitialState);
-    refSROEB.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
+  /* SRO EB1 end here */
+
+  /* SRO EB start from here */
+  const SROEBInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
+  }
+
+  const [SROEB, setSROEB] = useState(SROEBInitialState);
+  const changeImportSROEBCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setSROEB({ ...SROEB, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setSROEB({ ...SROEB, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportSROEB = async () => {
+    setSROEB({ ...SROEB, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      SROEB.csv_import,
+      SROEB.csv_import.name
+    );
+    const api = `${importSROEBDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
       setSROEB(SROEBInitialState);
-      refSROEB.current.value=null
+      refSROEB.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setSROEB(SROEBInitialState);
+      refSROEB.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setSROEB(SROEBInitialState);
+        refSROEB.current.value = null
+      }
     }
   }
-}
 
-/* SRO EB end here */
+  /* SRO EB end here */
 
 
-/* ALM start from here */
-const ALMInitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
-}
-
-const [ALM, setALM] = useState(ALMInitialState);
-const changeImportALMCsv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setALM({ ...ALM, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setALM({ ...ALM, ['csv_import']: null, ['isDisabled']: true });
+  /* ALM start from here */
+  const ALMInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
   }
-}
 
-const btnImportALM = async () => {
-  setALM({ ...ALM, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    ALM.csv_import,
-    ALM.csv_import.name
-  );
-  const api = `${importALMDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setALM(ALMInitialState);
-    refALM.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setALM(ALMInitialState);
-    refALM.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
+  const [ALM, setALM] = useState(ALMInitialState);
+  const changeImportALMCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setALM({ ...ALM, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setALM({ ...ALM, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportALM = async () => {
+    setALM({ ...ALM, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      ALM.csv_import,
+      ALM.csv_import.name
+    );
+    const api = `${importALMDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
       setALM(ALMInitialState);
-      refALM.current.value=null
+      refALM.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setALM(ALMInitialState);
+      refALM.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setALM(ALMInitialState);
+        refALM.current.value = null
+      }
     }
   }
-}
 
-/* ALM end here */
+  /* ALM end here */
 
 
-/* RBIMaster start from here */
-const RBIMasterInitialState = {
-  isLoader: false,
-  isDisabled: true,
-  csv_import: null
-}
-
-const [RBIMaster, setRBIMaster] = useState(RBIMasterInitialState);
-const changeImportRBIMasterCsv = (event) => {
-  if (event.target.files[0] && event.target.files[0] !== undefined) {
-    setRBIMaster({ ...RBIMaster, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-  } else {
-    setRBIMaster({ ...RBIMaster, ['csv_import']: null, ['isDisabled']: true });
+  /* RBIMaster start from here */
+  const RBIMasterInitialState = {
+    isLoader: false,
+    isDisabled: true,
+    csv_import: null
   }
-}
 
-const btnImportRBIMaster = async () => {
-  setRBIMaster({ ...RBIMaster, ['isDisabled']: true, ['isLoader']: true });
-  const formData = new FormData();
-  formData.append(
-    "csv_import",
-    RBIMaster.csv_import,
-    RBIMaster.csv_import.name
-  );
-  const api = `${importRBIMasterDataApi}`;
-  const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-    return response;
-  }).catch((error) => {
-    return error.response;
-  });
-  if (res.status === 200) {
-    SuccessToastMessage(res.data.message, "success1");
-    setRBIMaster(RBIMasterInitialState);
-    refRBIMaster.current.value=null
-  } else if(res.status === 401){
-    ErrorToastMessage(res.data.error.csv_import[0], "failed");
-    setRBIMaster(RBIMasterInitialState);
-    refRBIMaster.current.value=null
-  } else {
-    if (res.data.message !== undefined) {
-      ErrorToastMessage(res.data.message, "failedasdasda");
+  const [RBIMaster, setRBIMaster] = useState(RBIMasterInitialState);
+  const changeImportRBIMasterCsv = (event) => {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
+      setRBIMaster({ ...RBIMaster, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+    } else {
+      setRBIMaster({ ...RBIMaster, ['csv_import']: null, ['isDisabled']: true });
+    }
+  }
+
+  const btnImportRBIMaster = async () => {
+    setRBIMaster({ ...RBIMaster, ['isDisabled']: true, ['isLoader']: true });
+    const formData = new FormData();
+    formData.append(
+      "csv_import",
+      RBIMaster.csv_import,
+      RBIMaster.csv_import.name
+    );
+    const api = `${importRBIMasterDataApi}`;
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+      return response;
+    }).catch((error) => {
+      return error.response;
+    });
+    if (res.status === 200) {
+      SuccessToastMessage(res.data.message, "success1");
       setRBIMaster(RBIMasterInitialState);
-      refRBIMaster.current.value=null
+      refRBIMaster.current.value = null
+    } else if (res.status === 401) {
+      ErrorToastMessage(res.data.error.csv_import[0], "failed");
+      setRBIMaster(RBIMasterInitialState);
+      refRBIMaster.current.value = null
+    } else {
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failedasdasda");
+        setRBIMaster(RBIMasterInitialState);
+        refRBIMaster.current.value = null
+      }
     }
   }
-}
 
-/* RBIMaster end here */
+  /* RBIMaster end here */
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }} mt={10}>
         <Breadcrumb title="Import CSV" icon={ImportExportIcon} />
         <SuccessFailedMessage />
-      <Grid container spacing={2} mt={2}>
-          <Grid xs={12} sm={12} md={12}>  
+        <Grid container spacing={2} mt={2}>
+          <Grid xs={12} sm={12} md={12}>
             <Card style={{ marginBottom: "20px" }} >
               <CardContent className={classes.headingTitleBox} style={{ textAlign: "left" }}>
                 <Typography variant="body1" color="text.secondary">
@@ -1209,15 +1280,15 @@ const btnImportRBIMaster = async () => {
                       </Grid>
                       <CardContent>
                         <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
-                          Micrometer - Master 
+                          Micrometer - Master
                         </Typography>
-                       
+
                         <a href="/csv_format/Micrometer_CSV.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                                      Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
-                        
+
                       </CardContent>
                     </CardActionArea>
                     <CardActions>
@@ -1230,7 +1301,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1247,7 +1318,7 @@ const btnImportRBIMaster = async () => {
                           <Loader loader={masterBorrowings.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -1262,15 +1333,15 @@ const btnImportRBIMaster = async () => {
                       </Grid>
                       <CardContent>
                         <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
-                          Micrometer - Borrowings Master 
+                          Micrometer - Borrowings Master
                         </Typography>
-                       
+
                         <a href="/csv_format/Micrometer_Borrowings.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                                      Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
-                        
+
                       </CardContent>
                     </CardActionArea>
                     <CardActions>
@@ -1297,7 +1368,7 @@ const btnImportRBIMaster = async () => {
                             autoFocus
                             onChange={changeImportMmStateMasterCsv}
                           />
-                           <Loader loader={mmStateMaster.isLoader} size={40} />
+                          <Loader loader={mmStateMaster.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
                           <Button
@@ -1317,14 +1388,14 @@ const btnImportRBIMaster = async () => {
                         <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
                           Micrometer - State Master
                         </Typography>
-                                               
+
                         <a href="/csv_format/Micrometer_State.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
-                        
-                        
+
+
                       </CardContent>
                     </CardActionArea>
                     <CardActions>
@@ -1337,7 +1408,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1355,7 +1426,7 @@ const btnImportRBIMaster = async () => {
 
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -1373,9 +1444,9 @@ const btnImportRBIMaster = async () => {
                           Micrometer - RBI Data
                         </Typography>
                         <a href="/csv_format/Micrometer_RBI_Data.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                                      Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -1389,7 +1460,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1406,7 +1477,7 @@ const btnImportRBIMaster = async () => {
                           <Loader loader={ALM.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -1424,11 +1495,11 @@ const btnImportRBIMaster = async () => {
                           Micrometer - ALM
                         </Typography>
                         <a href="/csv_format/Micrometer_ALM.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
-                        
+
                       </CardContent>
                     </CardActionArea>
                     <CardActions>
@@ -1476,9 +1547,9 @@ const btnImportRBIMaster = async () => {
                           Credit Bureau Master - State
                         </Typography>
                         <a href="/csv_format/Credit_Bureau_Master_State.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -1508,7 +1579,7 @@ const btnImportRBIMaster = async () => {
                             autoFocus
                             onChange={changeImportCbDistrictCsv}
                           />
-                           <Loader loader={cbDistrict.isLoader} size={40} />
+                          <Loader loader={cbDistrict.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
                           <Button
@@ -1529,9 +1600,9 @@ const btnImportRBIMaster = async () => {
                           Credit Bureau Master - District
                         </Typography>
                         <a href="/csv_format/Credit_Bureau_Master_District.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -1775,7 +1846,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1792,7 +1863,7 @@ const btnImportRBIMaster = async () => {
                           <Loader loader={SROEB.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -1807,12 +1878,12 @@ const btnImportRBIMaster = async () => {
                       </Grid>
                       <CardContent>
                         <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
-                        SRO - Employee Bureau
+                          SRO - Employee Bureau
                         </Typography>
                         <a href="/csv_format/SRO_EB.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -1825,7 +1896,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1842,7 +1913,7 @@ const btnImportRBIMaster = async () => {
                           <Loader loader={SROEB1.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -1857,12 +1928,12 @@ const btnImportRBIMaster = async () => {
                       </Grid>
                       <CardContent>
                         <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
-                        SRO - Credit Bureau
+                          SRO - Credit Bureau
                         </Typography>
                         <a href="/csv_format/SRO_CB.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -1871,7 +1942,7 @@ const btnImportRBIMaster = async () => {
                   </Card>
                 </Grid>
 
-{/*                 <Grid xs={12} sm={12} md={3}>
+                {/*                 <Grid xs={12} sm={12} md={3}>
                   <Card style={{ padding: "8px" }} >
                     <CardActionArea>
                       <Grid container spacing={3}>
@@ -1927,7 +1998,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1944,7 +2015,7 @@ const btnImportRBIMaster = async () => {
                           <Loader loader={SROQAR.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -1962,9 +2033,9 @@ const btnImportRBIMaster = async () => {
                           SRO - QAR
                         </Typography>
                         <a href="/csv_format/SRO_QAR.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -1978,7 +2049,7 @@ const btnImportRBIMaster = async () => {
                     <CardActionArea>
                       <Grid container spacing={3}>
                         <Grid xs={12} sm={12} md={8}>
-                        <TextField
+                          <TextField
                             margin="normal"
                             variant="standard"
                             type="file"
@@ -1995,7 +2066,7 @@ const btnImportRBIMaster = async () => {
                           <Loader loader={SROCGRM.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
-                        <Button
+                          <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -2013,9 +2084,9 @@ const btnImportRBIMaster = async () => {
                           SRO - CGRM
                         </Typography>
                         <a href="/csv_format/SRO_CGRM.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -2069,7 +2140,7 @@ const btnImportRBIMaster = async () => {
                             disabled={mudraDistrictkWise.isDisabled}
                           >
                             Upload
-                            
+
                           </Button>
                         </Grid>
                       </Grid>
@@ -2078,9 +2149,9 @@ const btnImportRBIMaster = async () => {
                           Mudra - District Wise
                         </Typography>
                         <a href="/csv_format/Mudra_District_Wise_Tables.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -2109,7 +2180,7 @@ const btnImportRBIMaster = async () => {
                             autoFocus
                             onChange={changeImportMudraBankWiseCsv}
                           />
-                           <Loader loader={mudraBankWise.isLoader} size={40} />
+                          <Loader loader={mudraBankWise.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
                           <Button
@@ -2122,7 +2193,7 @@ const btnImportRBIMaster = async () => {
                             disabled={mudraBankWise.isDisabled}
                           >
                             Upload
-                           
+
                           </Button>
                         </Grid>
                       </Grid>
@@ -2131,9 +2202,9 @@ const btnImportRBIMaster = async () => {
                           Mudra - Bank Wise
                         </Typography>
                         <a href="/csv_format/Mudra_Bank_Wise_Tables.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -2161,7 +2232,7 @@ const btnImportRBIMaster = async () => {
                             autoFocus
                             onChange={changeImportAssociateMasterCsv}
                           />
-                           <Loader loader={associateMaster.isLoader} size={40} />
+                          <Loader loader={associateMaster.isLoader} size={40} />
                         </Grid>
                         <Grid xs={12} sm={12} md={4}>
                           <Button
@@ -2174,7 +2245,7 @@ const btnImportRBIMaster = async () => {
                             disabled={associateMaster.isDisabled}
                           >
                             Upload
-                           
+
                           </Button>
                         </Grid>
                       </Grid>
@@ -2183,9 +2254,9 @@ const btnImportRBIMaster = async () => {
                           Members and Associate Master
                         </Typography>
                         <a href="/csv_format/Members_and_Associate_Master.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -2226,7 +2297,7 @@ const btnImportRBIMaster = async () => {
                             disabled={contactDetails.isDisabled}
                           >
                             Upload
-                           
+
                           </Button>
                         </Grid>
                       </Grid>
@@ -2235,9 +2306,9 @@ const btnImportRBIMaster = async () => {
                           Contact Details
                         </Typography>
                         <a href="/csv_format/Contact_Details.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -2277,7 +2348,7 @@ const btnImportRBIMaster = async () => {
                             disabled={DRIState.isDisabled}
                           >
                             Upload
-                           
+
                           </Button>
                         </Grid>
                       </Grid>
@@ -2286,9 +2357,9 @@ const btnImportRBIMaster = async () => {
                           DRI States
                         </Typography>
                         <a href="/csv_format/DRIState.csv" className={classes.download_text} download>
-                              <Typography variant="body1" className={classes.download_text}>
-                              Download the Sample format : Click Here
-                              </Typography>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
                         </a>
                       </CardContent>
                     </CardActionArea>
@@ -2297,59 +2368,126 @@ const btnImportRBIMaster = async () => {
                   </Card>
                 </Grid>
 
-                
+
                 <Grid xs={12} sm={12} md={3}>
-  <Card style={{ padding: "8px" }} >
-    <CardActionArea>
-      <Grid container spacing={3}>
-        <Grid xs={12} sm={12} md={8}>
-          <TextField
-            margin="normal"
-            variant="standard"
-            type="file"
-            required
-            fullWidth
-            id="myFile"
-            name="myFile"
-            autoComplete="myFile"
-            inputProps={{ accept: ".csv" }}
-            inputRef={refDRIDistrict}
-            autoFocus
-            onChange={changeImportDRIDistrictCsv}
-          />
-          <Loader loader={DRIDistrict.isLoader} size={40} />
-        </Grid>
-        <Grid xs={12} sm={12} md={4}>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            className={classes.Buttonbg}
-            sx={{ mt: 1, mb: 2 }}
-            onClick={btnImportDRIDistrict}
-            disabled={DRIDistrict.isDisabled}
-          >
-            Upload
-           
-          </Button>
-        </Grid>
-      </Grid>
-      <CardContent>
-        <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
-          DRI District
-        </Typography>
-        <a href="/csv_format/DRIDistrict.csv" className={classes.download_text} download>
-              <Typography variant="body1" className={classes.download_text}>
-              Download the Sample format : Click Here
-              </Typography>
-        </a>
-      </CardContent>
-    </CardActionArea>
-    <CardActions>
-    </CardActions>
-  </Card>
-</Grid>
+                  <Card style={{ padding: "8px" }} >
+                    <CardActionArea>
+                      <Grid container spacing={3}>
+                        <Grid xs={12} sm={12} md={8}>
+                          <TextField
+                            margin="normal"
+                            variant="standard"
+                            type="file"
+                            required
+                            fullWidth
+                            id="myFile"
+                            name="myFile"
+                            autoComplete="myFile"
+                            inputProps={{ accept: ".csv" }}
+                            inputRef={refDRIDistrict}
+                            autoFocus
+                            onChange={changeImportDRIDistrictCsv}
+                          />
+                          <Loader loader={DRIDistrict.isLoader} size={40} />
+                        </Grid>
+                        <Grid xs={12} sm={12} md={4}>
+                          <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            className={classes.Buttonbg}
+                            sx={{ mt: 1, mb: 2 }}
+                            onClick={btnImportDRIDistrict}
+                            disabled={DRIDistrict.isDisabled}
+                          >
+                            Upload
+
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
+                          DRI District
+                        </Typography>
+                        <a href="/csv_format/DRIDistrict.csv" className={classes.download_text} download>
+                          <Typography variant="body1" className={classes.download_text}>
+                            Download the Sample format : Click Here
+                          </Typography>
+                        </a>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                    </CardActions>
+                  </Card>
+                </Grid>
+
+                 {/* dri map data */}
+
+              <Grid xs={12} sm={12} md={3}>
+                  <Card style={{ padding: "8px" }}>
+                    <CardActionArea>
+                      <Grid container spacing={3}>
+                        <Grid xs={12} sm={12} md={8}>
+                          <TextField
+                            margin="normal"
+                            variant="standard"
+                            type="file"
+                            required
+                            fullWidth
+                            id="myFile"
+                            name="myFile"
+                            autoComplete="myFile"
+                            inputProps={{ accept: ".csv" }}
+                            inputRef={refDRIMapData}
+                            autoFocus
+                            // onChange={changeImportDRIDistrictCsv}
+                            onChange={changeImportDRIMapDataCsv}
+                          />
+                          <Loader loader={DRIMapData.isLoader} size={40} />
+                        </Grid>
+                        <Grid xs={12} sm={12} md={4}>
+                          <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            className={classes.Buttonbg}
+                            sx={{ mt: 1, mb: 2 }}
+                            onClick={btnImportDRIMapData}
+                            disabled={DRIMapData.isDisabled}
+                          >
+                            Upload
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <CardContent>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          className={classes.headingTitle}
+                          component="div"
+                        >
+                          DRI Map Data
+                        </Typography>
+                        <a
+                          href="/csv_format/dri_map_data.csv"
+                          className={classes.download_text}
+                          download
+                        >
+                          <Typography
+                            variant="body1"
+                            className={classes.download_text}
+                          >
+                            Download the Sample format : Click Here
+                          </Typography>
+                        </a>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions></CardActions>
+                  </Card>
+                </Grid>
               </Grid>
+
+             
 
 
 

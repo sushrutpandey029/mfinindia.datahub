@@ -1,0 +1,2 @@
+Date,State_Name,District_Name,PIN_Code,DRI_Category,DRI_Score,GLP_RsCr,GLP_Rank,NoOfAccounts_K,NoOfUB_K,NoOfFI,DensityOfFIs,DensityOfFIs_P,AcperUB,AcperUB_P,DepthOfOutreach,DepthOfOutreach_P,PerCapita,PerCapita_P,PAR60,PAR60_P,R_RL,R_EI,R_RA,R_NA,CGRM_Q,CGRM_C,CGRM_R,CGRM_P
+01-01-2025,Andaman & Nicobar Islands,Nicobar,6565,Very High,0.5,0.08,692,0.026,0.021,12,0.63,0.98,1.24,0.13,0,0.06,0.05,0.28,0,0,0,0,0,0,0,0,0,0

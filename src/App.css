@@ -1,3 +1,10 @@
+.MiniDrawer-appBar-2 {
+  z-index: 1201;
+  background: linear-gradient(52deg, #2b60ad 14.87%, #39b1ac 86.11%) !important;
+  padding: 8px 0px !important;
+}
+
+
 .App {
   text-align: center;
 }

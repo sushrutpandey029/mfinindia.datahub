@@ -86,8 +86,8 @@ const styles = theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    boxShadow: "none !important",
-    backgroundColor: "#39B1AC !important"
+    background: "linear-gradient(52deg, #2b60ad 14.87%, #39b1ac 86.11%) !important", // Added gradient
+    padding: "8px 0px !important"
   },
   appBarShift: {
     marginLeft: drawerWidth,

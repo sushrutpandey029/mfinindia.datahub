@@ -200,7 +200,7 @@ const PublicationList = () => {
         <Grid container md={12} justifyContent={"space-between"} spacing={2}>
           <Grid item xs={8} sm={8} md={8} container>
             <Grid item xs={6} sm={4} md={3}>
-              <Button
+              <Button className="btn-primary"
                 type="submit"
                 color="primary"
                 fullWidth
@@ -211,7 +211,7 @@ const PublicationList = () => {
               </Button>
             </Grid>
             <Grid item xs={6} sm={4} md={3}>
-              <Button
+              <Button className="btn-primary"
                 type="submit"
                 color="primary"
                 fullWidth
@@ -222,7 +222,7 @@ const PublicationList = () => {
               </Button>
             </Grid>
             <Grid item xs={6} sm={4} md={3}>
-              <Button
+              <Button className="btn-primary"
                 type="submit"
                 color="primary"
                 fullWidth
@@ -233,7 +233,7 @@ const PublicationList = () => {
               </Button>
             </Grid>
             <Grid item xs={6} sm={4} md={3}>
-              <Button
+              <Button className="btn-primary"
                 type="submit"
                 color="primary"
                 fullWidth
