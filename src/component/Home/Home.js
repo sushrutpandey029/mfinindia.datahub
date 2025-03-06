@@ -167,7 +167,18 @@ const Home = () => {
                   Explore documentation to effortlessly navigate Datahub with user-friendly guides.</p>
                   </div>
                 </Link>
-              </div>   
+              </div>  
+
+              <div class="ag-courses_item">
+              <Link to="/data-reports" target="_self" class="ag-courses-item_link">
+                  {/* <div class="ag-courses-item_bg"></div> */}
+                  <h1><i class="bi bi-database-fill"></i></h1>
+                  <div class="ag-courses-item_title"><h3>Data Reporting</h3></div>
+                  <div class="ag-courses-item_date-box">
+                  <p>Report quarterly data</p>
+                  </div>
+                </Link>
+              </div> 
 
               {/* <div class="ag-courses_item">
               <Link to="https://dataweb.akosmdtech.com/Draft_User_Manual_for_Datahub_2023.pdf" target="_blank" class="ag-courses-item_link">

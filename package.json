@@ -53,6 +53,7 @@
     "react-html-table-to-excel": "^2.0.0",
     "react-html-table-to-excel-3": "^3.0.1",
     "react-india-states-map": "^1.0.0",
+    "react-multistep": "^5.5.9",
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.10.0",
     "react-script-tag": "^1.1.2",
@@ -62,7 +63,8 @@
     "source-map-loader": "^4.0.1",
     "styled-components": "^5.3.8",
     "tableau-api": "^2.2.3",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",

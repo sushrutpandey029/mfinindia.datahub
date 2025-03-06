@@ -158,5 +158,12 @@ export const RolePermissionList= [
     linkName:"/publicationlist",
     componentName:<PublicationList />
   },
+  {
+    key: "Data Dashboard",
+    subkey: [],
+    checked: true,
+    linkName:"/datadashboard",
+    componentName:<PublicationList />
+  },
 ]
 //export default RolePermissionList;

@@ -1,76 +1,192 @@
 /* General SVG Styling */
+
 svg {
-    width: 100%;
+  width: 100%;
+    /* height: 800px; */
     height: auto;
-    display: block;
+}
+.indiamap { 
+  display: flex;
+  justify-content: center; 
+  /* align-items: center; 
+  align-content: center; */
+  /* align-self: center; */
+  margin-left: 13rem;
 }
 
 /* State Path Styling */
 .state {
-    fill: #d3d3d3; /* Default state color */
-    stroke: #ffffff; /* State border color */
-    stroke-width: 1px;
-    cursor: pointer;
-    transition: fill 0.3s ease; /* Smooth color transition */
+  fill: #d3d3d3; /* Default state color */
+  stroke: #ffffff; /*State border color*/
+  /* stroke: #9e9e9e; */
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: fill 0.3s ease; 
 }
 
+.city {
+  transform: scale(1.1); /* Increase size */
+  transform-origin: center;
+  stroke: #4f4f4f;
+  /* stroke: #d3d3d3; */
+  stroke-width: 1px;
+  cursor: pointer;
+}
+
+.city-label {
+  font-size: 10px;
+  font-family: Arial, sans-serif;
+  fill: black; 
+  pointer-events: none; 
+  text-anchor: middle; 
+  font-weight: bold;
+  
+  }
+
 .state:hover {
-    fill: #00aaff; /* Highlighted state color on hover */
+  fill: #aed6f1;
+  /* fill: #00aaff;  */
+  /* stroke: #050707 ; */
+  
 }
 
 /* State Labels Styling */
 .state-label {
-    font-size: 12px;
-    font-family: Arial, sans-serif;
-    fill: black; /* Label text color */
-    pointer-events: none; /* Allow mouse events to pass through labels */
-    text-anchor: middle; /* Center align text */
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  fill: black; 
+  pointer-events: none; 
+  text-anchor: middle; 
+  font-weight: bold;
 }
 
 /* Tooltip Styling */
 .tooltip {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
-    color: #ffffff; /* White text */
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-family: Arial, sans-serif;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
-    pointer-events: none; /* Prevent tooltip from blocking interactions */
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.2s ease; /* Smooth fade-in/out */
-    z-index: 1000; /* Ensure tooltip appears above other elements */
+  position: absolute;
+  /* background: rgba(0, 0, 0, 0.8); 
+  color: #ffffff;  */
+  background: #ffffff; 
+  color: #000000; 
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3); 
+  pointer-events: none; 
+  opacity: 0; 
+  transition: opacity 0.2s ease; 
+  z-index: 1000; 
 }
 
-/* Tooltip Positioning */
 .tooltip.visible {
-    opacity: 1; /* Make tooltip visible */
+  opacity: 1; 
 }
 
-/* Example Tooltip Content */
 .map_data {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .map_data strong {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .map_data:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-.boxContainer {
-    display: flex;
-    flex-direction: row;
-    gap: 10px; /* Add spacing between the children */
-    align-items: center; /* Align items vertically */
-  }
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.firstContainer {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  margin: 0 auto;
+}
+
+.custom-select {
+  width: 100px; /* Set a fixed width */
+  padding: 8px;
+  font-size: 16px; /* Ensure same font size */
+  box-sizing: border-box; /* Consistent sizing */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: none; /* Removes browser default styling */
+}
+
+.select-label {
+  font-size: 16px;  
+  font-weight: bold;  
+  color: #333;  
+  
+}
+
+button {
+  border: none;
+}
+
+.colorContainer {
+  display: flex;
+ margin: 0px;
+  grid-gap: 20px;
+  gap: 20px;
+  /* background-color: cyan; */
+  align-items: center;
+  justify-content: center;
+}
+.resetBtn{
+    background: none;
+}
+.inContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.record-value{
+  color: #c20000;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.veryHigh {
+  height: 12px;
+  width: 12px;
+  background-color: #c20000;
+}
+
+.veryLow {
+  height: 12px;
+  width: 12px;
+  background-color: #ffd966;
+}
+
+.high {
+  height: 12px;
+  width: 12px;
+  background-color: #ff5050;
+}
+
+.moderate {
+  height: 12px;
+  width: 12px;
+  background-color: #9cb0e8;
+}
 
 
-  button {
-    align-self: flex-start; /* Align button to the start */
-  }
+.low {
+  height: 12px;
+  width: 12px;
+  background-color: #aed643;
+}
+
+p {
+  height: 7px;
+  margin-right: 3px;
+}

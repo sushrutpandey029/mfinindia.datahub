@@ -1,0 +1,24 @@
+.blue-row td{
+    background-color:#1f4a90;
+    color: white;
+    font-weight: bold;
+}
+
+.blue-row th{
+    background-color:#1f4a90;
+    color: white;
+    font-weight: bold;
+}
+
+.pink-row td{
+    background-color: #fbe5fd;
+    font-weight: bold;
+}
+
+.pink-row-sm td{
+    background-color: #fbe5fd;
+}
+
+td {
+    text-align: left;
+}

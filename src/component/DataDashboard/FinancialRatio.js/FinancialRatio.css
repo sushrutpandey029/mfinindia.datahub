@@ -1,0 +1,17 @@
+.blue-row th{
+    background-color: #1f4a90;
+    color: white;
+}
+
+.pink-row th {
+    text-align: left;
+    background-color:#fbe5fd;
+}
+
+.subheading td{
+    background-color: #fce1c1;
+}
+
+.note th{
+    background-color: #afcfe8;
+}

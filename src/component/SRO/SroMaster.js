@@ -1,5 +1,5 @@
 import { createStyles, makeStyles } from "@material-ui/styles";
-import { Card, Button, CardContent, CardActions, CardActionArea} from "@mui/material";
+import { Card, Button, CardContent, CardActions, CardActionArea } from "@mui/material";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -32,6 +32,7 @@ import EBOverallKYCMemberGraph from "./EBReport/EBOverallKYCMemberGraph";
 import EBCategoryIndustryGp from "./EBReport/EBCategoryIndustryGp"
 import EBCategoryGpMember from "./EBReport/EBCategoryGpMember";
 import EBOverallKYCIndustryGraph from "./EBReport/EBOverallKYCIndustryGraph";
+
 import EBMonthlyEnquirynhitMemberGp from "./EBReport/EBMonthlyEnquirynhitMemberGp";
 import EBMonthlyEnquirynhitIndustryGp from "./EBReport/EBMonthlyEnquirynhitIndustryGp";
 //  EB SRO - import end here
@@ -56,14 +57,17 @@ import RBIIndex from "./RBIReport/RBIIndex";
 import RBIOthersIndex from "./RBIReport/RBIOthersIndex";
 //  RBI SRO - import end here
 
-
+//cgrm -sro start from here
 import NatureofCall from './CGRM/NatureofCall';
 import ProductWiseCall from './CGRM/ProductWiseCall';
 import CategoryWiseQuery from './CGRM/CategoryWiseQuery';
 import CategoryWiseComplaint from './CGRM/CategoryWiseComplaint';
 import CategoryWiseStatus from './CGRM/CategoryWiseStatus';
 import ResulationTAT from './CGRM/ResulationTAT';
-
+import OriginOfCall from "./CGRM/OriginOfCall"
+import ComplaintStatus from "./CGRM/ComplaintStatus"
+import ReportTable from "./CGRM/ReportTable";
+import AverageTAT from "./CGRM/AverageTAT"
 
 
 // ***************  Others  : End ************************
@@ -129,23 +133,39 @@ const SroMaster = () => {
 
   // EB monthly submission
 
-
   // Start CGRM Report Information
+  const [ReportData, setReportData] = useState(null);
+
+
+  //latest
+  const [natureOfCallQuery, setNatureOfCallQuery] = useState(0);
+  const [natureOfCallComplaint, setNatureOfCallComplaint] = useState(0);
+
+  const [productWiseCallData, setProductWiseCallData] = useState({});
+
+  const [originOfCallData, setOriginOfCallData] = useState({});
+
+  const [categoryWiseComplaint, setCategoryWiseComplaint] = useState({});
+  const [categoryWiseQuery, setCategoryWiseQuery] = useState({});
+
+  const [complaintStatusData, setcomplaintStatusData] = useState({});
+
+  const [averageTATData, setAverageTATData] = useState({});
 
   const [NatureofCallSerieslabels, setNatureofCallSerieslabels] = useState([]);
-const [NatureofCallSeries, setNatureofCallSeries] = useState([]);
+  const [NatureofCallSeries, setNatureofCallSeries] = useState([]);
 
-const [ProductWiseCallVolumelabels, setProductWiseCallVolumelabels] = useState([]);
-const [ProductWiseCallVolumeSeries, setProductWiseCallVolumeSeries] = useState([]);
+  const [ProductWiseCallVolumelabels, setProductWiseCallVolumelabels] = useState([]);
+  const [ProductWiseCallVolumeSeries, setProductWiseCallVolumeSeries] = useState([]);
 
-const [CategoryWiseQuerylabels, setCategoryWiseQuerylabels] = useState([]);
-const [CategoryWiseQuerySeries, setCategoryWiseQuerySeries] = useState([]);
+  const [CategoryWiseQuerylabels, setCategoryWiseQuerylabels] = useState([]);
+  const [CategoryWiseQuerySeries, setCategoryWiseQuerySeries] = useState([]);
 
-const [CategoryWiseStatuslabels, setCategoryWiseStatuslabels] = useState([]);
-const [CategoryWiseStatusSeries, setCategoryWiseStatusSeries] = useState([]);
+  const [CategoryWiseStatuslabels, setCategoryWiseStatuslabels] = useState([]);
+  const [CategoryWiseStatusSeries, setCategoryWiseStatusSeries] = useState([]);
 
-const [ResulationTATlabels, setResulationTATlabels] = useState([]);
-const [ResulationTATSeries, setResulationTATSeries] = useState([]);
+  const [ResulationTATlabels, setResulationTATlabels] = useState([]);
+  const [ResulationTATSeries, setResulationTATSeries] = useState([]);
 
 
   /* End CGRM Report Information */
@@ -195,22 +215,170 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
     var queryString = Object.keys(formState)
       .map((key) => key + "=" + formState[key])
       .join("&");
+
+    const Quatar = formState.Quatar;
+    const member = formState.member;
+
     // sro-get-cgrm-category-wise
     await axios
-    .get(
-      `${BaseUrl}/api/auth/sro-get-cgrm-category-wise?${queryString}`,
-      { headers: authHeaders() }
-    )
-    .then((response) => {
-      setNatureofCallSeries(response.data.data.NatureOfCalls);
-      setProductWiseCallVolumeSeries(response.data.data.ProductWiseCall);
-      //setMembers(response.data.MFISelected);
-    })
-    .catch((error) => {
-      console.log("err", error);
-    });
-  //sro-get-QAR-paramters - member Level
+      .get(`${BaseUrl}/api/auth/sro-get-cgrm-category-wise?${queryString}`, {
+        headers: authHeaders(),
+      })
+      .then((response) => {
+        setNatureofCallSeries(response.data.data.NatureOfCalls);
+        setProductWiseCallVolumeSeries(response.data.data.ProductWiseCall);
+        //setMembers(response.data.MFISelected);
+      })
+      .catch((error) => {
+        console.log("err", error);
+      });
+    //sro-get-QAR-paramters - member Level
+
+    //sro-get-cgrm-getReport
+    await axios
+      .get(`${BaseUrl}/api/auth/getReport?month=${Quatar}&member=${member}`, {
+        headers: authHeaders(),
+      })
+      .then((response) => {
+        setReportData(response.data);
+        // console.log("cgrm_report", response.data);
+      })
+      .catch((err) => {
+        console.log("cgrm_report_err", err);
+      });
+
+    //sro get nature-of-calls
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/nature-of-calls?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        console.log("noc", response);
+        setNatureOfCallQuery(response.data.Query);
+        setNatureOfCallComplaint(response.data.Complaint);
+      })
+      .catch((err) => {
+        console.log("cgrm_noc_err", err);
+      });
+
+    //sro get cgrm product-wise-call
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/product-wise-calls?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        console.log("pwc", response);
+        setProductWiseCallData(response.data);
+        console.log("product", productWiseCallData);
+      })
+      .catch((err) => {
+        console.log("cgrm_noc_err", err);
+      });
+
+    //sro get cgrm origin-of-call
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/origin-of-calls?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        setOriginOfCallData(response.data);
+      })
+      .catch((err) => {
+        console.log("cgrm_noc_err", err);
+      });
+
+      //sro get cgrm category-wise-compalint data
+      await axios
+      .get(
+        `${BaseUrl}/api/auth/category-wise/Complaint?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        console.log("complaint",response)
+        setCategoryWiseComplaint(response.data)
+      })
+      .catch((err) => {
+        console.log("cgrm-category-wise-complaint-err", err);
+      });
+
+       //sro get cgrm category-wise-query data
+       await axios
+       .get(
+         `${BaseUrl}/api/auth/category-wise/Query?month=${Quatar}&member=${member}`,
+         {
+           headers: authHeaders(),
+         }
+       )
+       .then((response) => {
+         console.log("query",response)
+         setCategoryWiseQuery(response.data)
+       })
+       .catch((err) => {
+         console.log("cgrm-category-wise-query-err", err);
+       });
+
+       //sro get cgrm complaint-status data
+       await axios
+       .get(
+         `${BaseUrl}/api/auth/complaint-status?month=${Quatar}&member=${member}`,
+         {
+           headers: authHeaders(),
+         }
+       )
+       .then((response) => {
+         setcomplaintStatusData(response.data)
+       })
+       .catch((err) => {
+         console.log("cgrm-complaint-status-data-err", err);
+       });
+
+        //sro get cgrm average-tat data
+        await axios
+        .get(
+          `${BaseUrl}/api/auth/average-tat?month=${Quatar}&member=${member}`,
+          {
+            headers: authHeaders(),
+          }
+        )
+        .then((response) => {
+          setAverageTATData(response.data)
+        })
+        .catch((err) => {
+          console.log("cgrm-average-tat-data-err", err);
+        });
   };
+
+  // const getCGRMData = async () => {
+  //   var queryString = Object.keys(formState)
+  //     .map((key) => key + "=" + formState[key])
+  //     .join("&");
+  //   // sro-get-cgrm-category-wise
+  //   await axios
+  //     .get(
+  //       `${BaseUrl}/api/auth/sro-get-cgrm-category-wise?${queryString}`,
+  //       { headers: authHeaders() }
+  //     )
+  //     .then((response) => {
+  //       setNatureofCallSeries(response.data.data.NatureOfCalls);
+  //       setProductWiseCallVolumeSeries(response.data.data.ProductWiseCall);
+  //       //setMembers(response.data.MFISelected);
+  //     })
+  //     .catch((error) => {
+  //       console.log("err", error);
+  //     });
+  //   //sro-get-QAR-paramters - member Level
+  // };
 
   const getQARData = async () => {
     var queryString = Object.keys(formState)
@@ -218,19 +386,19 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
       .join("&");
     // sro-get-QAR-paramters- indusrty Level
     await axios
-    .get(
-      `${BaseUrl}/api/auth/sro-get-QAR-paramters?${queryString}`,
-      { headers: authHeaders() }
-    )
-    .then((response) => {
-      setQARParametersRecords(parse(response.data.data.QARParametersTable));
-     
-      //setMembers(response.data.MFISelected);
-    })
-    .catch((error) => {
-      console.log("err", error);
-    });
-  //sro-get-QAR-paramters - member Level
+      .get(
+        `${BaseUrl}/api/auth/sro-get-QAR-paramters?${queryString}`,
+        { headers: authHeaders() }
+      )
+      .then((response) => {
+        setQARParametersRecords(parse(response.data.data.QARParametersTable));
+
+        //setMembers(response.data.MFISelected);
+      })
+      .catch((error) => {
+        console.log("err", error);
+      });
+    //sro-get-QAR-paramters - member Level
   };
 
   const getQARBucketMeetingData = async () => {
@@ -239,20 +407,20 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
       .join("&");
     // sro-get-QAR-paramters- indusrty Level
     await axios
-    .get(
-      `${BaseUrl}/api/auth/sro-get-QAR-bucketmeeting?${queryString}`,
-      { headers: authHeaders() }
-    )
-    .then((response) => {
-      setQARBucketMeetinglabels(response.data.data.labels);
-      setQARBucketMeetingSeries(response.data.data.pieSeries);
-      setQARBucketMeetingmonthYear(response.data.data.monthYear);
-      //setMembers(response.data.MFISelected);
-    })
-    .catch((error) => {
-      console.log("err", error);
-    });
-  //sro-get-QAR-paramters - member Level
+      .get(
+        `${BaseUrl}/api/auth/sro-get-QAR-bucketmeeting?${queryString}`,
+        { headers: authHeaders() }
+      )
+      .then((response) => {
+        setQARBucketMeetinglabels(response.data.data.labels);
+        setQARBucketMeetingSeries(response.data.data.pieSeries);
+        setQARBucketMeetingmonthYear(response.data.data.monthYear);
+        //setMembers(response.data.MFISelected);
+      })
+      .catch((error) => {
+        console.log("err", error);
+      });
+    //sro-get-QAR-paramters - member Level
   };
   const getQARStatucAcQarterData = async () => {
     var queryString = Object.keys(formState)
@@ -260,20 +428,20 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
       .join("&");
     // sro-get-QAR-paramters- indusrty Level
     await axios
-    .get(
-      `${BaseUrl}/api/auth/sro-get-QAR-statucacqarter?${queryString}`,
-      { headers: authHeaders() }
-    )
-    .then((response) => {
-      setQARStatusACQarterlabels(response.data.data.labels);
-      console.log("Raj", response.data.data.labels);
-      setQARStatusACQarterSeries(response.data.data.series);
-      //setMembers(response.data.MFISelected);
-    })
-    .catch((error) => {
-      console.log("err", error);
-    });
-  //sro-get-QAR-paramters - member Level
+      .get(
+        `${BaseUrl}/api/auth/sro-get-QAR-statucacqarter?${queryString}`,
+        { headers: authHeaders() }
+      )
+      .then((response) => {
+        setQARStatusACQarterlabels(response.data.data.labels);
+        console.log("Raj", response.data.data.labels);
+        setQARStatusACQarterSeries(response.data.data.series);
+        //setMembers(response.data.MFISelected);
+      })
+      .catch((error) => {
+        console.log("err", error);
+      });
+    //sro-get-QAR-paramters - member Level
   };
 
   const getEmployeeBureauData = async () => {
@@ -389,88 +557,88 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
 
 
   // sro -RBI report start here
-        // get rbi quaterly data
+  // get rbi quaterly data
 
-         
 
-        const getRBIQuarterlyData = async () => {
-          console.log('formstate_member_b',formState.member);
-         console.log('formstate_quatar_b', formState.Quatar);
-         
-         await axios.get(`${BaseUrl}/api/auth/quarterly-data-report-highlights?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
-           {
-             headers: authHeaders(),
-           })
-         .then((response) => {
-           setRBIIndexData(parse(response.data.data))
-           console.log('sro-rbi-data',response);
-         })
-         .catch((error) => {
-           console.log('rbi quaterly error', error);
-           setRBIIndexData(error.response.data.message);
-           // console.log('err-mess',error.response.data.message);
-         })
-   
-         await axios.get(`${BaseUrl}/api/auth/quarterly-yoy-report-highlights?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
-           {headers: authHeaders()})
-         .then((response) => {
-           setRBIYOYData(parse(response.data.data))
-           console.log('sro-rbi-yoy-data',response);
-         })
-         .catch((error) => {
-           console.log('rbi quaterly error', error);
-           setRBIYOYData(error.response.data.message)
-         })
-   
-         //     -----household income and indebtedness data-----
-   
-         await axios.get(`${BaseUrl}/api/auth/calculate-HHIIndebtedness?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
-           {headers: authHeaders()})
-         .then((response) => {
-           setRBIHouseholdData(parse(response.data.data))
-           console.log('sro-rbi-household-data',response);
-         })
-         .catch((error) => {
-           console.log('rbi quaterly error', error);
-           setRBIHouseholdData(error.response.data.message)
-         })
-         
-       }
 
-       const filterRBIReportHandler = async () => {
-        setFormState((prevState) => ({
-          ...prevState,
-          ["isLoader"]: true,
-          ["isDisabled"]: true,
-        }));
+  const getRBIQuarterlyData = async () => {
+    console.log('formstate_member_b', formState.member);
+    console.log('formstate_quatar_b', formState.Quatar);
 
-        await getRBIQuarterlyData();
+    await axios.get(`${BaseUrl}/api/auth/quarterly-data-report-highlights?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+      {
+        headers: authHeaders(),
+      })
+      .then((response) => {
+        setRBIIndexData(parse(response.data.data))
+        console.log('sro-rbi-data', response);
+      })
+      .catch((error) => {
+        console.log('rbi quaterly error', error);
+        setRBIIndexData(error.response.data.message);
+        // console.log('err-mess',error.response.data.message);
+      })
 
-        setFormState((prevState) => ({
-          ...prevState,
-          ["isLoader"]: false,
-          ["isDisabled"] : false,
-        }))
+    await axios.get(`${BaseUrl}/api/auth/quarterly-yoy-report-highlights?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+      { headers: authHeaders() })
+      .then((response) => {
+        setRBIYOYData(parse(response.data.data))
+        console.log('sro-rbi-yoy-data', response);
+      })
+      .catch((error) => {
+        console.log('rbi quaterly error', error);
+        setRBIYOYData(error.response.data.message)
+      })
 
- 
-    }
+    //     -----household income and indebtedness data-----
 
-    // sbi rbi report end here
+    await axios.get(`${BaseUrl}/api/auth/calculate-HHIIndebtedness?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+      { headers: authHeaders() })
+      .then((response) => {
+        setRBIHouseholdData(parse(response.data.data))
+        console.log('sro-rbi-household-data', response);
+      })
+      .catch((error) => {
+        console.log('rbi quaterly error', error);
+        setRBIHouseholdData(error.response.data.message)
+      })
 
-    // RBI-Others start here
-          const getRBIOthersData = async () => {
-            await axios.get(`${BaseUrl}/api/auth/getQuarterlyYOYReport`,
-              {headers: authHeaders()})
-            .then((response) => {
-              setRBIOthersData( parse(response.data.table))
-              console.log('rbi_others_data',response);
-            })
-            .catch((error) => {
-              console.log('rbi_others_error', error);
-              // setRBIOthersData(error.response.data.message)
-            })
-          }
-    //RBI-Others end here
+  }
+
+  const filterRBIReportHandler = async () => {
+    setFormState((prevState) => ({
+      ...prevState,
+      ["isLoader"]: true,
+      ["isDisabled"]: true,
+    }));
+
+    await getRBIQuarterlyData();
+
+    setFormState((prevState) => ({
+      ...prevState,
+      ["isLoader"]: false,
+      ["isDisabled"]: false,
+    }))
+
+
+  }
+
+  // sbi rbi report end here
+
+  // RBI-Others start here
+  const getRBIOthersData = async () => {
+    await axios.get(`${BaseUrl}/api/auth/getQuarterlyYOYReport`,
+      { headers: authHeaders() })
+      .then((response) => {
+        setRBIOthersData(parse(response.data.table))
+        console.log('rbi_others_data', response);
+      })
+      .catch((error) => {
+        console.log('rbi_others_error', error);
+        // setRBIOthersData(error.response.data.message)
+      })
+  }
+  //RBI-Others end here
 
   const handleToDateChange = (date) => {
     setFormState({ ...formState, ["toMonth"]: date });
@@ -524,7 +692,7 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
     }));
   };
 
-  
+
   const filterCGRMHandler = async () => {
     setFormState((prevState) => ({
       ...prevState,
@@ -695,15 +863,15 @@ const [ResulationTATSeries, setResulationTATSeries] = useState([]);
     getQuatarList();
   }, []);
 
-//   useEffect(() => {
-//     getRBIQuarterlyData();
-// },[])
+  //   useEffect(() => {
+  //     getRBIQuarterlyData();
+  // },[])
 
-useEffect(() => {
-  getRBIQuarterlyData();
-  getRBIOthersData();
-  filterRBIReportHandler();
-},[])
+  useEffect(() => {
+    getRBIQuarterlyData();
+    getRBIOthersData();
+    filterRBIReportHandler();
+  }, [])
 
   return (
     <>
@@ -760,7 +928,7 @@ useEffect(() => {
                                 sx={{ m: 2, minWidth: 315 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                Member
+                                  Member
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-standard-label"
@@ -984,7 +1152,7 @@ useEffect(() => {
 
                     <Grid xs={12} sm={12} md={6}>
                       <EBCategoryGpMember
-                      ebcategaryMemberSeries = {ebcategaryMemberSeries}
+                        ebcategaryMemberSeries={ebcategaryMemberSeries}
                       />
                     </Grid>
                     {/* Industry Level Monthly Total Enquiries and hit volume End from here */}
@@ -992,15 +1160,15 @@ useEffect(() => {
 
                     <Grid xs={12} sm={12} md={6}>
                       <EBCategoryIndustryGp
-                      categoryIndustrySeries = {categoryIndustrySeries}
+                        categoryIndustrySeries={categoryIndustrySeries}
                       />
                     </Grid>
                     {/* Industry Level Monthly Total Enquiries and hit volume End from here */}
                   </Grid>
-                  
 
 
-                  
+
+
                 </TabPanel>
 
                 {/* Employee Bureau (EB-SRO)  End from Here */}
@@ -1081,37 +1249,37 @@ useEffect(() => {
 
                     <QARMonthlySbmsnCICTable
                       QARParametersRecords={QARParametersRecords}
-                     // memberName={memberName}
+                    // memberName={memberName}
                     />
 
-                    
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-            <QARBarChart
-            QARStatusACQarterlabels={QARStatusACQarterlabels}
-            QARStatusACQarterSeries={QARStatusACQarterSeries}
-            />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <QARBarChart
+                              QARStatusACQarterlabels={QARStatusACQarterlabels}
+                              QARStatusACQarterSeries={QARStatusACQarterSeries}
+                            />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
 
 
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-            <QARPieChart
-            QARBucketMeetinglabels={QARBucketMeetinglabels}
-            QARBucketMeetingSeries={QARBucketMeetingSeries}
-            QARBucketMeetingmonthYear={QARBucketMeetingmonthYear}
-            />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <QARPieChart
+                              QARBucketMeetinglabels={QARBucketMeetinglabels}
+                              QARBucketMeetingSeries={QARBucketMeetingSeries}
+                              QARBucketMeetingmonthYear={QARBucketMeetingmonthYear}
+                            />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
 
 
                     {/* Date of monthly submission to CICs */}
@@ -1202,71 +1370,185 @@ useEffect(() => {
 
                     {/* Date of monthly submission to CICs */}
 
-                    <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-          <NatureofCall
-            NatureofCallSeries={NatureofCallSeries}
-            />
-           
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+                    {/* Date of monthly submission to CICs */}
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <ReportTable ReportData={ReportData} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
 
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-            <ProductWiseCall
-            ProductWiseCallVolumeSeries={ProductWiseCallVolumeSeries}
-            />
-          
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <NatureofCall
+                              Query={natureOfCallQuery}
+                              Complaint={natureOfCallComplaint}
+                            />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
 
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-            <CategoryWiseQuery />
-         
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <ProductWiseCall data={productWiseCallData} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
 
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-          <CategoryWiseComplaint />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-         <CategoryWiseStatus />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            {/* <CategoryWiseQuery /> */}
+                            <OriginOfCall data={originOfCallData} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
 
-      <Grid xs={6} sm={6} md={6}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-         <ResulationTAT />
-          </CardContent>
-        </CardActionArea>
-      </Card>
-      </Grid>
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <CategoryWiseComplaint data={categoryWiseComplaint} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <CategoryWiseQuery data={categoryWiseQuery} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+
+                            <ComplaintStatus data={complaintStatusData} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    {/* <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <CategoryWiseStatus />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid> */}
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card
+                        style={{ paddingBottom: "20px", marginBottom: "20px" }}
+                      >
+                        <CardActionArea>
+                          <CardContent>
+                            <AverageTAT data={averageTATData} />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    {/* <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <NatureofCall
+                              NatureofCallSeries={NatureofCallSeries}
+                            />
+
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <ProductWiseCall
+                              ProductWiseCallVolumeSeries={ProductWiseCallVolumeSeries}
+                            />
+
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <CategoryWiseQuery />
+
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <CategoryWiseComplaint />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <CategoryWiseStatus />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+
+                    <Grid xs={6} sm={6} md={6}>
+                      <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <ResulationTAT />
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Grid> */}
 
                     {/* Date of monthly submission to CICs */}
                   </Grid>
@@ -1286,7 +1568,7 @@ useEffect(() => {
                                 sx={{ m: 2, minWidth: 315 }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                Choose Short Name
+                                  Choose Short Name
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-standard-label"
@@ -1313,7 +1595,7 @@ useEffect(() => {
                                 sx={{ minWidth: "100%" }}
                               >
                                 <InputLabel id="demo-simple-select-standard-label">
-                                   Choose Month
+                                  Choose Month
                                 </InputLabel>
                                 <Select
                                   labelId="demo-simple-select-standard-label"
@@ -1358,7 +1640,7 @@ useEffect(() => {
 
                     {/* Date of monthly submission to CICs */}
 
-                    <RBIIndex rbiIndexData={rbiIndexData}  rbiYOYData={rbiYOYData} rbiHouseholdData={rbiHouseholdData}/>
+                    <RBIIndex rbiIndexData={rbiIndexData} rbiYOYData={rbiYOYData} rbiHouseholdData={rbiHouseholdData} />
 
                     {/* Date of monthly submission to CICs */}
                   </Grid>
@@ -1367,8 +1649,8 @@ useEffect(() => {
 
 
 
-                  {/* Others-SRO Start from Here */}
-                  <TabPanel value="6">
+                {/* Others-SRO Start from Here */}
+                <TabPanel value="6">
                   <Grid container spacing={2}>
                     {/* Date Filter Component Start from here */}
                     <Grid xs={12} sm={12} md={12}>

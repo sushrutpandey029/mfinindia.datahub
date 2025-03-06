@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardActionArea, Box, Typography } from "@mui/material";
 import ReactApexChart from "react-apexcharts";
 
-class EBCategoryGpMember extends React.Component {
+class EBCategoryIndustryGp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -170,4 +170,4 @@ class EBCategoryGpMember extends React.Component {
   }
 }
 
-export default EBCategoryGpMember;
+export default EBCategoryIndustryGp;

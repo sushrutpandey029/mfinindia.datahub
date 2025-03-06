@@ -78,6 +78,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Micrometer from "../Micrometer/Micrometer";
 
+import DataMaster from "../DataDashboard/DataMaster"
+
 const drawerWidth = 250;
 
 const styles = theme => ({
@@ -550,6 +552,7 @@ class MiniDrawer extends React.Component {
             <Route path="/change-password" element={<ChangePasswordFormUpdate />} />
             <Route path="/change-phone" element={<ChangePhoneForm />} />
             <Route path="/comparison-report" element={<ComparisonModule />} />
+            <Route path="/data-reports" element={<DataMaster/>}/>
 
 
             {/* <Route exact path="/" element={<Home />} />

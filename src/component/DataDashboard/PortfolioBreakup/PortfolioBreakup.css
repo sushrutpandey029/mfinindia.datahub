@@ -1,0 +1,16 @@
+.blue-row td {
+  background-color: #1f4a90;
+  color: white;
+}
+
+td {
+  text-align: left;
+  background-color: #fbe5fd;
+}
+.TDCOLUMN {
+  text-align: center;
+  color: black;
+  border: 1 solid black;
+  padding: 10px;
+  background-color: #fff;
+}
