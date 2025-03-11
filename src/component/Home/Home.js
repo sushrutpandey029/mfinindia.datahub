@@ -175,7 +175,7 @@ const Home = () => {
                   <h1><i class="bi bi-database-fill"></i></h1>
                   <div class="ag-courses-item_title"><h3>Data Reporting</h3></div>
                   <div class="ag-courses-item_date-box">
-                  <p>Report quarterly data</p>
+                  <p>Report quarterly data.</p>
                   </div>
                 </Link>
               </div> 

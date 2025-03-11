@@ -1,17 +1,23 @@
 import React from "react";
-import { Card, CardContent, CardActionArea, Box, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardActionArea,
+  Box,
+  Typography,
+} from "@mui/material";
 import ReactApexChart from "react-apexcharts";
 
 class EBCategoryIndustryGp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showBarChart: false, // State to manage visibility of the bar chart
+      showBarChart: true, // Show bar chart by default
     };
   }
 
   toggleBarChartVisibility = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       showBarChart: !prevState.showBarChart,
     }));
   };
@@ -19,8 +25,11 @@ class EBCategoryIndustryGp extends React.Component {
   render() {
     const { categoryIndustrySeries } = this.props;
 
-    // Ensure categoryIndustrySeries is defined and has the expected structure
-    if (!categoryIndustrySeries || !categoryIndustrySeries.length || !categoryIndustrySeries[0].data) {
+    if (
+      !categoryIndustrySeries ||
+      !categoryIndustrySeries.length ||
+      !categoryIndustrySeries[0].data
+    ) {
       return (
         <div style={{ paddingBottom: "20px" }}>
           <p>Loading...</p>
@@ -28,22 +37,21 @@ class EBCategoryIndustryGp extends React.Component {
       );
     }
 
-    // Prepare data for pie chart
+    const data = categoryIndustrySeries[0].data;
+
+    // Pie chart data
     const pieChartKeys = ["active", "non_standard", "others"];
     const pieChartData = {
-      series: pieChartKeys.map(key => parseFloat(categoryIndustrySeries[0].data[key])),
-      labels: pieChartKeys
+      series: pieChartKeys.map((key) => parseFloat(data[key]) || 0),
+      labels: ["Active", "Non-Standard", "Others"],
     };
 
-    // ApexCharts options for the pie chart
     const pieChartOptions = {
       chart: {
-        width: 380,
-        type: 'pie',
+        type: "pie",
+        height: 300,
         events: {
-          // Event handler for clicking on a pie chart segment
           dataPointSelection: (event, chartContext, config) => {
-            // If the clicked segment is the "Others" section, toggle the visibility of the bar chart
             if (config.dataPointIndex === pieChartKeys.indexOf("others")) {
               this.toggleBarChartVisibility();
             }
@@ -52,87 +60,51 @@ class EBCategoryIndustryGp extends React.Component {
       },
       labels: pieChartData.labels,
       title: {
-        text: "Employees category - Member",
-        align: "left",
-        style: {
-          fontSize: '16px',
-          fontWeight: 'bold',
-          fontFamily: 'sans-serif',
-          color: '#263238'
-        }
+        text: "Category - Industry",
+        align: "center",
+        style: { fontSize: "16px", fontWeight: "bold", color: "#263238" },
       },
       legend: {
         position: "bottom",
         horizontalAlign: "center",
-        fontFamily: 'sans-serif',
-        fontSize: '15px',
-        fontWeight: 500,
+        fontSize: "14px",
       },
     };
 
-    // Prepare data for line chart
-    const lineChartKeys = ["abscondingM", "deceasedM", "exitedM", "resignedM", "retiredM", "terminatedM"];
-    const lineChartData = {
-      series: [
-        {
-          name: 'Percentage',
-          data: lineChartKeys.map(key => parseFloat(categoryIndustrySeries[0].data[key]))
-        }
-      ],
-      categories: lineChartKeys
-    };
+    // Stacked Bar Chart Data (Breakdown of "Others")
+    const barChartSeries = [
+      { name: "Absconding", data: [parseFloat(data["absconding"]) || 0] },
+      { name: "Deceased", data: [parseFloat(data["deceased"]) || 0] },
+      { name: "Exited", data: [parseFloat(data["exited"]) || 0] },
+      { name: "Resigned", data: [parseFloat(data["resigned"]) || 0] },
+      { name: "Retired", data: [parseFloat(data["retired"]) || 0] },
+      { name: "Terminated", data: [parseFloat(data["terminated"]) || 0] },
+    ];
 
-    // ApexCharts options for the line chart
-    const lineChartOptions = {
+    const barChartOptions = {
       chart: {
-        type: 'bar',
-        height: 100,
-        toolbar: {
-          show: false,
-        },
+        type: "bar",
+        height: 300,
         stacked: true,
-        stackType: '100%',
-      },
-      title: {
-        text: 'Reasons for Employee Attrition',
-        align: 'left',
-        style: {
-          fontSize: '20px',
-          fontWeight: 'bold',
-          fontFamily: 'sans-serif',
-          color: '#263238'
-        }
       },
       plotOptions: {
         bar: {
-          horizontal: true,
-          barHeight: '100%',
-          distributed: true,
-          dataLabels: {
-            position: 'top',
-          },
+          horizontal: false,
+          columnWidth: "60%", // Adjust column width
         },
       },
-      dataLabels: {
-        enabled: true,
-        textAnchor: 'start',
-        style: {
-          colors: ['#fff'],
-        },
-        formatter: function (val, opt) {
-          return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val + "%";
-        },
-        offsetX: 0,
-        dropShadow: {
-          enabled: true,
-        },
-      },
+      // title: {
+      //   text: "Breakdown of Others",
+      //   align: "center",
+      //   style: { fontSize: "16px", fontWeight: "bold", color: "#263238" },
+      // },
       xaxis: {
-        categories: lineChartData.categories,
-        show: false,
+        categories: [""], // Single vertical bar
       },
-      yaxis: {
-        show: false,
+      legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        fontSize: "14px",
       },
     };
 
@@ -140,28 +112,31 @@ class EBCategoryIndustryGp extends React.Component {
       <Card style={{ paddingBottom: "20px" }}>
         <CardActionArea>
           <CardContent>
-            <Box display="flex" alignItems="center">
-              {/* Render pie chart */}
-              <ReactApexChart
-                options={pieChartOptions}
-                series={pieChartData.series}
-                type="pie"
-                height={300}
-              />
-
-              {/* Render line chart for "Other" section */}
+            <Box display="flex" justifyContent="center" alignItems="center">
+              {/* Stacked Bar Chart (Initially Visible) */}
               {this.state.showBarChart && (
-                <Box ml={4} width={400}>
-                  <Typography variant="h6" style={{ marginBottom: "10px" }}>Reasons for Employee Attrition</Typography>
+                <Box width="50%">
+                  <Typography variant="h6" align="center" gutterBottom>
+                    Breakdown of "Others"
+                  </Typography>
                   <ReactApexChart
-                    options={lineChartOptions}
-                    series={lineChartData.series}
+                    options={barChartOptions}
+                    series={barChartSeries}
                     type="bar"
-                    height={100}
+                    height={300}
                   />
                 </Box>
               )}
 
+              {/* Pie Chart */}
+              <Box width="50%">
+                <ReactApexChart
+                  options={pieChartOptions}
+                  series={pieChartData.series}
+                  type="pie"
+                  height={300}
+                />
+              </Box>
             </Box>
           </CardContent>
         </CardActionArea>

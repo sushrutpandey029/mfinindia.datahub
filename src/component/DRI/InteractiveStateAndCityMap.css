@@ -8,9 +8,7 @@ svg {
 .indiamap { 
   display: flex;
   justify-content: center; 
-  /* align-items: center; 
-  align-content: center; */
-  /* align-self: center; */
+
   margin-left: 13rem;
 }
 
@@ -147,6 +145,10 @@ button {
   display: flex;
   flex-direction: row;
   align-items: center;
+  p {
+    height: 7px;
+    margin-right: 3px;
+  }
 }
 
 .record-value{
@@ -186,7 +188,7 @@ button {
   background-color: #aed643;
 }
 
-p {
+/* p {
   height: 7px;
   margin-right: 3px;
-}
+} */

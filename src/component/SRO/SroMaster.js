@@ -448,6 +448,7 @@ const SroMaster = () => {
     var queryString = Object.keys(formState)
       .map((key) => key + "=" + formState[key])
       .join("&");
+      console.log(("query",queryString));
     // member levels monthly submission
     await axios
       .get(

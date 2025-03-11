@@ -588,7 +588,7 @@ const InteractiveStateAndCityMap = () => {
         handleReset={handleReset}
       />
       <div className="indiamap">
-        <svg id="map" width="1200" height="1200"></svg>
+        <svg id="map" width="1200" height="900"></svg>
       </div>
 
       <FooterContent />

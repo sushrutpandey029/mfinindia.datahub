@@ -283,6 +283,23 @@ const MicrofinanceUniverse = () => {
                   {/* Overview Start from Here */}
 
                   <Grid container spacing={2}>
+                    {/* <Grid xs={12} sm={12} md={6}>
+                      <Card style={{ padding: "8px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <Typography>
+                              <GLPGrowthTrendsH glp={glp} changes={changes} xaxis={xaxis} />
+                            </Typography>
+                            <Typography variant="body1" className={classes.download_text}>
+                              <Link className="App-link" to="/micro-finance-universe/glp-trends-growth">Click here to see details.</Link>
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions>
+                        </CardActions>
+
+                      </Card>
+                    </Grid> */}
                     <Grid xs={12} sm={12} md={6}>
                       <Card style={{ padding: "8px" }}>
                         <CardActionArea>
