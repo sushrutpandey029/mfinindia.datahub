@@ -578,21 +578,55 @@ const InteractiveStateAndCityMap = () => {
   }
 
   return (
-    <div class="svg-container">
-      <FilterDiv
-        selectedMonth={selectedMonth}
-        selectedYear={selectedYear}
-        setSelectedMonth={setSelectedMonth}
-        setSelectedYear={setSelectedYear}
-        handleFilter={handleFilter}
-        handleReset={handleReset}
-      />
-      <div className="indiamap">
-        <svg id="map" width="1200" height="900"></svg>
-      </div>
+    <div className="container d-flex justify-content-center align-items-center">
+      <div className="row w-100">
+        <div className="col-sm-12">
+          <FilterDiv
+            selectedMonth={selectedMonth}
+            selectedYear={selectedYear}
+            setSelectedMonth={setSelectedMonth}
+            setSelectedYear={setSelectedYear}
+            handleFilter={handleFilter}
+            handleReset={handleReset}
+          />
+        </div>
 
-      <FooterContent />
+        {/* Centering the SVG */}
+        <div
+          className="col-sm-12 d-flex justify-content-center align-items-center"
+          style={{ marginLeft: "12%" }}
+        >
+          <svg
+            id="map"
+            style={{
+              maxWidth: "80%",
+              maxHeight: "100%",
+              display: "block",
+              height: "900px",       
+              width: "1200px",       
+              alignItems: "center",
+            }}
+          ></svg>
+        </div>
+
+        <FooterContent />
+      </div>
     </div>
+    // <div class="svg-container">
+    //   <FilterDiv
+    //     selectedMonth={selectedMonth}
+    //     selectedYear={selectedYear}
+    //     setSelectedMonth={setSelectedMonth}
+    //     setSelectedYear={setSelectedYear}
+    //     handleFilter={handleFilter}
+    //     handleReset={handleReset}
+    //   />
+    //   <div className="indiamap">
+    //     <svg id="map" width="1200" height="900"></svg>
+    //   </div>
+
+    //   <FooterContent />
+    // </div>
   );
 };
 
@@ -629,7 +663,7 @@ const FooterContent = () => {
   );
 };
 
-// import React, { useEffect, useState } from "react";
+
 // import * as d3 from "d3";
 // import "./InteractiveStateAndCityMap.css";
 // import Loader from "../common/Loader";

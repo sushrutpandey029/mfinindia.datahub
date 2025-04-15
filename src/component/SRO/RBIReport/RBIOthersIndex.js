@@ -25,6 +25,7 @@ import { VerticalAlignCenter } from "@material-ui/icons";
 
 function RBIOthersIndex(props) {
    const [open, setOpen] = useState(false);
+   console.log("pqindex",props.rbiOthersPQ);
   const downloadPdfMudraBankWise = () => {
     const pdf = new jsPDF();
     pdf.autoTable({
@@ -127,7 +128,7 @@ function RBIOthersIndex(props) {
       <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
         <CardActionArea>
           <CardContent>
-           <CostBorrowingInterestRatesRBI />
+           <CostBorrowingInterestRatesRBI apiData={props.rbiOthersCOB} />
           </CardContent>
         </CardActionArea>
       </Card>
@@ -137,7 +138,7 @@ function RBIOthersIndex(props) {
       <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
         <CardActionArea>
           <CardContent>
-          <PortfolioQualityRBILine />
+          <PortfolioQualityRBILine data={props.rbiOthersPQ}/>
           </CardContent>
         </CardActionArea>
       </Card>

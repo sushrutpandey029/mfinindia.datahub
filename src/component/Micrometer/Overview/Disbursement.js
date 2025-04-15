@@ -103,14 +103,18 @@ class Disbursement extends React.Component {
             //type: 'datetime'
             labels: {
               show: true,
-              rotate: -90,
+              // rotate: -90,
+              rotate : 0,
               hideOverlappingLabels: true,
               minHeight: 120,
               maxHeight: 120,
+              minHeight: 30,
+              maxHeight: 50,
               style: {
-                fontSize: '15px',
+                fontSize: '10px',
                 fontFamily: 'sans-serif',
                 fontWeight: 500,
+                fontWeight:"bold"
               },
             },
           },

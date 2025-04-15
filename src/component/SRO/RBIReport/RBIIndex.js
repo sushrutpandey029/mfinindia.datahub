@@ -22,8 +22,16 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PortfolioQualityRBILine from './PortfolioQualityRBILine';
 import CostBorrowingInterestRatesRBI from './CostBorrowingInterestRatesRBI';
 import { VerticalAlignCenter } from "@material-ui/icons";
+
+
 function RBIIndex(props) {
   const [open, setOpen] = useState(false);
+
+
+  var rbiHouseholdData = props.rbiHouseholdData;
+  console.log("rbiHouseholdData", rbiHouseholdData);
+  if (!rbiHouseholdData || !rbiHouseholdData.Indebtedness) return <p>No data available</p>;
+
   const downloadPdfMudraBankWise = () => {
     const pdf = new jsPDF();
     pdf.autoTable({
@@ -32,19 +40,25 @@ function RBIIndex(props) {
     pdf.save("mudra-bank-wise")
   }
 
+
+
+
+
+
+
   return (
     <>
-     <Grid xs={12} sm={12} md={12}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant="h5"
-              style={{ textAlign: "left", fontSize: "18px", color: "#bd2f03" }}
-              component="div"
-            >
-              Quarterly Data reporting for RBI <span style={{ float: "right", marginRight: "10px" }}>
+      <Grid xs={12} sm={12} md={12}>
+        <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+          <CardActionArea>
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                style={{ textAlign: "left", fontSize: "18px", color: "#bd2f03" }}
+                component="div"
+              >
+                Quarterly Data reporting for RBI <span style={{ float: "right", marginRight: "10px" }}>
                   <Dropdown
                     keepOpen
                     open={open}
@@ -71,11 +85,11 @@ function RBIIndex(props) {
                       </DropdownMenuItem>,
                     ]}
                   />
-                  </span>
-            </Typography>
-            <Table striped bordered hover style={{marginTop:"30px",textAlign:"left"}}>
-            {(props.rbiIndexData)}
-              {/* <thead>
+                </span>
+              </Typography>
+              <Table striped bordered hover style={{ marginTop: "30px", textAlign: "left" }}>
+                {(props.rbiIndexData)}
+                {/* <thead>
                 <tr>
                   <th>Sr.</th>
                   <th>Parameters</th>
@@ -250,10 +264,10 @@ function RBIIndex(props) {
                   <td>00.0</td>
                 </tr>
               </tbody> */}
-            </Table>
-            <Table striped bordered hover style={{marginTop:"30px",textAlign:"left"}}>
-            {(props.rbiYOYData)}
-              {/* <thead>
+              </Table>
+              <Table striped bordered hover style={{ marginTop: "30px", textAlign: "left" }}>
+                {(props.rbiYOYData)}
+                {/* <thead>
                 <tr>
                   <th>Sr.</th>
                   <th>Parameters ((YOY change))</th>
@@ -285,87 +299,147 @@ function RBIIndex(props) {
                   <td>00.0</td>
                 </tr>
               </tbody> */}
-            </Table>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+              </Table>
+            </CardContent>
+          </CardActionArea>
+        </Card>
       </Grid>
 
-      <Grid xs={12} sm={12} md={12}>          
-      <Card style={{ paddingBottom: "20px",marginBottom:"20px" }}>
-        <CardActionArea>
-          <CardContent>
-          <Typography
-              gutterBottom
-              variant="h5"
-              style={{ textAlign: "left", fontSize: "18px", color: "#bd2f03" }}
-              component="div"
-            >
-              Household Income and Indebtedness data </Typography>
+      <Grid xs={12} sm={12} md={12}>
+        <Card style={{ paddingBottom: "20px", marginBottom: "20px" }}>
+          <CardActionArea>
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                style={{ textAlign: "left", fontSize: "18px", color: "#bd2f03" }}
+                component="div"
+              >
+                Household Income and Indebtedness data </Typography>
 
-              <Table striped bordered hover style={{marginTop:"30px",textAlign:"left"}}>
-              {(props.rbiHouseholdData)}
-              {/* <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th>HH Income</th>
-                  <th>{"< Rs. 50,000"}</th>
-                  <th>{">=  Rs. 50,000 to < Rs. 1 lakh"} </th>
-                  <th>{">= Rs. 1 lakh to < Rs. 1.5 lakh"}</th>
-                  <th>{">= Rs. 1.5 lakh to < Rs. 2 lakh"}</th>
-                  <th>{">= Rs. 2 lakh to < Rs. 2.5 lakh"}</th>
-                  <th>{">= Rs. 2.5 lakh to <= Rs. 3 lakh"}</th>
-                </tr>
+              {/* <Table striped bordered hover style={{ marginTop: "30px", textAlign: "left" }}>
                 
-              </thead> */}
-              {/* <tbody>
-                <tr>
-                  <td rowSpan={4}>MFI</td>
-                  <td rowSpan={4}>Indebtedness</td>
-                  <td>{"< 20%"}</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                </tr>
-                <tr>
-                  <td>{">= 20% to < 30%"}</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                </tr>
-                <tr>
-                  <td>{">= 30% to < 40%"}</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                </tr>
-                <tr>
-                  <td>{">= 40% to <= 50%"}</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                  <td>00.0</td>
-                </tr>
-                
-              </tbody> */}
-            </Table>
+                <thead>
+                  <tr>
+                    
+                    <th>Indebtedness</th>
+                    <th>HH Income</th>
+                    <th>{"< Rs. 50,000"}</th>
+                    <th>{">=  Rs. 50,000 to < Rs. 1 lakh"} </th>
+                    <th>{">= Rs. 1 lakh to < Rs. 1.5 lakh"}</th>
+                    <th>{">= Rs. 1.5 lakh to < Rs. 2 lakh"}</th>
+                    <th>{">= Rs. 2 lakh to < Rs. 2.5 lakh"}</th>
+                    <th>{">= Rs. 2.5 lakh to <= Rs. 3 lakh"}</th>
+                  </tr>
+
+                </thead>
+                <tbody>
+                  <tr>
+                   
+                    <td>{"< 20%"}</td>
+                    <td>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_LRs50000"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs50000to1Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs1p5LaktoLRs2lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs2laktoLRs2p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs2p5LaktoLRs3Lak"]}</td>
+                  </tr>
+                  <tr>
+                    <td>{">= 20% to < 30%"}</td>
+                    <td>0%</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_LRs50000"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs1p5LaktoLRs2Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs2LaktoLR2p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs2p5LaktoLRs3Lak"]}</td>
+                    
+                  </tr>
+                  <tr>
+                    <td>{">= 30% to < 40%"}</td>
+                    <td>0%</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_LRs50000"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs1p5LaktoLRs2Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs2LaktoLRs2p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs2p5LaktoLRs3Lak"]}</td>
+                  </tr>
+                  <tr>
+                    <td>{">= 40% to <= 50%"}</td>
+                    <td>0%</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_LR50000"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs1p5LaktoLRs2Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs2LaktoLRs2p5Lak"]}</td>
+                    <td>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs2p5LaktoLRs3Lak"]}</td>
+                  </tr>
+
+                </tbody>
+              </Table> */}
+
+              <Table striped bordered hover style={{ marginTop: "30px", textAlign: "left" }}>
+
+                <thead>
+                  <tr>
+                    <th rowSpan={2} style={{ textAlign: "center", verticalAlign: "middle" }}>Indebtedness</th>
+                    <th colSpan={6} style={{textAlign:"center"}}>HH Income</th>
+
+                  </tr>
+                  <tr>
+                    <th>{"< Rs. 50,000"}</th>
+                    <th>{">=  Rs. 50,000 to < Rs. 1 lakh"} </th>
+                    <th>{">= Rs. 1 lakh to < Rs. 1.5 lakh"}</th>
+                    <th>{">= Rs. 1.5 lakh to < Rs. 2 lakh"}</th>
+                    <th>{">= Rs. 2 lakh to < Rs. 2.5 lakh"}</th>
+                    <th>{">= Rs. 2.5 lakh to <= Rs. 3 lakh"}</th>
+                  </tr>
+
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{"< 20%"}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_LRs50000"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs50000to1Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs1p5LaktoLRs2lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs2laktoLRs2p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness["< 20%"]["L20P_GRs2p5LaktoLRs3Lak"]}</td>
+                  </tr>
+                  <tr>
+                    <td>{">= 20% to < 30%"}</td>
+                    <td style={{ textAlign: "right" }}>0%</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_LRs50000"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs1p5LaktoLRs2Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs2LaktoLR2p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 20% to < 30%"]["G20ptoL30p_GRs2p5LaktoLRs3Lak"]}</td>
+
+                  </tr>
+                  <tr>
+                    <td>{">= 30% to < 40%"}</td>
+                    <td style={{ textAlign: "right" }}>0%</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_LRs50000"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs1p5LaktoLRs2Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs2LaktoLRs2p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 30% to < 40%"]["G30ptoL40p_GRs2p5LaktoLRs3Lak"]}</td>
+                  </tr>
+                  <tr>
+                    <td>{">= 40% to <= 50%"}</td>
+                    <td style={{ textAlign: "right" }}>0%</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_LR50000"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs1LaktoLRs1p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs1p5LaktoLRs2Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs2LaktoLRs2p5Lak"]}</td>
+                    <td style={{ textAlign: "right" }}>{rbiHouseholdData.Indebtedness[">= 40% to <= 50%"]["G40ptoL50p_GRs2p5LaktoLRs3Lak"]}</td>
+                  </tr>
+
+                </tbody>
+              </Table>
 
 
-          </CardContent>
-        </CardActionArea>
-      </Card>
+            </CardContent>
+          </CardActionArea>
+        </Card>
       </Grid>
     </>
   );

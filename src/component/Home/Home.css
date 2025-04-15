@@ -70,7 +70,7 @@
 .ag-courses-item_link {
   display: block;
   padding: 30px 20px;
-  height: 270px;
+  height: 296px !important;
   overflow: hidden;
   text-decoration: none;
   position: relative;
@@ -80,10 +80,7 @@
   box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
   top: -7px;
   background-color: white;}
-
-
-
-
+  
 .ag-courses_item:nth-child(1) .ag-courses-item_link{
   background:linear-gradient(96deg, #e7e5f8 5.02%, #FDF1FF 95.41%);
 }

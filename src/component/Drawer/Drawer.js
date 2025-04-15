@@ -38,7 +38,6 @@ import ParAnalysis from "../MicrofinanceUniverse/Details/ParAnalysis";
 import ParBucketAnalysis from "../MicrofinanceUniverse/Details/ParBucketAnalysis";
 // 18 May 2023
 import LocationCityIcon from '@mui/icons-material/LocationCity';
-
 import CustomHistoricalGLP from "../customReport/CustomHistoricalGLP";
 import CustomPARAnalysis from "../customReport/CustomPARAnalysis";
 import CustomDPDBucket from "../customReport/CustomDPDBucket";
@@ -67,9 +66,11 @@ import MicromatterResource from "../ContactDetail/MicromatterResource";
 import OtherpublicationsResource from "../ContactDetail/OtherpublicationsResource";
 
 import ChangePasswordFormUpdate from "../DRI/ChangePasswordFormUpdate"
+
 // 18 May 2023
 import PlaceIcon from '@mui/icons-material/Place';
 import Logout from "./Logout";
+
 import { RolePermissionList } from './PermissionAccess'
 import ComprisionReport from "../Micrometer/Comprision/ComprisionReport";
 import AddHomeIcon from '@mui/icons-material/AddHome';
@@ -77,8 +78,34 @@ import AddHomeIcon from '@mui/icons-material/AddHome';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Micrometer from "../Micrometer/Micrometer";
-
 import DataMaster from "../DataDashboard/DataMaster"
+
+// /importing sidebar for sit
+//importing  for sit
+import Dashboard from "../SITWeb/Home/Dashboard";
+import AddMeeting from "../SITWeb/addMeeting/AddMeeting";
+import Gallery from "../SITWeb/addMeeting/Gallery";
+// import MeetingListing from "../SITWeb/addMeeting/Gallery";
+import MeetingListing from "../SITWeb/addMeeting/Meetinglisting";
+import MeetingUpdate from "../SITWeb/addMeeting/MeetingUpdate";
+import SCM from "../SITWeb/SCM/SCM";
+import DFM from "../SITWeb/DFM/DFM";
+import CriticalEvent from "../SITWeb/Critical Events/CriticalEvent";
+import SCC from "../SITWeb/SCC/SCC";
+import MFAP from "../SITWeb/MFAP/MFAP";
+import FormEntry from "../SITWeb/FormEntry";
+import SCMList from "../SITWeb/SCM/SCMList";
+import DFMList from "../SITWeb/DFM/DFMList";
+import SCCList from "../SITWeb/SCC/SCCList";
+import MFAPList from "../SITWeb/MFAP/MFAPList";
+import SKM from "../SITWeb/SKM/SKM";
+import SKMList from "../SITWeb/SKM/SKMList";
+import EditMeeting from "../SITWeb/EditMeeting";
+import ViewUpdate from "../SITWeb/ViewUpdate";
+import ViewContent from "../SITWeb/ViewContent";
+import UpdateMeeting from "../SITWeb/UpdateMeeting";
+import Calendar from "../SITWeb/Calendar/Calendar"
+ 
 
 const drawerWidth = 250;
 
@@ -553,6 +580,32 @@ class MiniDrawer extends React.Component {
             <Route path="/change-phone" element={<ChangePhoneForm />} />
             <Route path="/comparison-report" element={<ComparisonModule />} />
             <Route path="/data-reports" element={<DataMaster/>}/>
+
+            {/* route for sit */}
+            <Route path="/sitdashboard/*" element={<Dashboard />} />
+            <Route path="/add-meeting" element={<AddMeeting />} />
+            <Route path="/meeting-update/:id" element={<MeetingUpdate />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/meetinglisting" element={<MeetingListing />} />
+
+            <Route path="/scm" element={<SCM />} />
+            <Route path="/skm" element={<SKM />} />
+            <Route path="/dfm" element={<DFM />} />
+            <Route path="/critical-event" element={<CriticalEvent />} />
+            <Route path="/scc" element={<SCC />} />
+            <Route path="/mfap" element={<MFAP />} />
+            <Route path="/form-entry" element={<FormEntry />} />
+            <Route path="/scm-lists" element={<SCMList />} />
+            <Route path="/skm-lists" element={<SKMList />} />
+            <Route path="/dfm-lists" element={<DFMList />} />
+            <Route path="/scc-lists" element={<SCCList />} />
+            <Route path="/mfap-lists" element={<MFAPList />} />
+            <Route path="/edit-meeting/:id" element={<EditMeeting />} />
+            <Route path="/meeting-tracking/:id" element={<ViewUpdate />} />
+            <Route path="/view-content" element={<ViewContent/>} />
+            <Route path="/update-meeting/:id" element={<UpdateMeeting/>}/>
+            <Route path ="/calendar" element={<Calendar/>}/>
+
 
 
             {/* <Route exact path="/" element={<Home />} />

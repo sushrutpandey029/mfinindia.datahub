@@ -123,6 +123,14 @@ const Home = () => {
       icon: <i className="bi bi-upload"></i>,
       checked: true
     },
+    {
+      title: "SI Tracker",
+      description:
+        "An internal activity tracker for the State Initiative vertical.",
+      link: "/sitdashboard",
+      icon: <i className="bi bi-bar-chart-fill"></i>,
+      checked: true,
+    },
     
   ];
 

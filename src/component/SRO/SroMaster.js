@@ -175,12 +175,14 @@ const SroMaster = () => {
 
   const [rbiIndexData, setRBIIndexData] = useState([]);
   const [rbiYOYData, setRBIYOYData] = useState([]);
-  const [rbiHouseholdData, setRBIHouseholdData] = useState([]);
+  const [rbiHouseholdData, setRBIHouseholdData] = useState(null);
 
   // end RBI report information
 
   //RBI-Others information start here
   const [rbiOthersData, setRBIOthersData] = useState([]);
+  const [rbiOthersCOB, setRbiOthersCOB] = useState([]);
+  const [rbiOthersPQ, setRbiOthersPQ] = useState([]);
 
 
   //RBI-Others information end here
@@ -296,8 +298,8 @@ const SroMaster = () => {
         console.log("cgrm_noc_err", err);
       });
 
-      //sro get cgrm category-wise-compalint data
-      await axios
+    //sro get cgrm category-wise-compalint data
+    await axios
       .get(
         `${BaseUrl}/api/auth/category-wise/Complaint?month=${Quatar}&member=${member}`,
         {
@@ -305,58 +307,58 @@ const SroMaster = () => {
         }
       )
       .then((response) => {
-        console.log("complaint",response)
+        console.log("complaint", response)
         setCategoryWiseComplaint(response.data)
       })
       .catch((err) => {
         console.log("cgrm-category-wise-complaint-err", err);
       });
 
-       //sro get cgrm category-wise-query data
-       await axios
-       .get(
-         `${BaseUrl}/api/auth/category-wise/Query?month=${Quatar}&member=${member}`,
-         {
-           headers: authHeaders(),
-         }
-       )
-       .then((response) => {
-         console.log("query",response)
-         setCategoryWiseQuery(response.data)
-       })
-       .catch((err) => {
-         console.log("cgrm-category-wise-query-err", err);
-       });
+    //sro get cgrm category-wise-query data
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/category-wise/Query?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        console.log("query", response)
+        setCategoryWiseQuery(response.data)
+      })
+      .catch((err) => {
+        console.log("cgrm-category-wise-query-err", err);
+      });
 
-       //sro get cgrm complaint-status data
-       await axios
-       .get(
-         `${BaseUrl}/api/auth/complaint-status?month=${Quatar}&member=${member}`,
-         {
-           headers: authHeaders(),
-         }
-       )
-       .then((response) => {
-         setcomplaintStatusData(response.data)
-       })
-       .catch((err) => {
-         console.log("cgrm-complaint-status-data-err", err);
-       });
+    //sro get cgrm complaint-status data
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/complaint-status?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        setcomplaintStatusData(response.data)
+      })
+      .catch((err) => {
+        console.log("cgrm-complaint-status-data-err", err);
+      });
 
-        //sro get cgrm average-tat data
-        await axios
-        .get(
-          `${BaseUrl}/api/auth/average-tat?month=${Quatar}&member=${member}`,
-          {
-            headers: authHeaders(),
-          }
-        )
-        .then((response) => {
-          setAverageTATData(response.data)
-        })
-        .catch((err) => {
-          console.log("cgrm-average-tat-data-err", err);
-        });
+    //sro get cgrm average-tat data
+    await axios
+      .get(
+        `${BaseUrl}/api/auth/average-tat?month=${Quatar}&member=${member}`,
+        {
+          headers: authHeaders(),
+        }
+      )
+      .then((response) => {
+        setAverageTATData(response.data)
+      })
+      .catch((err) => {
+        console.log("cgrm-average-tat-data-err", err);
+      });
   };
 
   // const getCGRMData = async () => {
@@ -448,7 +450,7 @@ const SroMaster = () => {
     var queryString = Object.keys(formState)
       .map((key) => key + "=" + formState[key])
       .join("&");
-      console.log(("query",queryString));
+    console.log(("query", queryString));
     // member levels monthly submission
     await axios
       .get(
@@ -591,17 +593,18 @@ const SroMaster = () => {
         setRBIYOYData(error.response.data.message)
       })
 
-    //     -----household income and indebtedness data-----
+    //     -----household income and indebtedness data-----indebtedness-summary
 
-    await axios.get(`${BaseUrl}/api/auth/calculate-HHIIndebtedness?Short_Name=${formState.member}&Month_As_on=${formState.Quatar}`,
+    //api changed  calculate-HHIIndebtedness to indebtedness-summary
+    await axios.get(`${BaseUrl}/api/auth/indebtedness-summary?short_name=${formState.member}&Month_As_on=${formState.Quatar}`,
       { headers: authHeaders() })
       .then((response) => {
-        setRBIHouseholdData(parse(response.data.data))
-        console.log('sro-rbi-household-data', response);
+        setRBIHouseholdData(response.data)
+        console.log('sro-rbi-household-data', response.data);
       })
       .catch((error) => {
         console.log('rbi quaterly error', error);
-        setRBIHouseholdData(error.response.data.message)
+        // setRBIHouseholdData(error.response.data || "error in api call")
       })
 
   }
@@ -637,6 +640,28 @@ const SroMaster = () => {
       .catch((error) => {
         console.log('rbi_others_error', error);
         // setRBIOthersData(error.response.data.message)
+      })
+
+    //cost of borrowing graph api
+    await axios.get(`${BaseUrl}/api/auth/financial-data?short_name=${formState.member}&Month_As_on=${formState.Quatar}`,
+      { headers: authHeaders() })
+      .then((response) => {
+        setRbiOthersCOB(response.data)
+        console.log('others_cob_data', response);
+      })
+      .catch((error) => {
+        console.log('rbi_others_error', error);
+      })
+
+    //portfolio quality  graph api
+    await axios.get(`${BaseUrl}/api/auth/par-data?short_name=${formState.member}&Month_As_on=${formState.Quatar}`,
+      { headers: authHeaders() })
+      .then((response) => {
+        setRbiOthersPQ(response.data)
+        console.log('others_PQ', response);
+      })
+      .catch((error) => {
+        console.log('rbi_others_error', error);
       })
   }
   //RBI-Others end here
@@ -701,6 +726,20 @@ const SroMaster = () => {
       ["isDisabled"]: true,
     }));
     await getCGRMData();
+    setFormState((prevState) => ({
+      ...prevState,
+      ["isLoader"]: false,
+      ["isDisabled"]: false,
+    }));
+  };
+
+  const filterRBIOthersHandler = async () => {
+    setFormState((prevState) => ({
+      ...prevState,
+      ["isLoader"]: true,
+      ["isDisabled"]: true,
+    }));
+    await getRBIOthersData();
     setFormState((prevState) => ({
       ...prevState,
       ["isLoader"]: false,
@@ -1722,7 +1761,7 @@ const SroMaster = () => {
                                 }}
                                 sx={{ mt: 3, mb: 2 }}
                                 disabled={formState.isDisabled}
-                                onClick={filterEBHandler}
+                                onClick={filterRBIOthersHandler}
                               >
                                 Filter
                                 <Loader loader={formState.isLoader} size={15} />
@@ -1736,7 +1775,7 @@ const SroMaster = () => {
 
                     {/* Date of monthly submission to CICs */}
 
-                    <RBIOthersIndex rbiOthersData={rbiOthersData} />
+                    <RBIOthersIndex rbiOthersData={rbiOthersData} rbiOthersCOB={rbiOthersCOB}  rbiOthersPQ={rbiOthersPQ} />
 
                     {/* Date of monthly submission to CICs */}
                   </Grid>

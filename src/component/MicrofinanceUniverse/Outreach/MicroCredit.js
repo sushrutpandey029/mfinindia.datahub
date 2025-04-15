@@ -40,6 +40,7 @@ class MicroCredit extends React.Component {
             }
           },
           labels: props.pieMicroOutsLabels,
+          colors: ['#39B1AC', '#2B60AD', '#FDBF11', '#B853A0', '#BD1E22'], // Custom colors
           theme: {
             mode: 'light',
             palette: 'palette5',

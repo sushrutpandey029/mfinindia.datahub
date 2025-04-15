@@ -65,7 +65,7 @@ function ComprisionReport() {
         toMonth: new Date("Mar-2019"),
         maxDate: new Date("Mar-2020"),
         MFI_Name: userdetails.data.user.MFI_Name?userdetails.data.user.MFI_Name:"",
-        Quatar: "Mar-23",
+        Quatar: "Dec-24",
         dateSeries: "2017",
         isLoader: false,
         isDisabled: false

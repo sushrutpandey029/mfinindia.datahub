@@ -1,0 +1,62 @@
+.publications {
+    position: relative;
+    z-index: 1; /* Bring it above the header */
+    padding-top: 80px; /* Adjust based on your header height */
+  }
+  
+  /* Container for all cards */
+  .card-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adds spacing between cards */
+    flex-wrap: wrap; /* Allows cards to wrap to the next line if needed */
+    /* justify-content: flex-start;  */
+  }
+  
+  /* Individual card styling */
+  .card {
+    border-radius: 0px 0px 20px 20px;
+    width: calc(25% - 2rem); 
+    margin: 1rem;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border: 1px solid #2b60ad;
+    background-color: #fff;
+    position: relative;
+    height: 15rem; /* Fixed height for all cards */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card .heading h3 {
+    font-size: 1.5rem; /* Larger font size for the title */
+    text-align: center; /* Centers the title text */
+    /* margin-top: 1rem; Adds some spacing at the top */
+  }
+  
+  .card .content {
+    text-align: center; /* Centers the content text */
+    flex-grow: 1; /* Allows the content to take up remaining space */
+    display: flex;
+    align-items: center; /* Vertically centers the content */
+    justify-content: center; /* Horizontally centers the content */
+    padding: 0 1rem; /* Adds some padding to the sides */
+  }
+  
+  /* Link styling */
+  .card a {
+    text-decoration: none; 
+    color: inherit; 
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card {
+      width: calc(50% - 2rem); /* Two cards per row on smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card {
+      width: 100%; /* Full width on very small screens */
+    }
+  }

@@ -237,17 +237,17 @@ const Micrometer = () => {
 
   console.log("User Details", userRole);
   console.log("userRole Details", userRole[2]['subkey'][0]['subkey_name']);
-  
+
   const classes = useStyle();
   const [value, setValue] = useState('1');
   const handleChange1 = (event, newValue) => {
     setValue(newValue);
   };
-  const graphFilterInitialState = {
+  const graphFilterInitialState ={
     fromMonth: new Date("Aug-2018"),
     toMonth: new Date("Mar-2019"),
     maxDate: new Date("Mar-2020"),
-    Quatar: "Mar-23",
+    Quatar: "Dec-24",
     Period: "Q4 FY 22-23",
     dateSeries: "2017",
     isLoader: false,
@@ -268,7 +268,7 @@ const Micrometer = () => {
     dateSeries: "2017",
     isLoader: false,
     isDisabled: false
-  } 
+  }
   const [graphFilter, setGraphFilter] = useState(graphFilterInitialState);
   const [Quatars, setQuatarList] = useState([]);
   const [formState, setFormState] = useState(formInitialState);
@@ -276,15 +276,15 @@ const Micrometer = () => {
     const api = 'api/auth/mm-quater-list';
     await axios.get(`${BaseUrl}/${api}`, { headers: authHeaders() }).then((response) => {
       setQuatarList(response.data.data);
-      setGraphFilter({ ...graphFilter, ['Quatar']: response.data.maxDate})
-      setGraphFilter({ ...graphFilter, ['Period']: response.data.maxperiod})
+      setGraphFilter({ ...graphFilter, ['Quatar']: response.data.maxDate })
+      setGraphFilter({ ...graphFilter, ['Period']: response.data.maxperiod })
     }).catch((error) => {
       console.log('error', error)
     })
-  } 
+  }
 
   const handleGraphToDateChange = (e) => {
-    console.log("Value",e.target.value);
+    console.log("Value", e.target.value);
     setFormState({ ...formState, ['Quatar']: e.target.value });
     setGraphFilter({ ...graphFilter, ['Quatar']: e.target.value })
   };
@@ -347,16 +347,16 @@ const Micrometer = () => {
 
   // get overview highlights data
   const [selectedEntity, setSelectedEntity] = useState("All");
- 
+
   const handleEntity = (e) => {
-   setSelectedEntity(e.target.value);
+    setSelectedEntity(e.target.value);
   }
 
 
   const getOverHightsRecords = async () => {
-      await axios.get(`${BaseUrl}/api/auth/mm-get-overview-highlights`, { headers: authHeaders() }).then((response) => {
+    await axios.get(`${BaseUrl}/api/auth/mm-get-overview-highlights`, { headers: authHeaders() }).then((response) => {
       setOverViewHighLights(parse(response.data.data));
-     }).catch((error) => {
+    }).catch((error) => {
       console.log('overview err', error)
     });
   }
@@ -397,18 +397,18 @@ const Micrometer = () => {
   const [pDisbursementLabels, setPDisbursementLabels] = useState([]);
   const [pDisbursementSeries, setPDisbursementSeries] = useState([]);
 
-    //Disbursement MFI Size (Rs) graph
-    const [pDisbursementMfiWiseLabels, setPDisbursementMfiWiseLabels] = useState([]);
-    const [pDisbursementMfiWiseSeries, setPDisbursementMfiWiseSeries] = useState([]);
-    const [ShowDate, setShowDate] = useState("");
+  //Disbursement MFI Size (Rs) graph
+  const [pDisbursementMfiWiseLabels, setPDisbursementMfiWiseLabels] = useState([]);
+  const [pDisbursementMfiWiseSeries, setPDisbursementMfiWiseSeries] = useState([]);
+  const [ShowDate, setShowDate] = useState("");
 
-    //Distribution of MFIs as per size
-    const [DistributionMFISizesLabels, setDistributionMFISizesLabels] = useState([]);
-    const [DistributionMFISizesSeries, setDistributionMFISizesSeries] = useState([]);
-    const [DistributionMFISizesDateTitle, setDistributionMFISizesDateTitle] = useState([]);
+  //Distribution of MFIs as per size
+  const [DistributionMFISizesLabels, setDistributionMFISizesLabels] = useState([]);
+  const [DistributionMFISizesSeries, setDistributionMFISizesSeries] = useState([]);
+  const [DistributionMFISizesDateTitle, setDistributionMFISizesDateTitle] = useState([]);
 
   const GetDisbursementandHRTab = async (Quatar = 0, endMonth = 0) => {
-   
+
     await axios.get(`${BaseUrl}/api/auth/mm-disburement-rs-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
       setPDisbursementLabels(response.data.data.labels)
       setPDisbursementSeries(response.data.data.series)
@@ -423,22 +423,22 @@ const Micrometer = () => {
       console.log('err', error)
     });
 
-  await axios.get(`${BaseUrl}/api/auth/mm-disburement-mfi-size-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-    setPDisbursementMfiWiseLabels(response.data.data.labels)
-    setPDisbursementMfiWiseSeries(response.data.data.series)
-    setShowDate(response.data.show_date)
-  }).catch((error) => {
-    console.log('err', error)
-  });
+    await axios.get(`${BaseUrl}/api/auth/mm-disburement-mfi-size-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setPDisbursementMfiWiseLabels(response.data.data.labels)
+      setPDisbursementMfiWiseSeries(response.data.data.series)
+      setShowDate(response.data.show_date)
+    }).catch((error) => {
+      console.log('err', error)
+    });
 
-     // top 10 state graph disbursement - Outreach
+    // top 10 state graph disbursement - Outreach
     await axios.get(`${BaseUrl}/api/auth/mm-get-portfolio-top-ten-state?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-  //          //disbusement
-   setDisburseTopStateGLPSeries(response.data.data.dSeries)
-   setDisburseTopStateGLPLabels(response.data.data.dLabels)
-        }).catch((error) => {
-          console.log('err', error)
-         });
+      //          //disbusement
+      setDisburseTopStateGLPSeries(response.data.data.dSeries)
+      setDisburseTopStateGLPLabels(response.data.data.dLabels)
+    }).catch((error) => {
+      console.log('err', error)
+    });
 
     /* //HR (Overall,HO & Branch Level) */
     // staff distribution 31 march 2023
@@ -472,54 +472,54 @@ const Micrometer = () => {
   const getPortfolioOutreachGraphTabData = async (Quatar = 0, endMonth = 0) => {
 
     //Distribution of MFIs as per size - Outreah
-     await axios.get(`${BaseUrl}/api/auth/mm-distribution-by-mfis-size?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-         setDistributionMFISizesLabels(response.data.data.labels)
-         setDistributionMFISizesSeries(response.data.data.series)
-         setDistributionMFISizesDateTitle(response.data.data.show_date)
-       }).catch((error) => {
-         console.log('err', error)
-       });
- 
-     // top 10 mfi graph - Outreach
-     await axios.get(`${BaseUrl}/api/auth/mm-portfolio-top-ten-state-mfis?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-       setTopTenPMfiLabels(response.data.data.labels)
-       setTopTenPMfiSerise(response.data.data.series)
-     }).catch((error) => {
-       console.log('err', error)
-     });
-     // top 10 state graph outreach
-     await axios.get(`${BaseUrl}/api/auth/mm-get-portfolio-top-ten-state-outreach?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-       setpqTopStateGLPLabels(response.data.data.labels)
-       setPqTopStateGLPSeries(response.data.data.series)
-     }).catch((error) => {
-       console.log('err', error)
-     });
- 
+    await axios.get(`${BaseUrl}/api/auth/mm-distribution-by-mfis-size?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setDistributionMFISizesLabels(response.data.data.labels)
+      setDistributionMFISizesSeries(response.data.data.series)
+      setDistributionMFISizesDateTitle(response.data.data.show_date)
+    }).catch((error) => {
+      console.log('err', error)
+    });
 
-     // top 10 mfi graph - Outreach
-     await axios.get(`${BaseUrl}/api/auth/mm-portfolio-loan-portfolio-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-       setPLoanPortfolioLabels(response.data.data.labels)
-       setPLoanPortfolioSeries(response.data.data.series)
-     }).catch((error) => {
-       console.log('err', error)
-     });
- 
-     // portfolio employee loan and branches - Outrach
-     await axios.get(`${BaseUrl}/api/auth/mm-portfolio-employee-loan-officers-graph?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-       setPELOBThousandLables(response.data.data.labels)
-       setPELOBThousandSeries(response.data.data.series)
-     }).catch((error) => {
-       console.log('err', error)
-     });
-     // portfolio average loan outstanding disbursement - Outreach
-     await axios.get(`${BaseUrl}/api/auth/mm-portfolio-average-loan-outstanding-disbursement-graph?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-       setPAverageLoanDisbursementLables(response.data.data.labels)
-       setPAverageLoanDisbursementSeries(response.data.data.series)
-     }).catch((error) => {
-       console.log('err', error)
-     });
- 
-   }
+    // top 10 mfi graph - Outreach
+    await axios.get(`${BaseUrl}/api/auth/mm-portfolio-top-ten-state-mfis?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setTopTenPMfiLabels(response.data.data.labels)
+      setTopTenPMfiSerise(response.data.data.series)
+    }).catch((error) => {
+      console.log('err', error)
+    });
+    // top 10 state graph outreach
+    await axios.get(`${BaseUrl}/api/auth/mm-get-portfolio-top-ten-state-outreach?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setpqTopStateGLPLabels(response.data.data.labels)
+      setPqTopStateGLPSeries(response.data.data.series)
+    }).catch((error) => {
+      console.log('err', error)
+    });
+
+
+    // top 10 mfi graph - Outreach
+    await axios.get(`${BaseUrl}/api/auth/mm-portfolio-loan-portfolio-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setPLoanPortfolioLabels(response.data.data.labels)
+      setPLoanPortfolioSeries(response.data.data.series)
+    }).catch((error) => {
+      console.log('err', error)
+    });
+
+    // portfolio employee loan and branches - Outrach
+    await axios.get(`${BaseUrl}/api/auth/mm-portfolio-employee-loan-officers-graph?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setPELOBThousandLables(response.data.data.labels)
+      setPELOBThousandSeries(response.data.data.series)
+    }).catch((error) => {
+      console.log('err', error)
+    });
+    // portfolio average loan outstanding disbursement - Outreach
+    await axios.get(`${BaseUrl}/api/auth/mm-portfolio-average-loan-outstanding-disbursement-graph?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setPAverageLoanDisbursementLables(response.data.data.labels)
+      setPAverageLoanDisbursementSeries(response.data.data.series)
+    }).catch((error) => {
+      console.log('err', error)
+    });
+
+  }
   // Outreach Tab End Here
 
   const [pqPortfolioRiskLables, setPqPortfolioRiskLables] = useState([]);
@@ -557,7 +557,7 @@ const Micrometer = () => {
 
   const [fAssetsOutstandingLabels, setFAssetsOutstandingLabels] = useState([]);
   const [fAssetsOutstandingSeries, setFAssetsOutstandingSeries] = useState([])
-  
+
   const getFinancialGraphData = async (Quatar = 0, endMonth = 0) => {
     await axios.get(`${BaseUrl}/api/auth/mm-financials-get-graph-records?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
       setFEquityPositionsLabels(response.data.data.labels);
@@ -573,59 +573,59 @@ const Micrometer = () => {
   const [BreakupOutstandingBorrowLabels, setBreakupOutstandingBorrowLabels] = useState([]);
   const [BreakupOutstandingBorrowSeries, setBreakupOutstandingBorrowSeries] = useState([]);
   const [BreakupOutstandingBorrowLatestMonth, setBreakupOutstandingBorrowLatestMonth] = useState([]);
-  
-  
-  
+
+
+
   const getBreakupOutstandingBorrow = async (Quatar = 0, endMonth = 0) => {
     await axios.get(`${BaseUrl}/api/auth/mm-breakup-borrowings-received-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-    //  console.log("labels",response.data.data.labels);
+      //  console.log("labels",response.data.data.labels);
       //console.log("series",response.data.data.series);
       setBreakupOutstandingBorrowLabels(response.data.data.labels);
       setBreakupOutstandingBorrowSeries(response.data.data.series);
       setBreakupOutstandingBorrowLatestMonth(response.data.show_date_source);
-  
+
     }).catch((error) => {
       console.log('err', error)
     });
   }
 
-const [BreakupBorrowLabels, setBreakupBorrowLabels] = useState([]);
-const [BreakupBorrowSeries, setBreakupBorrowSeries] = useState([]);
-const getBreakupBorrowOS = async (Quatar = 0, endMonth = 0) => {
-  await axios.get(`${BaseUrl}/api/auth/mm-breakup-borrowings-source-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-    setBreakupBorrowLabels(response.data.data.labels);
-    setBreakupBorrowSeries(response.data.data.series);
+  const [BreakupBorrowLabels, setBreakupBorrowLabels] = useState([]);
+  const [BreakupBorrowSeries, setBreakupBorrowSeries] = useState([]);
+  const getBreakupBorrowOS = async (Quatar = 0, endMonth = 0) => {
+    await axios.get(`${BaseUrl}/api/auth/mm-breakup-borrowings-source-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setBreakupBorrowLabels(response.data.data.labels);
+      setBreakupBorrowSeries(response.data.data.series);
 
-  }).catch((error) => {
-    console.log('err', error)
-  });
-}
+    }).catch((error) => {
+      console.log('err', error)
+    });
+  }
 
-const [FundingInstructionsLabels, setFundingInstructionsLabels] = useState([]);
-const [FundingInstructionsSeries, setFundingInstructionsSeries] = useState([]);
-const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
-  await axios.get(`${BaseUrl}/api/auth/mm-funding-instruction-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
-    setFundingInstructionsLabels(response.data.data.labels);
-    setFundingInstructionsSeries(response.data.data.series);
+  const [FundingInstructionsLabels, setFundingInstructionsLabels] = useState([]);
+  const [FundingInstructionsSeries, setFundingInstructionsSeries] = useState([]);
+  const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
+    await axios.get(`${BaseUrl}/api/auth/mm-funding-instruction-graph-record?Quatar=${Quatar}&toMonth=${endMonth}`, { headers: authHeaders() }).then((response) => {
+      setFundingInstructionsLabels(response.data.data.labels);
+      setFundingInstructionsSeries(response.data.data.series);
 
-  }).catch((error) => {
-    console.log('err', error)
-  });
-}
+    }).catch((error) => {
+      console.log('err', error)
+    });
+  }
 
   const filterdateOutreachGraph = async () => {
     setGraphFilter({ ...graphFilter, ['isLoader']: true, ['isDisabled']: true });
-   await getPortfolioOutreachGraphTabData(graphFilter.Quatar, graphFilter.toMonth);
+    await getPortfolioOutreachGraphTabData(graphFilter.Quatar, graphFilter.toMonth);
 
-   await GetDisbursementandHRTab(graphFilter.Quatar, graphFilter.toMonth);
-   await PortfolioQualityGraphData(graphFilter.Quatar, graphFilter.toMonth);
-   await getFinancialGraphData(graphFilter.Quatar, graphFilter.toMonth);
+    await GetDisbursementandHRTab(graphFilter.Quatar, graphFilter.toMonth);
+    await PortfolioQualityGraphData(graphFilter.Quatar, graphFilter.toMonth);
+    await getFinancialGraphData(graphFilter.Quatar, graphFilter.toMonth);
 
-   await getBreakupOutstandingBorrow(graphFilter.Quatar, graphFilter.toMonth);
+    await getBreakupOutstandingBorrow(graphFilter.Quatar, graphFilter.toMonth);
 
-   await getBreakupBorrowOS(graphFilter.Quatar, graphFilter.toMonth);
-   
-   await getFundingInstructions(graphFilter.Quatar, graphFilter.toMonth);
+    await getBreakupBorrowOS(graphFilter.Quatar, graphFilter.toMonth);
+
+    await getFundingInstructions(graphFilter.Quatar, graphFilter.toMonth);
 
     setGraphFilter({ ...graphFilter, ['isLoader']: false, ['isDisabled']: false });
   }
@@ -634,7 +634,7 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
     getOverHightsRecords();
     getOverviewGraphData();
     GetDisbursementandHRTab();
-   //getDisbursementGraphData();
+    //getDisbursementGraphData();
     PortfolioQualityGraphData();
     getFinancialGraphData();
     getBreakupOutstandingBorrow();
@@ -644,7 +644,7 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
     getQuatarList();
   }, []);
 
-  console.log("Quatar List",Quatars)
+  console.log("Quatar List", Quatars)
   return (
     <>
       <Box sx={{ flexGrow: 1 }} mt={10}>
@@ -656,36 +656,36 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <TabList onChange={handleChange1} aria-label="Micrometer" centered textColor="secondary"
                     indicatorColor="secondary">
-                    
-                    { userRole[2]['subkey'][0]['subkey_name'] == 'Overview' &&  userRole[2]['subkey'][0]['subkey_checked'] == true? 
-                    <Tab icon={<AnalyticsIcon />} label="Overview" value="1" />
-                    : "" }
 
-                    { userRole[2]['subkey'][1]['subkey_name'] == 'Portfolio and Outreach' &&  userRole[2]['subkey'][1]['subkey_checked'] == true? 
-                    <Tab icon={<TableChartIcon />} label="Portfolio and Outreach" value="2" />
-                    : "" }
+                    {userRole[2]['subkey'][0]['subkey_name'] == 'Overview' && userRole[2]['subkey'][0]['subkey_checked'] == true ?
+                      <Tab icon={<AnalyticsIcon />} label="Overview" value="1" />
+                      : ""}
 
-                    { userRole[2]['subkey'][2]['subkey_name'] == 'Disbursement' &&  userRole[2]['subkey'][2]['subkey_checked'] == true? 
-                    <Tab icon={<PaymentsIcon />} label="Disbursement" value="3" />
-                    : "" }
+                    {userRole[2]['subkey'][1]['subkey_name'] == 'Portfolio and Outreach' && userRole[2]['subkey'][1]['subkey_checked'] == true ?
+                      <Tab icon={<TableChartIcon />} label="Portfolio and Outreach" value="2" />
+                      : ""}
 
-                    { userRole[2]['subkey'][3]['subkey_name'] == 'Portfolio Quality' &&  userRole[2]['subkey'][3]['subkey_checked'] == true? 
-                    <Tab icon={<MiscellaneousServicesIcon />} label="Portfolio Quality" value="4" />
-                    : "" }
+                    {userRole[2]['subkey'][2]['subkey_name'] == 'Disbursement' && userRole[2]['subkey'][2]['subkey_checked'] == true ?
+                      <Tab icon={<PaymentsIcon />} label="Disbursement" value="3" />
+                      : ""}
 
-                    { userRole[2]['subkey'][4]['subkey_name'] == 'Financials' &&  userRole[2]['subkey'][4]['subkey_checked'] == true? 
-                    <Tab icon={<AccountBalanceWalletIcon />} label="Financials" value="5" />
-                    : "" }
+                    {userRole[2]['subkey'][3]['subkey_name'] == 'Portfolio Quality' && userRole[2]['subkey'][3]['subkey_checked'] == true ?
+                      <Tab icon={<MiscellaneousServicesIcon />} label="Portfolio Quality" value="4" />
+                      : ""}
 
-                    { userRole[2]['subkey'][5]['subkey_name'] == 'HR (Overall HO & Branch level)' &&  userRole[2]['subkey'][5]['subkey_checked'] == true? 
-                    <Tab icon={<Face2Icon />} label="HR (Overall HO & Branch level)" value="6" />
-                    : "" }
+                    {userRole[2]['subkey'][4]['subkey_name'] == 'Financials' && userRole[2]['subkey'][4]['subkey_checked'] == true ?
+                      <Tab icon={<AccountBalanceWalletIcon />} label="Financials" value="5" />
+                      : ""}
+
+                    {userRole[2]['subkey'][5]['subkey_name'] == 'HR (Overall HO & Branch level)' && userRole[2]['subkey'][5]['subkey_checked'] == true ?
+                      <Tab icon={<Face2Icon />} label="HR (Overall HO & Branch level)" value="6" />
+                      : ""}
 
                     {/* { userRole[2]['subkey'][6]['subkey_name'] == 'Comparison' &&  userRole[2]['subkey'][6]['subkey_checked'] == true? 
                     <Tab icon={<CompareIcon />} label="Comparison" value="8" />
                     : "" } */}
-                    
-                   {/*  <Tab icon={<TableChartIcon />} label="Portfolio and Outreach" value="2" />
+
+                    {/*  <Tab icon={<TableChartIcon />} label="Portfolio and Outreach" value="2" />
                     <Tab icon={<PaymentsIcon />} label="Disbursement" value="3" />
                     <Tab icon={<MiscellaneousServicesIcon />} label="Portfolio Quality" value="4" />
                      <Tab icon={<AccountBalanceWalletIcon />} label="Financials" value="5" /> 
@@ -698,9 +698,9 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 {/* Overview Start from Here */}
                 <TabPanel value="1">
 
-                <Grid container spacing={2} mt={2}>
+                  <Grid container spacing={2} mt={2}>
                     {/* Date Filter Component Start from here */}
-                     {/* <Grid xs={12} sm={12} md={12}>
+                    {/* <Grid xs={12} sm={12} md={12}>
                     <Card>
                         <CardContent>
                             <Grid container spacing={2} mt={2}>
@@ -897,50 +897,50 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
 
                     {/* Date Filter Component Start from here */}
                     <Grid xs={12} sm={12} md={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2} mt={2}>
-  
-                <Grid xs={12} sm={12} md={7}>
+                      <Card>
+                        <CardContent>
+                          <Grid container spacing={2} mt={2}>
 
-                <FormControl variant="standard" sx={{ minWidth:"100%" }}>
-<InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
-<Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        name="Qautar"
-                        value={graphFilter.Quatar}
-                        onChange={handleGraphToDateChange}
-                        label="Qautar">
-                         {
-                          Quatars.map((q) => {
-                            return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
-                          })
-                        } 
-                      </Select>
-</FormControl>
-                </Grid>
-                  <Grid xs={12} sm={12} md={3}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      className={classes.Buttonbg}
-                      sx={{ mt: 2, mb: 2 }}
-                      disabled={graphFilter.isDisabled}
-                      onClick={filterdateOutreachGraph}
-                    >
-                      Filter
-                      <Loader loader={graphFilter.isLoader} size={15} />
-                    </Button>
-                  </Grid>
+                            <Grid xs={12} sm={12} md={7}>
 
-                  <Grid xs={12} sm={12} md={2}></Grid>  
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Date Filter Component End here */}
+                              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-standard-label"
+                                  id="demo-simple-select-standard"
+                                  name="Qautar"
+                                  value={graphFilter.Quatar}
+                                  onChange={handleGraphToDateChange}
+                                  label="Qautar">
+                                  {
+                                    Quatars.map((q) => {
+                                      return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
+                                    })
+                                  }
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid xs={12} sm={12} md={3}>
+                              <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.Buttonbg}
+                                sx={{ mt: 2, mb: 2 }}
+                                disabled={graphFilter.isDisabled}
+                                onClick={filterdateOutreachGraph}
+                              >
+                                Filter
+                                <Loader loader={graphFilter.isLoader} size={15} />
+                              </Button>
+                            </Grid>
+
+                            <Grid xs={12} sm={12} md={2}></Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {/* Date Filter Component End here */}
 
                     {/* Loan Portfolio from here : Outreach*/}
                     <Grid xs={12} sm={12} md={6}>
@@ -1052,7 +1052,7 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                         <CardActionArea>
                           <CardContent>
                             <Typography>
-                              <DistributionMFI GetSeries={DistributionMFISizesSeries} Getlabels={DistributionMFISizesLabels}  GetDatelabels={DistributionMFISizesDateTitle} />
+                              <DistributionMFI GetSeries={DistributionMFISizesSeries} Getlabels={DistributionMFISizesLabels} GetDatelabels={DistributionMFISizesDateTitle} />
                             </Typography>
                             {/* <Typography variant="body1" className={classes.download_text}>
                               Click here to see details.
@@ -1075,51 +1075,51 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 <TabPanel value="3">
                   <Grid container spacing={2}>
 
-                                        {/* Date Filter Component Start from here */}
-                                        <Grid xs={12} sm={12} md={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2} mt={2}> 
-                <Grid xs={12} sm={12} md={7}>
+                    {/* Date Filter Component Start from here */}
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card>
+                        <CardContent>
+                          <Grid container spacing={2} mt={2}>
+                            <Grid xs={12} sm={12} md={7}>
 
-                <FormControl variant="standard" sx={{ minWidth:"100%" }}>
-<InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
-<Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        name="Qautar"
-                        value={graphFilter.Quatar}
-                        onChange={handleGraphToDateChange}
-                        label="Qautar">
-                         {
-                          Quatars.map((q) => {
-                            return (<MenuItem value={q.Month}>{q.period}</MenuItem>)
-                          })
-                        } 
-                      </Select>
-</FormControl>
-                </Grid>
-                  <Grid xs={12} sm={12} md={3}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      className={classes.Buttonbg}
-                      sx={{ mt: 2, mb: 2 }}
-                      disabled={graphFilter.isDisabled}
-                      onClick={filterdateOutreachGraph}
-                    >
-                      Filter
-                      <Loader loader={graphFilter.isLoader} size={15} />
-                    </Button>
-                  </Grid>
+                              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-standard-label"
+                                  id="demo-simple-select-standard"
+                                  name="Qautar"
+                                  value={graphFilter.Quatar}
+                                  onChange={handleGraphToDateChange}
+                                  label="Qautar">
+                                  {
+                                    Quatars.map((q) => {
+                                      return (<MenuItem value={q.Month}>{q.period}</MenuItem>)
+                                    })
+                                  }
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid xs={12} sm={12} md={3}>
+                              <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.Buttonbg}
+                                sx={{ mt: 2, mb: 2 }}
+                                disabled={graphFilter.isDisabled}
+                                onClick={filterdateOutreachGraph}
+                              >
+                                Filter
+                                <Loader loader={graphFilter.isLoader} size={15} />
+                              </Button>
+                            </Grid>
 
-                  <Grid xs={12} sm={12} md={2}></Grid>  
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Date Filter Component End here */}
+                            <Grid xs={12} sm={12} md={2}></Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {/* Date Filter Component End here */}
 
 
                     {/* Entities wise from here */}
@@ -1144,7 +1144,7 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                     {/* Entities wise End from here */}
 
 
-                    
+
 
                     {/* State wise from here */}
                     <Grid xs={12} sm={12} md={6}>
@@ -1166,8 +1166,8 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                         </CardActions>
                       </Card>
                     </Grid>
-                    {/* State wise End from here */} 
-                    
+                    {/* State wise End from here */}
+
                     {/* Outreach from here */}
                     <Grid xs={12} sm={12} md={6}>
                       <Card style={{ padding: "8px" }} >
@@ -1190,7 +1190,7 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                     {/* Outreach End from here */}
 
                     {/* MFI size-wise Disbursement (Rs Cr) from here */}
-                      <Grid xs={12} sm={12} md={6}>
+                    <Grid xs={12} sm={12} md={6}>
                       <Card style={{ padding: "8px" }} >
                         <CardActionArea>
                           <CardContent>
@@ -1199,7 +1199,7 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                                 pDisbursementMfiWiseLabels={pDisbursementMfiWiseLabels}
                                 pDisbursementMfiWiseSeries={pDisbursementMfiWiseSeries}
                                 ShowDate={ShowDate}
-                                />
+                              />
                             </Typography>
                             {/* <Typography variant="body1" className={classes.download_text}>
                               Click here to see details.
@@ -1222,52 +1222,52 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 <TabPanel value="4">
 
                   <Grid container spacing={2}>
-                                        {/* Date Filter Component Start from here */}
-                                        <Grid xs={12} sm={12} md={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2} mt={2}>
- 
-                <Grid xs={12} sm={12} md={7}>
+                    {/* Date Filter Component Start from here */}
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card>
+                        <CardContent>
+                          <Grid container spacing={2} mt={2}>
 
-                <FormControl variant="standard" sx={{ minWidth:"100%" }}>
-<InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
-<Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        name="Qautar"
-                        value={graphFilter.Quatar}
-                        onChange={handleGraphToDateChange}
-                        label="Qautar">
-                         {
-                          Quatars.map((q) => {
-                            return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
-                          })
-                        } 
-                      </Select>
-</FormControl>
-                </Grid>
-                  <Grid xs={12} sm={12} md={3}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      className={classes.Buttonbg}
-                      sx={{ mt: 2, mb: 2 }}
-                      disabled={graphFilter.isDisabled}
-                      onClick={filterdateOutreachGraph}
-                    >
-                      Filter
-                      <Loader loader={graphFilter.isLoader} size={15} />
-                    </Button>
-                  </Grid>
+                            <Grid xs={12} sm={12} md={7}>
 
-                  <Grid xs={12} sm={12} md={2}></Grid>  
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Date Filter Component End here */}
+                              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-standard-label"
+                                  id="demo-simple-select-standard"
+                                  name="Qautar"
+                                  value={graphFilter.Quatar}
+                                  onChange={handleGraphToDateChange}
+                                  label="Qautar">
+                                  {
+                                    Quatars.map((q) => {
+                                      return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
+                                    })
+                                  }
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid xs={12} sm={12} md={3}>
+                              <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.Buttonbg}
+                                sx={{ mt: 2, mb: 2 }}
+                                disabled={graphFilter.isDisabled}
+                                onClick={filterdateOutreachGraph}
+                              >
+                                Filter
+                                <Loader loader={graphFilter.isLoader} size={15} />
+                              </Button>
+                            </Grid>
+
+                            <Grid xs={12} sm={12} md={2}></Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {/* Date Filter Component End here */}
 
                     {/* Portfolio at risk from here */}
                     <Grid xs={12} sm={12} md={6}>
@@ -1316,6 +1316,80 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
 
                     {/* Top 10 state in terms of GLP (Rs Cr) from here */}
                     <Grid xs={12} sm={12} md={12}>
+                      <Card style={{ padding: "8px" }}>
+                        <CardActionArea>
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              style={{ textAlign: "left" }}
+                              className={classes.headingTitle}
+                              component="div"
+                            >
+                              Portfolio at Risk for Top 15 States in Terms of
+                              AUM {pqRiskTopFifteenStateTitle}
+                            </Typography>
+                            <div className="main" style={{ marginTop: "15px" }}>
+                              <Table striped bordered hover>
+                                <thead>
+                                  <tr>
+                                    <th >
+                                      States
+                                    </th>
+                                    <th >
+                                      PAR
+                                      <Chip
+                                        label=">30"
+                                        style={{ backgroundColor: "transparent", paddingLeft: "0px" }}
+                                      />
+                                    </th>
+                                    <th >
+                                      PAR{" "}
+                                      <Chip
+                                        label=">90"
+                                        style={{ backgroundColor: "transparent", paddingLeft: "0px" }}
+                                      />
+                                    </th>
+                                    <th >
+                                      PAR{" "}
+                                      <Chip
+                                        label=">180"
+                                        style={{ backgroundColor: "transparent", paddingLeft: "0px" }}
+                                      />
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {pqRiskTopFifteenState.map((v, i) => (
+                                    <tr key={i}>
+                                      <td
+                                        style={{
+                                          fontWeight: "bold",
+                                          textAlign: "left",
+                                        }}
+                                      >
+                                        {v.states}
+                                      </td>
+                                      <td style={{ textAlign: "right" }}>
+                                        {v.PAR_30}
+                                      </td>
+                                      <td style={{ textAlign: "right" }}>
+                                        {v.PAR_90}
+                                      </td>
+                                      <td style={{ textAlign: "right" }}>
+                                        {v.PAR_180}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </Table>
+                            </div>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions></CardActions>
+                      </Card>
+                    </Grid>
+                    {/* <Grid xs={12} sm={12} md={12}>
                       <Card style={{ padding: "8px" }} >
                         <CardActionArea>
                           <CardContent>
@@ -1363,13 +1437,13 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                                   highlightOnHover
                                 />
                               </DataTableExtensions> */}
-                            </div>
+                    {/* </div>
                           </CardContent>
                         </CardActionArea>
                         <CardActions>
                         </CardActions>
                       </Card>
-                    </Grid>
+                    </Grid> */}
                     {/* Top 10 state in terms of GLP (Rs Cr) End from here */}
 
                   </Grid>
@@ -1381,51 +1455,51 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 <TabPanel value="5">
 
                   <Grid container spacing={2}>
-                                        {/* Date Filter Component Start from here */}
-                                        <Grid xs={12} sm={12} md={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2} mt={2}> 
-                <Grid xs={12} sm={12} md={7}>
+                    {/* Date Filter Component Start from here */}
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card>
+                        <CardContent>
+                          <Grid container spacing={2} mt={2}>
+                            <Grid xs={12} sm={12} md={7}>
 
-                <FormControl variant="standard" sx={{ minWidth:"100%" }}>
-<InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
-<Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        name="Qautar"
-                        value={graphFilter.Quatar}
-                        onChange={handleGraphToDateChange}
-                        label="Qautar">
-                         {
-                          Quatars.map((q) => {
-                            return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
-                          })
-                        } 
-                      </Select>
-</FormControl>
-                </Grid>
-                  <Grid xs={12} sm={12} md={3}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      className={classes.Buttonbg}
-                      sx={{ mt: 2, mb: 2 }}
-                      disabled={graphFilter.isDisabled}
-                      onClick={filterdateOutreachGraph}
-                    >
-                      Filter
-                      <Loader loader={graphFilter.isLoader} size={15} />
-                    </Button>
-                  </Grid>
+                              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-standard-label"
+                                  id="demo-simple-select-standard"
+                                  name="Qautar"
+                                  value={graphFilter.Quatar}
+                                  onChange={handleGraphToDateChange}
+                                  label="Qautar">
+                                  {
+                                    Quatars.map((q) => {
+                                      return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
+                                    })
+                                  }
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid xs={12} sm={12} md={3}>
+                              <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.Buttonbg}
+                                sx={{ mt: 2, mb: 2 }}
+                                disabled={graphFilter.isDisabled}
+                                onClick={filterdateOutreachGraph}
+                              >
+                                Filter
+                                <Loader loader={graphFilter.isLoader} size={15} />
+                              </Button>
+                            </Grid>
 
-                  <Grid xs={12} sm={12} md={2}></Grid>  
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Date Filter Component End here */}
+                            <Grid xs={12} sm={12} md={2}></Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {/* Date Filter Component End here */}
 
 
                     {/* EquityPositions Start from here */}
@@ -1481,11 +1555,11 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                         <CardActionArea>
                           <CardContent>
                             <Typography>
-                            <FundingInstructions
+                              <FundingInstructions
                                 FundingInstructionsLabels={FundingInstructionsLabels}
                                 FundingInstructionsSeries={FundingInstructionsSeries}
                               />
-                              
+
                             </Typography>
                             {/* <Typography variant="body1" className={classes.download_text}>
                               Click here to see details.
@@ -1505,11 +1579,11 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                         <CardActionArea>
                           <CardContent>
                             <Typography>
-                             <BreakupOutstandingRecieved
+                              <BreakupOutstandingRecieved
                                 BreakupOutstandingBorrowLatestMonth={BreakupOutstandingBorrowLatestMonth}
                                 BreakupOutstandingBorrowLabels={BreakupOutstandingBorrowLabels}
                                 BreakupOutstandingBorrowSeries={BreakupOutstandingBorrowSeries}
-                              /> 
+                              />
                             </Typography>
                             {/* <Typography variant="body1" className={classes.download_text}>
                               Click here to see details.
@@ -1528,10 +1602,10 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                         <CardActionArea>
                           <CardContent>
                             <Typography>
-                            <BreakBorrowingsSource
-  BreakupBorrowLabels={BreakupBorrowLabels}
-  BreakupBorrowSeries={BreakupBorrowSeries}
-/>;
+                              <BreakBorrowingsSource
+                                BreakupBorrowLabels={BreakupBorrowLabels}
+                                BreakupBorrowSeries={BreakupBorrowSeries}
+                              />;
                             </Typography>
                             {/* <Typography variant="body1" className={classes.download_text}>
                               Click here to see details.
@@ -1551,52 +1625,52 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 {/* HR (Overall, HO & Branch level) Start from Here */}
                 <TabPanel value="6">
                   <Grid container spacing={2}>
-                                        {/* Date Filter Component Start from here */}
-                                        <Grid xs={12} sm={12} md={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2} mt={2}>
- 
-                <Grid xs={12} sm={12} md={7}>
+                    {/* Date Filter Component Start from here */}
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card>
+                        <CardContent>
+                          <Grid container spacing={2} mt={2}>
 
-                <FormControl variant="standard" sx={{ minWidth:"100%" }}>
-<InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
-<Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        name="Qautar"
-                        value={graphFilter.Quatar}
-                        onChange={handleGraphToDateChange}
-                        label="Qautar">
-                         {
-                          Quatars.map((q) => {
-                            return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
-                          })
-                        } 
-                      </Select>
-</FormControl>
-                </Grid>
-                  <Grid xs={12} sm={12} md={3}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      className={classes.Buttonbg}
-                      sx={{ mt: 2, mb: 2 }}
-                      disabled={graphFilter.isDisabled}
-                      onClick={filterdateOutreachGraph}
-                    >
-                      Filter
-                      <Loader loader={graphFilter.isLoader} size={15} />
-                    </Button>
-                  </Grid>
+                            <Grid xs={12} sm={12} md={7}>
 
-                  <Grid xs={12} sm={12} md={2}></Grid>  
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Date Filter Component End here */}
+                              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-standard-label"
+                                  id="demo-simple-select-standard"
+                                  name="Qautar"
+                                  value={graphFilter.Quatar}
+                                  onChange={handleGraphToDateChange}
+                                  label="Qautar">
+                                  {
+                                    Quatars.map((q) => {
+                                      return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
+                                    })
+                                  }
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid xs={12} sm={12} md={3}>
+                              <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.Buttonbg}
+                                sx={{ mt: 2, mb: 2 }}
+                                disabled={graphFilter.isDisabled}
+                                onClick={filterdateOutreachGraph}
+                              >
+                                Filter
+                                <Loader loader={graphFilter.isLoader} size={15} />
+                              </Button>
+                            </Grid>
+
+                            <Grid xs={12} sm={12} md={2}></Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {/* Date Filter Component End here */}
 
                     {/* Staff Distribution Start from here */}
                     <Grid xs={12} sm={12} md={6}>
@@ -1664,52 +1738,52 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 <TabPanel value="7">
 
                   <Grid container spacing={2}>
-                                        {/* Date Filter Component Start from here */}
-                                        <Grid xs={12} sm={12} md={12}>
-            <Card>
-              <CardContent>
-                <Grid container spacing={2} mt={2}>
-               
-                <Grid xs={12} sm={12} md={7}>
+                    {/* Date Filter Component Start from here */}
+                    <Grid xs={12} sm={12} md={12}>
+                      <Card>
+                        <CardContent>
+                          <Grid container spacing={2} mt={2}>
 
-                <FormControl variant="standard" sx={{ minWidth:"100%" }}>
-<InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
-<Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        name="Qautar"
-                        value={graphFilter.Quatar}
-                        onChange={handleGraphToDateChange}
-                        label="Qautar">
-                         {
-                          Quatars.map((q) => {
-                            return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
-                          })
-                        } 
-                      </Select>
-</FormControl>
-                </Grid>
-                  <Grid xs={12} sm={12} md={3}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      className={classes.Buttonbg}
-                      sx={{ mt: 2, mb: 2 }}
-                      disabled={graphFilter.isDisabled}
-                      onClick={filterdateOutreachGraph}
-                    >
-                      Filter
-                      <Loader loader={graphFilter.isLoader} size={15} />
-                    </Button>
-                  </Grid>
+                            <Grid xs={12} sm={12} md={7}>
 
-                  <Grid xs={12} sm={12} md={2}></Grid>  
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          {/* Date Filter Component End here */}
+                              <FormControl variant="standard" sx={{ minWidth: "100%" }}>
+                                <InputLabel id="demo-simple-select-standard-label">Choose quater</InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-standard-label"
+                                  id="demo-simple-select-standard"
+                                  name="Qautar"
+                                  value={graphFilter.Quatar}
+                                  onChange={handleGraphToDateChange}
+                                  label="Qautar">
+                                  {
+                                    Quatars.map((q) => {
+                                      return (<MenuItem value={q.Month}>{q.Month}</MenuItem>)
+                                    })
+                                  }
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid xs={12} sm={12} md={3}>
+                              <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.Buttonbg}
+                                sx={{ mt: 2, mb: 2 }}
+                                disabled={graphFilter.isDisabled}
+                                onClick={filterdateOutreachGraph}
+                              >
+                                Filter
+                                <Loader loader={graphFilter.isLoader} size={15} />
+                              </Button>
+                            </Grid>
+
+                            <Grid xs={12} sm={12} md={2}></Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {/* Date Filter Component End here */}
 
                     {/* Cost of funds %  Start from here */}
                     <Grid xs={12} sm={12} md={6}>
@@ -1755,8 +1829,8 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
                 </TabPanel>
                 {/* Others End from Here */}
 
-  {/* Comprision Tab Start from Here */}
-  {/* <TabPanel value="8">
+                {/* Comprision Tab Start from Here */}
+                {/* <TabPanel value="8">
 
 <Grid container spacing={2}>
 
@@ -1776,11 +1850,11 @@ const getFundingInstructions = async (Quatar = 0, endMonth = 0) => {
  
 </Grid>
 </TabPanel> */}
-{/* Comprision Tab End from Here */}
+                {/* Comprision Tab End from Here */}
 
               </TabContext>
 
-              <Typography style={{textAlign:"left", fontWeight:500}}>Source: Self-reported data from MFIN Member NBFC-MFIs (Data presented here will not match with Micrometer publication since the panel of MFIs differ between the publication and Datahub) </Typography>
+              <Typography style={{ textAlign: "left", fontWeight: 500 }}>Source: Self-reported data from MFIN Member NBFC-MFIs (Data presented here will not match with Micrometer publication since the panel of MFIs differ between the publication and Datahub) </Typography>
 
             </Box>
 

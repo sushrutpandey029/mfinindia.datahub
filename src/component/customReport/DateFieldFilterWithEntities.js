@@ -42,6 +42,7 @@ const style = {
 
 const DateFieldFilter = (props) => {
     const classes = useStyle();
+    const currentDate = new Date();
 
     const graphFilterInitialState = {
         fromMonth: new Date(props.commonState.fromMonth),
@@ -115,6 +116,7 @@ const DateFieldFilter = (props) => {
                                         fullWidth
                                         value={graphFilter.toMonth}
                                         onChange={handleGraphToDateChange}
+                                        maxDate={currentDate}
                                     />
                                 </Grid>
                             </MuiPickersUtilsProvider>

@@ -157,7 +157,7 @@ class CustomPARAnalysis extends React.Component {
         isLoader: false,
         isDisabled: false,
         fromMonth: "Aug-2018",
-        toMonth: "Mar-2019",
+        toMonth: "Jan-2025",
         entities: "Universe"
       }
 
