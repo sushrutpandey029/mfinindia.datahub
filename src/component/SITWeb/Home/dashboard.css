@@ -164,7 +164,7 @@
   .ag-courses-item_date-box p {
     font-size: 16px;
     color: #171616;
-  
+  font-weight: 100;
     z-index: 2;
     position: relative;
   }
@@ -388,3 +388,69 @@
       display: block;
       color: #000000;
   }
+
+  .latest-data-container {
+  padding: 15px;
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.data-label {
+  font-weight: bold;
+}
+
+.data-value {
+  color: #333;
+}
+
+.data-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.data-item-link:hover .data-item {
+  background-color: #f0f7ff; /* Light blue background on hover */
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Gap between buttons */
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button i {
+  margin-left: 8px; /* gap between text and icon */
+  font-size: 18px;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}

@@ -32,6 +32,7 @@ const CriticalEvent = () => {
   const userData = JSON.parse(user);
   const userName = userData.data.user.name || '';
   const userRole = userData.data.role_name || '';
+  const userEmail = userData.data.user.email;
 
   const [regionalHead, setRegionalHead] = useState([]);
 
@@ -47,6 +48,7 @@ const CriticalEvent = () => {
     region: "",
     state: "",
     incidents: "",
+    regional_head: ""
   });
   const [filterOptions, setFilterOptions] = useState({
     years: [],
@@ -54,6 +56,7 @@ const CriticalEvent = () => {
     regions: [],
     states: [],
     incidents: [],
+    regionalHeads: []
   });
   const [loading, setLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -93,6 +96,7 @@ const CriticalEvent = () => {
         regions: (response.data.filters && response.data.filters.regions) || prev.regions,
         states: (response.data.filters && response.data.filters.states) || prev.states,
         incidents: (response.data.filters && response.data.filters.incidents && response.data.filters.incidents.filter(Boolean)) || prev.incidents,
+        regionalHeads: (response.data.filters && response.data.filters.regional_heads) || prev.regionalHeads,
       }));
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -148,6 +152,7 @@ const CriticalEvent = () => {
       region: "",
       state: "",
       incidents: "",
+      regional_head: ""
     });
     fetchData(); // Fetch without any filters
   };
@@ -249,7 +254,7 @@ const CriticalEvent = () => {
       selector: row => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "State",
@@ -333,30 +338,30 @@ const CriticalEvent = () => {
       width: "70px",
       center: true,
     },
-    {
-      name: "File",
-      cell: row => (
-        row.uploadFile ? (
-          <a
-            href={`https://api.mfinindia.org/public/${row.uploadFile}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "blue",
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-          >
-            <DownloadIcon />
-          </a>
-        ) : (
-          <span>—</span>
-        )
-      ),
-      center: true,
-      sortable: true,
-      width: "80px",
-    },
+    // {
+    //   name: "File",
+    //   cell: row => (
+    //     row.uploadFile ? (
+    //       <a
+    //         href={`https://api.mfinindia.org/public/${row.uploadFile}`}
+    //         target="_blank"
+    //         rel="noopener noreferrer"
+    //         style={{
+    //           color: "blue",
+    //           textDecoration: "underline",
+    //           cursor: "pointer",
+    //         }}
+    //       >
+    //         <DownloadIcon />
+    //       </a>
+    //     ) : (
+    //       <span>—</span>
+    //     )
+    //   ),
+    //   center: true,
+    //   sortable: true,
+    //   width: "80px",
+    // },
     {
       name: "View",
       cell: row => (
@@ -391,7 +396,7 @@ const CriticalEvent = () => {
       ignoreRowClick: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Update",
@@ -409,7 +414,7 @@ const CriticalEvent = () => {
       ignoreRowClick: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Delete",
@@ -461,11 +466,14 @@ const CriticalEvent = () => {
           }
           try {
             await axios.post(
-              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update/${row.id}`,
+              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update_new/${row.id}`,
               {
-                regional_head:row.regional_head,
+                regional_head: row.regional_head,
                 hodObservation: status,
                 statusUpdate: comment,
+                loginemail: userEmail,
+                username: userName,
+                activity_type: row.activity_type
               }
             );
             alert("Data Updated Successfully!");
@@ -489,11 +497,13 @@ const CriticalEvent = () => {
               }}
             >
               <option value="">Select Status</option>
-              {row.hod_observation === "Open" ? (
+              <option value="Open">Open</option>
+              <option value="Closed">Closed</option>
+              {/* {row.hod_observation === "Open" ? (
                 <option value="Closed">Closed</option>
               ) : (
                 <option value="Open">Open</option>
-              )}
+              )} */}
 
             </select>
 
@@ -526,7 +536,7 @@ const CriticalEvent = () => {
       ignoreRowClick: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
   ];
 
@@ -571,6 +581,7 @@ const CriticalEvent = () => {
             </Box>
 
             {/* Filter Section */}
+
             <Box
               sx={{
                 mb: 3,
@@ -581,6 +592,32 @@ const CriticalEvent = () => {
               }}
             >
               <Grid container spacing={2} alignItems="center">
+
+                {
+                  (userRole === "Admin" || userRole === "Vertical-Head") && (
+                    <Grid item xs={12} sm={6} md={2}>
+                      <FormControl fullWidth size="small">
+                        <InputLabel>Regional Head</InputLabel>
+                        <Select
+                          name="regional_head"
+                          value={filters.regional_head}
+                          onChange={handleFilterChange}
+                          label="Regional Head"
+                        >
+                          <MenuItem value="">All Regional Head</MenuItem>
+                          {filterOptions.regionalHeads.map(region => (
+                            <MenuItem key={region} value={region}>
+                              {region}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  )
+                }
+
+
+
                 <Grid item xs={12} sm={6} md={2}>
                   <FormControl fullWidth size="small">
                     <InputLabel>Year</InputLabel>
@@ -793,7 +830,7 @@ const CriticalEvent = () => {
                   pagination
                   highlightOnHover
                   progressPending={loading}
-                  
+
                   paginationPerPage={10}
                   paginationRowsPerPageOptions={[10, 20, 30, 50]}
                   noDataComponent={

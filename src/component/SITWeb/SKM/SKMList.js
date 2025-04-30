@@ -30,6 +30,7 @@ const SKMList = () => {
   const userData = JSON.parse(user);
   const userName = userData.data.user.name;
   const userRole = userData.data.role_name;
+  const userEmail = userData.data.user.email;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -162,7 +163,7 @@ const SKMList = () => {
       selector: (row) => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "State",
@@ -195,7 +196,7 @@ const SKMList = () => {
       width: "150px",
     },
     {
-      name: "Person Meet",
+      name: "Person Met",
       selector: (row) => row.personMeet,
       sortable: true,
       width: "130px",
@@ -258,26 +259,26 @@ const SKMList = () => {
       width: "70px",
       center: true,
     },
-    {
-      name: "File",
-      cell: (row) => (
-        <a
-          href={`https://api.mfinindia.org/public/${row.uploadFile}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: "blue",
-            textDecoration: "underline",
-            cursor: "pointer",
-          }}
-        >
-          <DownloadIcon />
-        </a>
-      ),
-      center: true,
-      sortable: true,
-      width: "80px"
-    },
+    // {
+    //   name: "File",
+    //   cell: (row) => (
+    //     <a
+    //       href={`https://api.mfinindia.org/public/${row.uploadFile}`}
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       style={{
+    //         color: "blue",
+    //         textDecoration: "underline",
+    //         cursor: "pointer",
+    //       }}
+    //     >
+    //       <DownloadIcon />
+    //     </a>
+    //   ),
+    //   center: true,
+    //   sortable: true,
+    //   width: "80px"
+    // },
 
     {
       name: "View",
@@ -323,7 +324,7 @@ const SKMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Update",
@@ -346,7 +347,7 @@ const SKMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Delete",
@@ -403,17 +404,21 @@ const SKMList = () => {
         const urlStatus = searchParams.get("status") || "";
 
         const handleUpdate = async () => {
+
           if (!status) {
             alert("Please choose status to update.");
             return;
           }
           try {
             await axios.post(
-              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update/${row.id}`,
+              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update_new/${row.id}`,
               {
-                regional_head:row.regional_head,
+                regional_head: row.regional_head,
                 hodObservation: status,
                 statusUpdate: comment,
+                loginemail: userEmail,
+                username: userName,
+                activity_type: row.activity_type
               }
             );
             alert("Data Updated Successfully!");
@@ -436,11 +441,13 @@ const SKMList = () => {
               }}
             >
               <option value="">Select Status</option>
-              {urlStatus.toLowerCase() === "open" ? (
+              <option value="Open">Open</option>
+              <option value="Closed">Closed</option>
+              {/* {urlStatus.toLowerCase() === "open" ? (
                 <option value="Closed">Closed</option>
               ) : (
                 <option value="Open">Open</option>
-              )}
+              )} */}
 
             </select>
 
@@ -477,7 +484,7 @@ const SKMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
   ];
 
@@ -572,7 +579,7 @@ const SKMList = () => {
                 {/* Filter Dropdown and Button */}
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {userRole === "Admin" && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head") && (
                     <>
                       <select
                         value={selectedRegionalHead}

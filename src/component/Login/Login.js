@@ -26,7 +26,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mfinindia.org/">
-      Microfinance Industry Network.
+        Microfinance Industry Network.
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -35,7 +35,7 @@ function Copyright(props) {
 }
 const useStyle = makeStyles((theme) =>
   createStyles({
-   
+
   }))
 
 
@@ -62,7 +62,7 @@ export default function Login() {
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
- const handlClick = async (e) => {
+  const handlClick = async (e) => {
     e.preventDefault();
     setIsDisabled(true);
     setLoader(true);
@@ -72,11 +72,12 @@ export default function Login() {
     }
 
     try {
+      console.log("before response");
       const response = await authLogin(body)
 
-      console.log("authlogin",response);
+      console.log("authlogin", response);
       console.log('login-response', response);
-  
+
       if (response.data.status === true) {
         localStorage.setItem("login_screen", true);
         localStorage.setItem("access_token", response.data.data.access_token)
@@ -87,23 +88,23 @@ export default function Login() {
         navigate('/login-otp');
         ///navigate(0);
       } else {
-       // setLoader(false);
-       console.log("aasasa",response.data.message);
+        // setLoader(false);
+        console.log("aasasa", response.data.message);
         alert(response.data.message);
-       // ErrorToastMessage("Invalid Email Address and Password.", "failed");
+        // ErrorToastMessage("Invalid Email Address and Password.", "failed");
       }
 
-    }catch (error) {
-      console.error("Login Error", error);
+    } catch (error) {
+      console.log("Login Error", error);
 
-      if(error.response) {
-        if(error.response.data && error.response.data.status === false) {
+      if (error.response) {
+        if (error.response.data && error.response.data.access_status === false) {
           alert(error.response.data.message);
-         }
+        }
       }
-        // window.location.reload();
+      // window.location.reload();
     }
-   
+
   }
 
   const handleForgotClick = async (e) => {
@@ -119,7 +120,7 @@ export default function Login() {
       alert(response.data.message);
       window.location.reload(true)
     } else {
-     // setLoader(false);
+      // setLoader(false);
       alert(response.data.message);
       window.location.reload(true)
     }
@@ -180,23 +181,23 @@ export default function Login() {
               />
               <div className="form-check d-flex">
                 <div>
-                <Grid item xs>
-                  <FormControlLabel
-                    control={<Checkbox value="remember" className='form-check-input' color="primary" />}
-                    label="Remember me"
-                  />
-                </Grid>
+                  <Grid item xs>
+                    <FormControlLabel
+                      control={<Checkbox value="remember" className='form-check-input' color="primary" />}
+                      label="Remember me"
+                    />
+                  </Grid>
                 </div>
                 <Link variant='body2' onClick={handleOpen} >
                   Forgot password?
                 </Link>
               </div>
               <div className="text-center">
-                <button  type="submit"
-                fullWidth className='login '
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                disabled={isDisabled}>
+                <button type="submit"
+                  fullWidth className='login '
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={isDisabled}>
                   Sign In
                 </button>
               </div>
@@ -218,39 +219,39 @@ export default function Login() {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Forgot Password
           </Typography>
-          
-            <Box component="form" noValidate onSubmit={(e) => handleForgotClick(e)} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                className={classes.Buttonbg}
-                sx={{ mt: 3, mb: 2 }}
-                //disabled={loader}
 
-              >
-                Submit
-              </Button>
-              
-            </Box>
+          <Box component="form" noValidate onSubmit={(e) => handleForgotClick(e)} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              variant="outlined"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className={classes.Buttonbg}
+              sx={{ mt: 3, mb: 2 }}
+            //disabled={loader}
+
+            >
+              Submit
+            </Button>
+
+          </Box>
         </Box>
       </Modal>
     </div>
 
-    
+
   );
 }

@@ -11,6 +11,9 @@ const EditMeeting = () => {
   let userName = "";
   let userRole = "";
 
+    const fileInputRef = React.useRef(null);
+  
+
   if (user) {
     try {
       const userData = JSON.parse(user);
@@ -233,14 +236,26 @@ const EditMeeting = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type, files,multiple } = e.target;
+
+    // if (type === "file") {
+    //   setFormData((prev) => ({
+    //     ...prev,
+    //     dynamicFields: {
+    //       ...prev.dynamicFields,
+    //       [name]: files[0],
+    //     },
+    //   }));
+    //   return;
+    // }
 
     if (type === "file") {
       setFormData((prev) => ({
         ...prev,
         dynamicFields: {
           ...prev.dynamicFields,
-          [name]: files[0],
+          // Store ALL files as an array if 'multiple' is enabled, else just the first file
+          [name]: multiple ? Array.from(files) : files[0],
         },
       }));
       return;
@@ -385,8 +400,14 @@ const EditMeeting = () => {
       };
 
       Object.entries(dynamicFields).forEach(([key, value]) => {
-        if (value instanceof File) {
-          formDataToSend.append(key, value);
+        if (key === "uploadFile") {
+          if (Array.isArray(value)) {
+            value.forEach((file) => {
+              formDataToSend.append("uploadFile[]", file);
+            });
+          } else if (value instanceof File) {
+            formDataToSend.append("uploadFile", value);
+          }
         } else if (key === "districts" && Array.isArray(value)) {
           value.forEach((district) =>
             formDataToSend.append("district[]", district)
@@ -402,7 +423,7 @@ const EditMeeting = () => {
         console.log(key, val);
       }
       const response = await axios.post(
-        `https://api.mfinindia.org/api/auth/meetings/update/${id}`,
+        `https://api.mfinindia.org/api/auth/meetings/update_new/${id}`,
         formDataToSend,
         {
           headers: {
@@ -512,13 +533,14 @@ const EditMeeting = () => {
         type: "file",
         label: "Upload File",
         helperText: "(Audio, video, Image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
         type: "text",
         label: "Link"
       },
-      { name: "personMeet", type: "text", label: "Person Meet" },
+      { name: "personMeet", type: "text", label: "Person Met" },
       {
         name: "activityDetails",
         type: "textarea",
@@ -581,6 +603,7 @@ const EditMeeting = () => {
         type: "file",
         label: "Upload File",
         helperText: "(Audio, video, Image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
@@ -651,7 +674,7 @@ const EditMeeting = () => {
         name: "MomUploadedInRadar",
         type: "dropdown",
         options: ["Yes", "No"],
-        label: "",
+        label: "MOM Uploaded in Radar",
       },
       {
         name: "activityDetails",
@@ -701,7 +724,7 @@ const EditMeeting = () => {
         label: "District",
         required: true,
       },
-      { name: "village", type: "text" },
+      { name: "village", type: "text", label: "Village" },
       { name: "dateOfMeeting", type: "date", label: "Meeting Date" },
       {
         name: "sourceOfInformation",
@@ -715,6 +738,7 @@ const EditMeeting = () => {
         type: "file",
         label: "Upload File",
         helperText: "(Audio, video, Image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
@@ -767,10 +791,16 @@ const EditMeeting = () => {
         label: "Online/Physical",
       },
       {
+        name: "placeOfMeeting",
+        type: "text",
+        label: "Meeting Place"
+      },
+      {
         name: "uploadFile",
         type: "file",
         label: "Upload File",
         helperText: "(Audio, video, Image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
@@ -823,12 +853,13 @@ const EditMeeting = () => {
         label: "Online/Physical",
       },
       { name: "dateOfMeeting", type: "date", label: "Meeting Date" },
-      { name: "feedback", type: "text" },
+      { name: "feedback", type: "text", label: "Feedback" },
       {
         name: "uploadFile",
         type: "file",
         label: "Upload File",
         helperText: "(Audio, video, Image, doc, pdf)",
+        multiple: true,
       },
 
       {
@@ -953,7 +984,7 @@ const EditMeeting = () => {
                   value={formData.dynamicFields.incidents_other || ""}
                   onChange={handleChange}
                   className="form-control mt-2"
-                  placeholder="Please specify incident"
+                  // placeholder="Please specify incident"
                   required
                 />
               )}
@@ -984,7 +1015,7 @@ const EditMeeting = () => {
                   value={formData.dynamicFields.sourceOfInformation_other || ""}
                   onChange={handleChange}
                   className="form-control mt-2"
-                  placeholder="Please specify source"
+                  // placeholder="Please specify source"
                   required
                 />
               )}
@@ -1074,7 +1105,7 @@ const EditMeeting = () => {
                 </div>
               )}
 
-             
+
             </div>
           );
         }
@@ -1086,6 +1117,8 @@ const EditMeeting = () => {
             name={field.name}
             onChange={handleChange}
             className="form-control"
+            ref={fileInputRef}
+            multiple={field.multiple || false}
           />
         );
       default:
@@ -1149,11 +1182,11 @@ const EditMeeting = () => {
                   value={formData.regional_head}
                   onChange={handleChange}
                   className="form-select"
-                  disabled={userRole !== "Admin"}
+                  disabled={!(userRole === "Admin" || userRole === "Vertical-Head")}
                   required
                 >
                   <option value="">Select</option>
-                  {userRole === "Admin" ? (
+                  {(userRole === "Admin" || userRole === "Vertical-Head") ? (
                     <>
                       {regionalHead.map((option) => (
                         <option key={option} value={option}>
@@ -1170,12 +1203,16 @@ const EditMeeting = () => {
               {/* Dynamic Fields based on Activity Type */}
               {activityFieldsMap[formData.activity_type] &&
                 activityFieldsMap[formData.activity_type].filter((field) => {
-                    // For DFM, only show placeOfMeeting if mode is Physical
-                    if (formData.activity_type === "DFM" && field.name === "placeOfMeeting") {
-                      return formData.dynamicFields.mode === "Physical";
-                    }
+                  // For DFM, only show placeOfMeeting if mode is Physical
+                  // only show placeOfMeeting if mode is Physical
+                  if ((formData.activity_type === "DFM" || formData.activity_type === "SKM" || formData.activity_type === "SCM" || formData.activity_type === "SCC") && field.name === "placeOfMeeting") {
+                    return formData.dynamicFields.mode === "Physical";
+                  }
+                  if ((formData.activity_type === "SKM") && field.name === "personMeet") {
+                    return formData.dynamicFields.mode === "Physical";
+                  }
                   // Show all fields for Admin
-                  if (userRole === "Admin") return true;
+                  if (userRole === "Admin" || userRole === "Vertical-Head") return true;
                   // Hide these two fields for non-Admins
                   return !["headAndSiRemark", "hodObservation"].includes(
                     field.name

@@ -12,7 +12,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import DownloadIcon from "@mui/icons-material/Download";
 import * as XLSX from "xlsx";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"; 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 
@@ -21,14 +21,15 @@ const MFAPList = () => {
   const userData = JSON.parse(user);
   const userName = userData.data.user.name;
   const userRole = userData.data.role_name;
+  const userEmail = userData.data.user.email;
 
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const status = searchParams.get("status"); // "open" or "closed"
 
-    const [regionalHead, setRegionalHead] = useState([]);
-  
+  const [regionalHead, setRegionalHead] = useState([]);
+
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -90,8 +91,8 @@ const MFAPList = () => {
     }
   }, [data, selectedRegionalHead]);
 
-   //fetching regional head data
-   useEffect(() => {
+  //fetching regional head data
+  useEffect(() => {
     const fetchRegionalHead = async () => {
       try {
         const response = await axios.get(
@@ -163,7 +164,7 @@ const MFAPList = () => {
       selector: (row) => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "State",
@@ -207,7 +208,7 @@ const MFAPList = () => {
       sortable: true,
       width: "160px",
     },
-    
+
     {
       name: "HOD Remark",
       selector: (row) => row.head_and_si_remark,
@@ -218,7 +219,7 @@ const MFAPList = () => {
       name: "HOD Observation(s)",
       selector: (row) => row.hod_observation,
       sortable: true,
-      width:"180px"
+      width: "180px"
     },
     {
       name: "URL",
@@ -247,49 +248,49 @@ const MFAPList = () => {
       width: "70px",
       center: true,
     },
+    // {
+    //   name: "File",
+    //   cell: (row) => (
+    //     <a
+    //       href={`https://api.mfinindia.org/public/${row.uploadFile}`}
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       style={{
+    //         color: "blue",
+    //         textDecoration: "underline",
+    //         cursor: "pointer",
+    //       }}
+    //     >
+    //       <DownloadIcon />
+    //     </a>
+    //   ),
+    //   center: true,
+    //   sortable: true,
+    //   width: "80px",
+    // },
     {
-      name: "File",
+      name: "View",
       cell: (row) => (
-        <a
-          href={`https://api.mfinindia.org/public/${row.uploadFile}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: "blue",
-            textDecoration: "underline",
-            cursor: "pointer",
+        <Button
+          variant="contained"
+          color="info"
+          size="small"
+          onClick={() => handleViewClick(row)}
+          sx={{
+            minWidth: "32px",
+            px: 0,
           }}
         >
-          <DownloadIcon />
-        </a>
+          <VisibilityIcon fontSize="small" />
+        </Button>
       ),
-      center: true,
       sortable: true,
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
       width: "80px",
+      center: true,
     },
-     {
-          name: "View",
-          cell: (row) => (
-            <Button
-              variant="contained"
-              color="info"
-              size="small"
-              onClick={() => handleViewClick(row)}
-              sx={{
-                minWidth: "32px",
-                px: 0,
-              }}
-            >
-              <VisibilityIcon fontSize="small" />
-            </Button>
-          ),
-          sortable: true,
-          ignoreRowClick: true,
-          allowOverflow: true,
-          button: true,
-          width: "80px",
-          center: true,
-        },
     {
       name: "Edit",
       cell: (row) => (
@@ -311,31 +312,31 @@ const MFAPList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
-     {
-          name: "Update",
-          cell: (row) => (
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => handleUpdateClick(row)}
-              sx={{
-                minWidth: "32px",
-                px: 0,
-              }}
-            >
-              <EditIcon fontSize="small" />
-            </Button>
-          ),
-          ignoreRowClick: true,
-          allowOverflow: true,
-          button: true,
-          width: "80px",
-          center: true,
-          omit: (userRole === "Admin" || userRole === "SuperAdmin"),
-        },
+    {
+      name: "Update",
+      cell: (row) => (
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => handleUpdateClick(row)}
+          sx={{
+            minWidth: "32px",
+            px: 0,
+          }}
+        >
+          <EditIcon fontSize="small" />
+        </Button>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+      width: "80px",
+      center: true,
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+    },
     {
       name: "Delete",
       cell: (row) => (
@@ -384,26 +385,33 @@ const MFAPList = () => {
     {
       name: "Admin Update",
       cell: (row) => {
+
         const [comment, setComment] = useState(row.comment || "");
         const [status, setStatus] = useState(row.status || "");
 
-         // Get the URL status parameter
-    const urlStatus = searchParams.get("status") || "";
+        // Get the URL status parameter
+        const urlStatus = searchParams.get("status") || "";
 
         const handleUpdate = async () => {
+
           if (!status) {
             alert("There is no changes to update.");
             return;
           }
+
           try {
             await axios.post(
-              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update/${row.id}`,
+              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update_new/${row.id}`,
               {
-                regional_head:row.regional_head,
+                regional_head: row.regional_head,
                 hodObservation: status,
                 statusUpdate: comment,
+                loginemail: userEmail,
+                username: userName,
+                activity_type: row.activity_type
               }
             );
+
             alert("Data Updated Successfully!");
             window.location.reload();
           } catch (error) {
@@ -424,11 +432,13 @@ const MFAPList = () => {
               }}
             >
               <option value="">Select Status</option>
-              {urlStatus.toLowerCase() === "open" ? (
+              <option value="Open">Open</option>
+              <option value="Closed">Closed</option>
+              {/* {urlStatus.toLowerCase() === "open" ? (
                 <option value="Closed">Closed</option>
               ) : (
                 <option value="Open">Open</option>
-              )}
+              )} */}
             </select>
 
             <textarea
@@ -464,7 +474,7 @@ const MFAPList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
   ];
 
@@ -481,17 +491,17 @@ const MFAPList = () => {
   );
 
   const exportToExcel = () => {
-      // Define columns you want to exclude
-        const columnsToExclude = ['id', 'created_at', 'updated_at']; // replace with your actual column names
-    
-        // Filter the data to exclude unwanted columns
-        const filteredExportData = filteredData.map(item => {
-          const newItem = { ...item };
-          columnsToExclude.forEach(col => delete newItem[col]);
-          return newItem;
-        });
-    
-        const ws = XLSX.utils.json_to_sheet(filteredExportData);
+    // Define columns you want to exclude
+    const columnsToExclude = ['id', 'created_at', 'updated_at']; // replace with your actual column names
+
+    // Filter the data to exclude unwanted columns
+    const filteredExportData = filteredData.map(item => {
+      const newItem = { ...item };
+      columnsToExclude.forEach(col => delete newItem[col]);
+      return newItem;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(filteredExportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "SIT");
 
@@ -523,11 +533,11 @@ const MFAPList = () => {
 
   return (
     <div className="AddMeeting mt-6" >
-    <div className="container-fluid ">
-      <div className="row g-0 ">
-        <div className="col-12">
-           <div className="col-sm-6">
-           <div className="col-sm-6 mb-3">
+      <div className="container-fluid ">
+        <div className="row g-0 ">
+          <div className="col-12">
+            <div className="col-sm-6">
+              <div className="col-sm-6 mb-3">
                 <button
                   onClick={() => navigate(-1)} // Goes back to previous page
                   className="back-button"
@@ -543,118 +553,118 @@ const MFAPList = () => {
                   <ArrowBackIcon />
                 </button>
               </div>
-                                </div>
-    <div style={{ padding: "20px", marginTop: "80px", position: "relative",marginTop:"0px" }}>
-      <h2 style={{ position: "sticky", left: 0 }}>
-        MFAP Meetings - {status.charAt(0).toUpperCase() + status.slice(1)}
-      </h2>
+            </div>
+            <div style={{ padding: "20px", marginTop: "80px", position: "relative", marginTop: "0px" }}>
+              <h2 style={{ position: "sticky", left: 0 }}>
+                MFAP Meetings - {status.charAt(0).toUpperCase() + status.slice(1)}
+              </h2>
 
-      {/* Filter Row */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "20px 0",
-        }}
-      >
-        {/* Filter Dropdown and Button */}
-        <div style={{ display: "flex", gap: "10px" }}>
-          {userRole === "Admin" && (
-            <>
-              <select
-                value={selectedRegionalHead}
-                onChange={(e) => setSelectedRegionalHead(e.target.value)}
+              {/* Filter Row */}
+              <div
                 style={{
-                  padding: "8px 12px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                  minWidth: "200px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  margin: "20px 0",
                 }}
               >
-                <option value="">All Regional Heads</option>
-                {regionalHead.map((head) => (
-                  <option key={head} value={head}>
-                    {head}
-                  </option>
-                ))}
-              </select>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={applyFilter}
-                style={{
-                  fontWeight: "bold",
-                }}
-              >
-                Apply Filter
-              </Button>
-            </>
-          )}
+                {/* Filter Dropdown and Button */}
+                <div style={{ display: "flex", gap: "10px" }}>
+                  {(userRole === "Admin" || userRole === "Vertical-Head") && (
+                    <>
+                      <select
+                        value={selectedRegionalHead}
+                        onChange={(e) => setSelectedRegionalHead(e.target.value)}
+                        style={{
+                          padding: "8px 12px",
+                          borderRadius: "4px",
+                          border: "1px solid #ccc",
+                          minWidth: "200px",
+                        }}
+                      >
+                        <option value="">All Regional Heads</option>
+                        {regionalHead.map((head) => (
+                          <option key={head} value={head}>
+                            {head}
+                          </option>
+                        ))}
+                      </select>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={applyFilter}
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Apply Filter
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                {/* Excel/Print Button */}
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<DownloadIcon />}
+                  onClick={exportToExcel}
+                  style={{
+                    backgroundColor: "rgb(25 118 210)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Excel / Print
+                </Button>
+              </div>
+
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                <DataTable
+                  columns={columns}
+                  data={filteredData}
+                  pagination
+                  highlightOnHover
+                  progressPending={loading}
+                  paginationPerPage={10}
+                  paginationRowsPerPageOptions={[10, 20, 30, 50]}
+                  noDataComponent="No meetings found"
+                  customStyles={{
+                    table: {
+                      style: {
+                        border: "1px solid #000", // Outer border
+                      },
+                    },
+                    headCells: {
+                      style: {
+                        backgroundColor: "#307eac",
+                        fontWeight: "bold",
+                        color: "#fff",
+                        borderRight: "1px solid #fff", // White border between headers
+                        borderBottom: "1px solid #000", // Bottom border for header
+                      },
+                    },
+                    cells: {
+                      style: {
+                        borderRight: "1px solid #000", // Vertical borders
+                        borderBottom: "1px solid #000", // Horizontal borders
+                      },
+                    },
+                    rows: {
+                      style: {
+                        "&:not(:last-child)": {
+                          borderBottom: "none", // Prevent double horizontal borders
+                        },
+                      },
+                    },
+                  }}
+                />
+              )}
+            </div>
+          </div>
         </div>
-
-        {/* Excel/Print Button */}
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<DownloadIcon />}
-          onClick={exportToExcel}
-          style={{
-            backgroundColor: "rgb(25 118 210)",
-            fontWeight: "bold",
-          }}
-        >
-          Excel / Print
-        </Button>
       </div>
-
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <DataTable
-          columns={columns}
-          data={filteredData}
-          pagination
-          highlightOnHover
-          progressPending={loading}
-          paginationPerPage={10}
-          paginationRowsPerPageOptions={[10, 20, 30,50]}
-          noDataComponent="No meetings found"
-          customStyles={{
-            table: {
-              style: {
-                border: "1px solid #000", // Outer border
-              },
-            },
-            headCells: {
-              style: {
-                backgroundColor: "#307eac",
-                fontWeight: "bold",
-                color: "#fff",
-                borderRight: "1px solid #fff", // White border between headers
-                borderBottom: "1px solid #000", // Bottom border for header
-              },
-            },
-            cells: {
-              style: {
-                borderRight: "1px solid #000", // Vertical borders
-                borderBottom: "1px solid #000", // Horizontal borders
-              },
-            },
-            rows: {
-              style: {
-                "&:not(:last-child)": {
-                  borderBottom: "none", // Prevent double horizontal borders
-                },
-              },
-            },
-          }}
-        />
-      )}
-    </div>
-    </div>
-    </div>
-    </div>
     </div>
   );
 };

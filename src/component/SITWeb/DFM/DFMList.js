@@ -12,7 +12,7 @@ import * as XLSX from "xlsx";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import VisibilityIcon from "@mui/icons-material/Visibility";
- 
+
 
 
 const DFMList = () => {
@@ -20,14 +20,15 @@ const DFMList = () => {
   const userData = JSON.parse(user);
   const userName = userData.data.user.name;
   const userRole = userData.data.role_name;
+  const userEmail = userData.data.user.email;
 
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const status = searchParams.get("status"); // "open" or "closed"
 
-    const [regionalHead, setRegionalHead] = useState([]);
-  
+  const [regionalHead, setRegionalHead] = useState([]);
+
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -90,8 +91,8 @@ const DFMList = () => {
     }
   }, [data, selectedRegionalHead]);
 
-   //fetching regional head data
-   useEffect(() => {
+  //fetching regional head data
+  useEffect(() => {
     const fetchRegionalHead = async () => {
       try {
         const response = await axios.get(
@@ -163,7 +164,7 @@ const DFMList = () => {
       selector: (row) => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "State",
@@ -266,29 +267,29 @@ const DFMList = () => {
       width: "70px",
       center: true,
     },
-     {
-          name: "View",
-          cell: (row) => (
-            <Button
-              variant="contained"
-              color="info"
-              size="small"
-              onClick={() => handleViewClick(row)}
-              sx={{
-                minWidth: "32px",
-                px: 0,
-              }}
-            >
-              <VisibilityIcon fontSize="small" />
-            </Button>
-          ),
-          sortable: true,
-          ignoreRowClick: true,
-          allowOverflow: true,
-          button: true,
-          width: "80px",
-          center: true,
-        },
+    {
+      name: "View",
+      cell: (row) => (
+        <Button
+          variant="contained"
+          color="info"
+          size="small"
+          onClick={() => handleViewClick(row)}
+          sx={{
+            minWidth: "32px",
+            px: 0,
+          }}
+        >
+          <VisibilityIcon fontSize="small" />
+        </Button>
+      ),
+      sortable: true,
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+      width: "80px",
+      center: true,
+    },
     {
       name: "Edit",
       cell: (row) => (
@@ -310,7 +311,7 @@ const DFMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Update",
@@ -333,7 +334,7 @@ const DFMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Delete",
@@ -386,8 +387,8 @@ const DFMList = () => {
         const [comment, setComment] = useState(row.comment || "");
         const [status, setStatus] = useState(row.status || "");
 
-         // Get the URL status parameter
-    const urlStatus = searchParams.get("status") || "";
+        // Get the URL status parameter
+        const urlStatus = searchParams.get("status") || "";
 
         const handleUpdate = async () => {
           if (!status) {
@@ -396,11 +397,14 @@ const DFMList = () => {
           }
           try {
             await axios.post(
-              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update/${row.id}`,
+              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update_new/${row.id}`,
               {
-                regional_head:row.regional_head,
+                regional_head: row.regional_head,
                 hodObservation: status,
                 statusUpdate: comment,
+                loginemail: userEmail,
+                username: userName,
+                activity_type: row.activity_type
               }
             );
             alert("Data Updated Successfully!");
@@ -423,11 +427,13 @@ const DFMList = () => {
               }}
             >
               <option value="">Select Status</option>
-              {urlStatus.toLowerCase() === "open" ? (
+              <option value="Open">Open</option>
+              <option value="Closed">Closed</option>
+              {/* {urlStatus.toLowerCase() === "open" ? (
                 <option value="Closed">Closed</option>
               ) : (
                 <option value="Open">Open</option>
-              )}
+              )} */}
             </select>
 
             <textarea
@@ -463,7 +469,7 @@ const DFMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
   ];
 
@@ -480,17 +486,17 @@ const DFMList = () => {
   );
 
   const exportToExcel = () => {
-      // Define columns you want to exclude
-        const columnsToExclude = ['id', 'created_at', 'updated_at']; // replace with your actual column names
-    
-        // Filter the data to exclude unwanted columns
-        const filteredExportData = filteredData.map(item => {
-          const newItem = { ...item };
-          columnsToExclude.forEach(col => delete newItem[col]);
-          return newItem;
-        });
-    
-        const ws = XLSX.utils.json_to_sheet(filteredExportData);
+    // Define columns you want to exclude
+    const columnsToExclude = ['id', 'created_at', 'updated_at']; // replace with your actual column names
+
+    // Filter the data to exclude unwanted columns
+    const filteredExportData = filteredData.map(item => {
+      const newItem = { ...item };
+      columnsToExclude.forEach(col => delete newItem[col]);
+      return newItem;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(filteredExportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "SIT");
 
@@ -567,7 +573,7 @@ const DFMList = () => {
               >
                 {/* Filter Dropdown and Button */}
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {userRole === "Admin" && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head") && (
                     <>
                       <select
                         value={selectedRegionalHead}
@@ -627,7 +633,7 @@ const DFMList = () => {
                   highlightOnHover
                   progressPending={loading}
                   paginationPerPage={10}
-                  paginationRowsPerPageOptions={[10, 20, 30,50]}
+                  paginationRowsPerPageOptions={[10, 20, 30, 50]}
                   noDataComponent="No meetings found"
                   customStyles={{
                     table: {

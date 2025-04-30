@@ -30,6 +30,7 @@ const SCMList = () => {
   const userData = JSON.parse(user);
   const userName = userData.data.user.name || "";
   const userRole = userData.data.role_name || "";
+  const userEmail = userData.data.user.email;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -175,7 +176,7 @@ const SCMList = () => {
       selector: (row) => row.regional_head || "-",
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "State",
@@ -185,7 +186,8 @@ const SCMList = () => {
     },
     {
       name: "District",
-      selector: (row) => row.district || "-",
+      // selector: (row) => row.district || "-",
+      selector: (row) => "All" || "-",
       sortable: true,
       width: "150px",
     },
@@ -264,30 +266,30 @@ const SCMList = () => {
       width: "70px",
       center: true,
     },
-    {
-      name: "File",
-      cell: (row) => (
-        row.uploadFile ? (
-          <a
-            href={`https://api.mfinindia.org/public/${row.uploadFile}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: "blue",
-              textDecoration: "underline",
-              cursor: "pointer",
-            }}
-          >
-            <DownloadIcon />
-          </a>
-        ) : (
-          <span>—</span>
-        )
-      ),
-      center: true,
-      sortable: true,
-      width: "80px",
-    },
+    // {
+    //   name: "File",
+    //   cell: (row) => (
+    //     row.uploadFile ? (
+    //       <a
+    //         href={`https://api.mfinindia.org/public/${row.uploadFile}`}
+    //         target="_blank"
+    //         rel="noopener noreferrer"
+    //         style={{
+    //           color: "blue",
+    //           textDecoration: "underline",
+    //           cursor: "pointer",
+    //         }}
+    //       >
+    //         <DownloadIcon />
+    //       </a>
+    //     ) : (
+    //       <span>—</span>
+    //     )
+    //   ),
+    //   center: true,
+    //   sortable: true,
+    //   width: "80px",
+    // },
     {
       name: "View",
       cell: (row) => (
@@ -332,7 +334,7 @@ const SCMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Update",
@@ -355,7 +357,7 @@ const SCMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
     },
     {
       name: "Delete",
@@ -418,11 +420,14 @@ const SCMList = () => {
           }
           try {
             await axios.post(
-              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update/${row.id}`,
+              `https://api.mfinindia.org/api/auth/meetings/archmeeting_update_new/${row.id}`,
               {
-                regional_head:row.regional_head,
+                regional_head: row.regional_head,
                 hodObservation: status,
                 statusUpdate: comment,
+                loginemail: userEmail,
+                username: userName,
+                activity_type: row.activity_type
               }
             );
             alert("Data Updated Successfully!");
@@ -445,11 +450,13 @@ const SCMList = () => {
               }}
             >
               <option value="">Select Status</option>
-              {urlStatus.toLowerCase() === "open" ? (
+              <option value="Open">Open</option>
+              <option value="Closed">Closed</option>
+              {/* {urlStatus.toLowerCase() === "open" ? (
                 <option value="Closed">Closed</option>
               ) : (
                 <option value="Open">Open</option>
-              )}
+              )} */}
             </select>
 
             <textarea
@@ -485,7 +492,7 @@ const SCMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "SuperAdmin"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
     },
   ];
 
@@ -582,7 +589,7 @@ const SCMList = () => {
                 }}
               >
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {userRole === "Admin" && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head") && (
                     <>
                       <select
                         value={selectedRegionalHead}

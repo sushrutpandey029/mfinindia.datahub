@@ -51,6 +51,7 @@ import OverviewGraphDetails from "../Micrometer/Overview/OverviewGraphDetails"
 import MfinMembersModule from "../Micrometer/mfin_members_module"
 
 import DRIFormUpdate from "../DRI/DRIFormUpdate"
+import axios from "axios";
 
 import UploadPublication from "../ContactDetail/UploadPublication";
 import PublicationList from "../ContactDetail/PublicationList";
@@ -70,6 +71,8 @@ import ChangePasswordFormUpdate from "../DRI/ChangePasswordFormUpdate"
 // 18 May 2023
 import PlaceIcon from '@mui/icons-material/Place';
 import Logout from "./Logout";
+import authHeaders from "../Service/AuthHeaders";
+import { BaseUrl } from "../url/url";
 
 import { RolePermissionList } from './PermissionAccess'
 import ComprisionReport from "../Micrometer/Comprision/ComprisionReport";
@@ -105,7 +108,7 @@ import ViewUpdate from "../SITWeb/ViewUpdate";
 import ViewContent from "../SITWeb/ViewContent";
 import UpdateMeeting from "../SITWeb/UpdateMeeting";
 import Calendar from "../SITWeb/Calendar/Calendar"
- 
+
 
 const drawerWidth = 250;
 
@@ -199,6 +202,8 @@ const styles = theme => ({
 
 var userdetails = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 var userRoleInfo = userdetails ? JSON.parse(userdetails.data.userRole) : null;
+// const userName = userdetails ? userdetails.data.user.name : null;
+// const userRole = userdetails ? userdetails.data.role_name : null;
 const menuItems = [
   {
     title: "Home",
@@ -325,21 +330,99 @@ class MiniDrawer extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  handleLogout = async () => {
-    var result = window.confirm("You have been inactive for a while. Do you want to logout?");
-    if (result) {
-      localStorage.setItem("access_token", "");
-      localStorage.setItem("user", "");
-      localStorage.setItem("loggedIn", "");
-      localStorage.setItem("mobile_verify", "");
-      localStorage.clear();
-      window.location.assign('/')
-      //window.location.reload(true);
-      //navigate('/');
-      // navigate(0);
+  UpdateLogoutTime = async () => {
+    try {
+      const now = new Date();
+
+      const formattedDateTime = `${now.getFullYear()}-${String(
+        now.getMonth() + 1
+      ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
+        now.getHours()
+      ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(
+        now.getSeconds()
+      ).padStart(2, "0")}`;
+
+      const response = await axios.post(
+        "https://api.mfinindia.org/api/auth/meetings/logouttime",
+        { logout_time: formattedDateTime }
+      );
+
+      console.log("Logout time updated successfully:", formattedDateTime);
+      //   return response.data;
+    } catch (err) {
+      console.error(
+        "Error in updating logout time:",
+        err.message,
+        err.response && err.response.data
+      );
+      throw err; // Optional: Re-throw error if needed
     }
-    return;
-  }
+  };
+
+  handleLogout = async () => {
+    var result = window.confirm(
+      "You have been inactive for a while. Do you want to logout?"
+    );
+    if (result) {
+      try {
+        const { userName, role_name, user_id } = this.state;
+
+        // Check if admin user needs to update logout time
+        if (
+         ( role_name === "Admin" || role_name === "Vertical-Head") &&
+          ["Alok Misra","Rama Kamaraju", "Sushrut Pandey"].includes(
+            userName
+          )
+        ) {
+          await this.UpdateLogoutTime();
+        }
+
+        // Clear local storage
+        // localStorage.setItem("access_token", "");
+        // localStorage.setItem("user", "");
+        // localStorage.setItem("loggedIn", "");
+        // localStorage.setItem("mobile_verify", "");
+        // localStorage.clear();
+
+        await axios.get(`${BaseUrl}/api/auth/loginLogout?user_id=${user_id}`,
+          { headers: authHeaders() })
+          .then((response) => {
+            localStorage.setItem("access_token", "");
+            localStorage.setItem("user", "");
+            localStorage.setItem("loggedIn", "");
+            localStorage.setItem("mobile_verify", "");
+            localStorage.clear();
+            window.location.assign("/");
+
+            // window.location.reload(true);
+            console.log('logout api call');
+          }).catch((error) => {
+            console.log('err', error);
+          });
+
+        // Redirect to home
+       
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    }
+  };
+
+  // handleLogout = async () => {
+  //   var result = window.confirm("You have been inactive for a while. Do you want to logout?");
+  //   if (result) {
+  //     localStorage.setItem("access_token", "");
+  //     localStorage.setItem("user", "");
+  //     localStorage.setItem("loggedIn", "");
+  //     localStorage.setItem("mobile_verify", "");
+  //     localStorage.clear();
+  //     window.location.assign('/')
+  //     //window.location.reload(true);
+  //     //navigate('/');
+  //     // navigate(0);
+  //   }
+  //   return;
+  // }
 
 
   // componentDidMount() {
@@ -362,6 +445,7 @@ class MiniDrawer extends React.Component {
     if (userdetails && userdetails.data) {
       this.setState({
         userName: userdetails.data.user.name,
+        user_id: userdetails.data.user.id,
         userRole: JSON.parse(userdetails.data.userRole),
         role_name: userdetails.data.role_name,
         MFI_Name: userdetails.data.user.MFI_Name || "",
@@ -478,16 +562,16 @@ class MiniDrawer extends React.Component {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose} className={classes.menuItem}>
-                  <Link to="/change-password" style={{ color: "#000", textDecoration: "none" }}>
+                  <Link to="/change-password" style={{ color: "#000", textDecoration: "none" ,fontWeight:"100"}}>
                     Change Password
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose} className={classes.menuItem}>
-                  <Link to="/change-phone" style={{ color: "#000", textDecoration: "none" }}>
+                  <Link to="/change-phone" style={{ color: "#000", textDecoration: "none",fontWeight:"100" }}>
                     Change Phone
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={this.handleLogout} className={classes.menuItem}>
+                <MenuItem onClick={this.handleLogout} className={classes.menuItem}  style={{ color: "#000", textDecoration: "none",fontWeight:"100"}}>
                   Logout
                 </MenuItem>
               </Menu>
@@ -579,7 +663,7 @@ class MiniDrawer extends React.Component {
             <Route path="/change-password" element={<ChangePasswordFormUpdate />} />
             <Route path="/change-phone" element={<ChangePhoneForm />} />
             <Route path="/comparison-report" element={<ComparisonModule />} />
-            <Route path="/data-reports" element={<DataMaster/>}/>
+            <Route path="/data-reports" element={<DataMaster />} />
 
             {/* route for sit */}
             <Route path="/sitdashboard/*" element={<Dashboard />} />
@@ -602,9 +686,9 @@ class MiniDrawer extends React.Component {
             <Route path="/mfap-lists" element={<MFAPList />} />
             <Route path="/edit-meeting/:id" element={<EditMeeting />} />
             <Route path="/meeting-tracking/:id" element={<ViewUpdate />} />
-            <Route path="/view-content" element={<ViewContent/>} />
-            <Route path="/update-meeting/:id" element={<UpdateMeeting/>}/>
-            <Route path ="/calendar" element={<Calendar/>}/>
+            <Route path="/view-content" element={<ViewContent />} />
+            <Route path="/update-meeting/:id" element={<UpdateMeeting />} />
+            <Route path="/calendar" element={<Calendar />} />
 
 
 

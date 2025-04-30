@@ -29,7 +29,8 @@ const FormEntry = () => {
   }
 
   const [showOtherIncidentInput, setShowOtherIncidentInput] = useState(false);
-  const [showOtherSOInformation, setShowOtherSOInformation] = useState(false)
+  const [showOtherSOInformation, setShowOtherSOInformation] = useState(false);
+  const fileInputRef = React.useRef(null);
 
   const navigate = useNavigate();
   const [regions, setRegions] = useState([]);
@@ -177,7 +178,7 @@ const FormEntry = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type, files,multiple } = e.target;
 
     // Handle file inputs
     if (type === "file") {
@@ -185,11 +186,22 @@ const FormEntry = () => {
         ...prev,
         dynamicFields: {
           ...prev.dynamicFields,
-          [name]: files[0],
+          // Store ALL files as an array if 'multiple' is enabled, else just the first file
+          [name]: multiple ? Array.from(files) : files[0],
         },
       }));
       return;
     }
+    // if (type === "file") {
+    //   setFormData((prev) => ({
+    //     ...prev,
+    //     dynamicFields: {
+    //       ...prev.dynamicFields,
+    //       [name]: files[0],
+    //     },
+    //   }));
+    //   return;
+    // }
 
     // Special case for incidents dropdown
     if (name === "incidents") {
@@ -345,8 +357,14 @@ const FormEntry = () => {
       formDataToSend.append("activity_type", formData.activity_type);
 
       Object.entries(formData.dynamicFields).forEach(([key, value]) => {
-        if (value instanceof File) {
-          formDataToSend.append(key, value);
+        if (key === "uploadFile") {
+          if (Array.isArray(value)) {
+            value.forEach((file) => {
+              formDataToSend.append("uploadFile[]", file);
+            });
+          } else if (value instanceof File) {
+            formDataToSend.append("uploadFile", value);
+          }
         } else if (key === "districts" && Array.isArray(value)) {
           value.forEach((district) =>
             formDataToSend.append("district[]", district)
@@ -375,7 +393,7 @@ const FormEntry = () => {
       }
 
       const response = await axios.post(
-        "https://api.mfinindia.org/api/auth/meetings",
+        "https://api.mfinindia.org/api/auth/meetings/store_new",
         formDataToSend,
         {
           headers: {
@@ -421,17 +439,8 @@ const FormEntry = () => {
       });
       setShowOtherIncidentInput(false); // Reset the visibility state
       setShowOtherSOInformation(false)
-      // Navigate based on activity type
-      // const activityRoutes = {
-      //   SCM: "/scm",
-      //   DFM: "/dfm",
-      //   MFAP: "/mfap",
-      //   CI: "/critical-event",
-      //   SCC: "/scc",
-      //   SKM: "/skm",
-      // };
-      // const route = activityRoutes[formData.activity_type] || "/sitdashboard";
-      navigate("/form-entry");
+      // navigate("/form-entry");
+      window.location.href = "/form-entry";
     } catch (error) {
       let errorMessage = "Submission failed";
       if (
@@ -482,25 +491,30 @@ const FormEntry = () => {
         label: "Online/Physical",
         required: true,
       },
+      { name: "personMeet", type: "text", label: "Person Met" },
+      {
+        name: "placeOfMeeting",
+        type: "text",
+        label: "Meeting Place"
+      },
       {
         name: "uploadFile",
         type: "file",
         label: "Upload File",
         helperText: "(audio, video, image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
         type: "text",
         label: "Link"
       },
-      { name: "personMeet", type: "text", label: "Person Meet" },
+
       {
         name: "activityDetails",
         type: "textarea",
         label: "Activity Details",
         required: true,
-        // helperText:
-        // "SCM & DFM - Indicate critical issue(s) raised & MFIN action points; SKM - indicate the officer(s) details, purpose & outcome of the engagement; Critical Issues - Indicate source of Information, date reported to MFIN, MFIs affected, #Borrowers duped, amount, #Outstanding loans etc.",
       },
       {
         name: "importantDecision",
@@ -558,6 +572,7 @@ const FormEntry = () => {
         type: "file",
         label: "Upload File",
         helperText: "(audio, video, image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
@@ -625,7 +640,7 @@ const FormEntry = () => {
         name: "MomUploadedInRadar",
         type: "dropdown",
         options: ["Yes", "No"],
-        label: "MOM uploaded in Radar",
+        label: "MOM Uploaded in Radar",
       },
       {
         name: "url",
@@ -697,6 +712,7 @@ const FormEntry = () => {
         type: "file",
         label: "Upload File",
         helperText: "(audio, video, image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
@@ -751,10 +767,16 @@ const FormEntry = () => {
         label: "Online/Physical",
       },
       {
+        name: "placeOfMeeting",
+        type: "text",
+        label: "Meeting Place"
+      },
+      {
         name: "uploadFile",
         type: "file",
         label: "Upload File",
         helperText: "(audio, video, image, doc, pdf)",
+        multiple: true,
       },
       {
         name: "url",
@@ -795,7 +817,7 @@ const FormEntry = () => {
         label: "District",
         required: true,
       },
-      { name: "village", type: "text" },
+      { name: "village", type: "text", label: "Village" },
       {
         name: "type",
         type: "dropdown",
@@ -809,12 +831,13 @@ const FormEntry = () => {
         label: "Online/Physical",
       },
       { name: "dateOfMeeting", type: "date", label: "Meeting Date" },
-      { name: "feedback", type: "text" },
+      { name: "feedback", type: "text", label: "Feedback" },
       {
         name: "uploadFile",
         type: "file",
         label: "Upload File",
         helperText: "(audio, video, image, doc, pdf)",
+        multiple: true,
       }, {
         name: "url",
         type: "text",
@@ -940,7 +963,7 @@ const FormEntry = () => {
                   value={formData.dynamicFields.otherIncident || ""}
                   onChange={handleChange}
                   className="form-control mt-2"
-                  placeholder="Please specify incident"
+                  // placeholder="Please specify incident"
                   required
                 />
               )}
@@ -971,7 +994,7 @@ const FormEntry = () => {
                   value={formData.dynamicFields.sourceOfInformationOther || ""}
                   onChange={handleChange}
                   className="form-control mt-2"
-                  placeholder="Please specify incident"
+                  // placeholder="Please specify incident"
                   required
                 />
               )}
@@ -1073,8 +1096,19 @@ const FormEntry = () => {
             name={field.name}
             onChange={handleChange}
             className="form-control"
+            ref={fileInputRef}
+            multiple={field.multiple || false}
           />
         );
+      // return (
+      //   <input
+      //     type="file"
+      //     name={field.name}
+      //     onChange={handleChange}
+      //     className="form-control"
+      //     ref={fileInputRef}
+      //   />
+      // );
       default:
         return null;
     }
@@ -1087,7 +1121,10 @@ const FormEntry = () => {
           <div className="col-md-6">
             <div className="col-sm-6 mb-3">
               <button
-                onClick={() => navigate(-1)} // Goes back to previous page
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(-1);
+                }}
                 className="back-button"
                 style={{
                   background: "none",
@@ -1136,10 +1173,10 @@ const FormEntry = () => {
                   value={formData.regional_head}
                   onChange={handleChange}
                   className="form-select"
-                  disabled={userRole !== "Admin"}
+                  disabled={!(userRole === "Admin" || userRole === "Vertical-Head")}
                   required
                 >
-                  {userRole === "Admin" ? (
+                  {(userRole === "Admin" || userRole === "Vertical-Head") ? (
                     <>
                       <option value="">Select</option>
                       {regionalHead.map((option) => (
@@ -1160,17 +1197,20 @@ const FormEntry = () => {
               {activityFieldsMap[formData.activity_type] &&
                 activityFieldsMap[formData.activity_type]
                   .filter((field) => {
-                     // For DFM, only show placeOfMeeting if mode is Physical
-                     if (formData.activity_type === "DFM" && field.name === "placeOfMeeting") {
+                    // only show placeOfMeeting if mode is Physical
+                    if ((formData.activity_type === "DFM" || formData.activity_type === "SKM" || formData.activity_type === "SCM" || formData.activity_type === "SCC") && field.name === "placeOfMeeting") {
+                      return formData.dynamicFields.mode === "Physical";
+                    }
+                    if ((formData.activity_type === "SKM") && field.name === "personMeet") {
                       return formData.dynamicFields.mode === "Physical";
                     }
                     // Show all fields for Admin
-                    if (userRole === "Admin") return true;
+                    if (userRole === "Admin" || userRole === "Vertical-Head") return true;
                     // Hide these two fields for non-Admins
                     return !["headAndSiRemark", "hodObservation"].includes(
                       field.name
                     );
-                   
+
                   })
                   .map((field) => (
                     <div
