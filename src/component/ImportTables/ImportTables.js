@@ -22,11 +22,17 @@ import authHeaders from "../Service/AuthHeaders";
 import {
   BaseUrl, importContactApi, importDRIStateApi,
   importDRIDistrictApi, importCbDistrict, importCbState,
-  importMemberAssociateMaster, importMudraBankWise, importMudraDistrictWise,
-  importRadarExternalInciterApi, importRadarNegativeAreaApi, importRadarRiskyAreaApi,
-  importRadarRingLeaderApi, importMmStateMasterApi, importMmMasterDataApi, importSROEBDataApi,
+  importMemberAssociateMaster, importMmStateMasterApi, importMmMasterDataApi, importSROEBDataApi,
   importSROCBDataApi, importSROQARDataApi, importSROCGRMDataApi, importALMDataApi, importRBIMasterDataApi, importMmMasterBorrowingsDataApi, importDRIMapDataApi
 } from "../url/url";
+// import {
+//   BaseUrl, importContactApi, importDRIStateApi,
+//   importDRIDistrictApi, importCbDistrict, importCbState,
+//   importMemberAssociateMaster, importMudraBankWise, importMudraDistrictWise,
+//   importRadarExternalInciterApi, importRadarNegativeAreaApi, importRadarRiskyAreaApi,
+//   importRadarRingLeaderApi, importMmStateMasterApi, importMmMasterDataApi, importSROEBDataApi,
+//   importSROCBDataApi, importSROQARDataApi, importSROCGRMDataApi, importALMDataApi, importRBIMasterDataApi, importMmMasterBorrowingsDataApi, importDRIMapDataApi
+// } from "../url/url";
 import { SuccessFailedMessage, SuccessToastMessage, ErrorToastMessage } from "../common/SuccessFailedMessage";
 const useStyle = makeStyles((theme) =>
   createStyles({
@@ -90,12 +96,12 @@ const ImportTables = () => {
   const refContactDetails = useRef(null);
   const refDRIState = useRef(null);
   const refDRIDistrict = useRef(null);
-  const refMudraDistrictkWise = useRef(null);
-  const refMudraBankWise = useRef(null);
-  const refRadarExternalInciter = useRef(null);
-  const refRadarNegativeArea = useRef(null);
-  const refRadarRiskyArea = useRef(null);
-  const refRadarRingLeader = useRef(null);
+  // const refMudraDistrictkWise = useRef(null);
+  // const refMudraBankWise = useRef(null);
+  // const refRadarExternalInciter = useRef(null);
+  // const refRadarNegativeArea = useRef(null);
+  // const refRadarRiskyArea = useRef(null);
+  // const refRadarRingLeader = useRef(null);
   const refMmStateMaster = useRef(null);
   const refSROEB = useRef(null);
   const refSROEB1 = useRef(null);
@@ -436,25 +442,25 @@ const ImportTables = () => {
   /* DRI Map Data Import  */
 
   const DRIMapDataInitialState = {
-    isLoader : false,
+    isLoader: false,
     isDisabled: true,
-    csv_import : null
+    csv_import: null
   }
 
   const [DRIMapData, setDRIMapData] = useState(DRIMapDataInitialState);
-   
+
   const changeImportDRIMapDataCsv = (event) => {
-    if(event.target.files[0] && event.target.files[0] !== undefined) {
+    if (event.target.files[0] && event.target.files[0] !== undefined) {
       setDRIMapData({
         ...DRIMapData,
-        ["csv_import"] : event.target.files[0],
-        ["isDisabled"] : false
+        ["csv_import"]: event.target.files[0],
+        ["isDisabled"]: false
       })
     } else {
       setDRIMapData({
         ...DRIMapData,
-        ["csv_import"] : null,
-        ["isDisabled"] : true
+        ["csv_import"]: null,
+        ["isDisabled"]: true
       })
     }
   }
@@ -462,8 +468,8 @@ const ImportTables = () => {
   const btnImportDRIMapData = async () => {
     setDRIMapData({
       ...DRIMapData,
-      ["isDisabled"] : true,
-      ["isLoader"]  :true
+      ["isDisabled"]: true,
+      ["isLoader"]: true
     });
     const formData = new FormData();
     formData.append(
@@ -472,14 +478,14 @@ const ImportTables = () => {
       DRIMapData.csv_import.name
     );
     const api = `${importDRIMapDataApi}`;
-    const res = await axios.post(`${BaseUrl}/${api}`,formData, {headers: authHeaders()})
-    .then((response) => {
-      return response
-    })
-    .catch((error) => {
-      return error.response
-    });
-    if(res.status === 200) {
+    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() })
+      .then((response) => {
+        return response
+      })
+      .catch((error) => {
+        return error.response
+      });
+    if (res.status === 200) {
       SuccessToastMessage(res.data.message, "Success1");
       setDRIMapData(DRIMapDataInitialState);
       refDRIMapData.current.value = null
@@ -488,8 +494,8 @@ const ImportTables = () => {
       setDRIMapData(DRIMapDataInitialState)
       refDRIMapData.current.value = null
     } else {
-      if(res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message,"failed")
+      if (res.data.message !== undefined) {
+        ErrorToastMessage(res.data.message, "failed")
         setDRIMapData(DRIMapDataInitialState);
         refDRIMapData.current.value = null
       }
@@ -544,286 +550,286 @@ const ImportTables = () => {
   }
 
   /* Mudra District Wise  */
-  const mudraDistrictkWiseInitialState = {
-    isLoader: false,
-    isDisabled: true,
-    csv_import: null
-  }
+  // const mudraDistrictkWiseInitialState = {
+  //   isLoader: false,
+  //   isDisabled: true,
+  //   csv_import: null
+  // }
 
-  const [mudraDistrictkWise, setMudraDistrictkWise] = useState(mudraDistrictkWiseInitialState);
-  const changeImportMudraDistrictWiseCsv = (event) => {
-    if (event.target.files[0] && event.target.files[0] !== undefined) {
-      setMudraDistrictkWise({ ...mudraDistrictkWise, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-    } else {
-      setMudraDistrictkWise({ ...mudraDistrictkWise, ['csv_import']: null, ['isDisabled']: true });
-    }
-  }
+  // const [mudraDistrictkWise, setMudraDistrictkWise] = useState(mudraDistrictkWiseInitialState);
+  // const changeImportMudraDistrictWiseCsv = (event) => {
+  //   if (event.target.files[0] && event.target.files[0] !== undefined) {
+  //     setMudraDistrictkWise({ ...mudraDistrictkWise, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+  //   } else {
+  //     setMudraDistrictkWise({ ...mudraDistrictkWise, ['csv_import']: null, ['isDisabled']: true });
+  //   }
+  // }
 
-  const btnImportMudraDistrictkWise = async () => {
-    setMudraDistrictkWise({ ...mudraDistrictkWise, ['isDisabled']: true, ['isLoader']: true });
-    const formData = new FormData();
-    formData.append(
-      "csv_import",
-      mudraDistrictkWise.csv_import,
-      mudraDistrictkWise.csv_import.name
-    );
-    const api = `${importMudraDistrictWise}`;
-    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-      return response;
-    }).catch((error) => {
-      return error.response;
-    });
-    if (res.status === 200) {
-      SuccessToastMessage(res.data.message, "success1");
-      setMudraDistrictkWise(mudraDistrictkWiseInitialState);
-      refMudraDistrictkWise.current.value = null
-    } else if (res.status === 401) {
-      ErrorToastMessage(res.data.error.csv_import[0], "failed");
-      setMudraDistrictkWise(mudraDistrictkWiseInitialState);
-      refMudraDistrictkWise.current.value = null
-    } else {
-      if (res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message, "failedasdasda");
-        setMudraDistrictkWise(mudraDistrictkWiseInitialState);
-        refMudraDistrictkWise.current.value = null
-      }
-    }
-  }
+  // const btnImportMudraDistrictkWise = async () => {
+  //   setMudraDistrictkWise({ ...mudraDistrictkWise, ['isDisabled']: true, ['isLoader']: true });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "csv_import",
+  //     mudraDistrictkWise.csv_import,
+  //     mudraDistrictkWise.csv_import.name
+  //   );
+  //   const api = `${importMudraDistrictWise}`;
+  //   const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+  //     return response;
+  //   }).catch((error) => {
+  //     return error.response;
+  //   });
+  //   if (res.status === 200) {
+  //     SuccessToastMessage(res.data.message, "success1");
+  //     setMudraDistrictkWise(mudraDistrictkWiseInitialState);
+  //     refMudraDistrictkWise.current.value = null
+  //   } else if (res.status === 401) {
+  //     ErrorToastMessage(res.data.error.csv_import[0], "failed");
+  //     setMudraDistrictkWise(mudraDistrictkWiseInitialState);
+  //     refMudraDistrictkWise.current.value = null
+  //   } else {
+  //     if (res.data.message !== undefined) {
+  //       ErrorToastMessage(res.data.message, "failedasdasda");
+  //       setMudraDistrictkWise(mudraDistrictkWiseInitialState);
+  //       refMudraDistrictkWise.current.value = null
+  //     }
+  //   }
+  // }
 
   /* Mudra Bank Wise  */
-  const mudraBankWiseInitialState = {
-    isLoader: false,
-    isDisabled: true,
-    csv_import: null
-  }
+  // const mudraBankWiseInitialState = {
+  //   isLoader: false,
+  //   isDisabled: true,
+  //   csv_import: null
+  // }
 
-  const [mudraBankWise, setMudraBankWise] = useState(mudraBankWiseInitialState);
-  const changeImportMudraBankWiseCsv = (event) => {
-    if (event.target.files[0] && event.target.files[0] !== undefined) {
-      setMudraBankWise({ ...mudraBankWise, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-    } else {
-      setMudraBankWise({ ...mudraBankWise, ['csv_import']: null, ['isDisabled']: true });
-    }
-  }
+  // const [mudraBankWise, setMudraBankWise] = useState(mudraBankWiseInitialState);
+  // const changeImportMudraBankWiseCsv = (event) => {
+  //   if (event.target.files[0] && event.target.files[0] !== undefined) {
+  //     setMudraBankWise({ ...mudraBankWise, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+  //   } else {
+  //     setMudraBankWise({ ...mudraBankWise, ['csv_import']: null, ['isDisabled']: true });
+  //   }
+  // }
 
-  const btnImportMudraBankWise = async () => {
-    setMudraBankWise({ ...mudraBankWise, ['isDisabled']: true, ['isLoader']: true });
-    const formData = new FormData();
-    formData.append(
-      "csv_import",
-      mudraBankWise.csv_import,
-      mudraBankWise.csv_import.name
-    );
-    const api = `${importMudraBankWise}`;
-    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-      return response;
-    }).catch((error) => {
-      return error.response;
-    });
-    if (res.status === 200) {
-      SuccessToastMessage(res.data.message, "success1");
-      setMudraBankWise(mudraBankWiseInitialState);
-      refMudraBankWise.current.value = null;
-    } else if (res.status === 401) {
-      ErrorToastMessage(res.data.error.csv_import[0], "failed");
-      setMudraBankWise(mudraBankWiseInitialState);
-      refMudraBankWise.current.value = null;
-    } else {
-      if (res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message, "failedasdasda");
-        setMudraBankWise(mudraBankWiseInitialState);
-        refMudraBankWise.current.value = null;
-      }
-    }
-  }
+  // const btnImportMudraBankWise = async () => {
+  //   setMudraBankWise({ ...mudraBankWise, ['isDisabled']: true, ['isLoader']: true });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "csv_import",
+  //     mudraBankWise.csv_import,
+  //     mudraBankWise.csv_import.name
+  //   );
+  //   const api = `${importMudraBankWise}`;
+  //   const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+  //     return response;
+  //   }).catch((error) => {
+  //     return error.response;
+  //   });
+  //   if (res.status === 200) {
+  //     SuccessToastMessage(res.data.message, "success1");
+  //     setMudraBankWise(mudraBankWiseInitialState);
+  //     refMudraBankWise.current.value = null;
+  //   } else if (res.status === 401) {
+  //     ErrorToastMessage(res.data.error.csv_import[0], "failed");
+  //     setMudraBankWise(mudraBankWiseInitialState);
+  //     refMudraBankWise.current.value = null;
+  //   } else {
+  //     if (res.data.message !== undefined) {
+  //       ErrorToastMessage(res.data.message, "failedasdasda");
+  //       setMudraBankWise(mudraBankWiseInitialState);
+  //       refMudraBankWise.current.value = null;
+  //     }
+  //   }
+  // }
 
   /* Radar External Inciter  */
-  const radarExternalInciterInitialState = {
-    isLoader: false,
-    isDisabled: true,
-    csv_import: null
-  }
+  // const radarExternalInciterInitialState = {
+  //   isLoader: false,
+  //   isDisabled: true,
+  //   csv_import: null
+  // }
 
-  const [radarExternalInciter, setRadarExternalInciter] = useState(radarExternalInciterInitialState);
-  const changeImportRadarExternalInciterCsv = (event) => {
-    if (event.target.files[0] && event.target.files[0] !== undefined) {
-      setRadarExternalInciter({ ...radarExternalInciter, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-    } else {
-      setRadarExternalInciter({ ...radarExternalInciter, ['csv_import']: null, ['isDisabled']: true });
-    }
-  }
+  // const [radarExternalInciter, setRadarExternalInciter] = useState(radarExternalInciterInitialState);
+  // const changeImportRadarExternalInciterCsv = (event) => {
+  //   if (event.target.files[0] && event.target.files[0] !== undefined) {
+  //     setRadarExternalInciter({ ...radarExternalInciter, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+  //   } else {
+  //     setRadarExternalInciter({ ...radarExternalInciter, ['csv_import']: null, ['isDisabled']: true });
+  //   }
+  // }
 
-  const btnImportRadarExternalInciter = async () => {
-    setRadarExternalInciter({ ...radarExternalInciter, ['isDisabled']: true, ['isLoader']: true });
-    const formData = new FormData();
-    formData.append(
-      "csv_import",
-      radarExternalInciter.csv_import,
-      radarExternalInciter.csv_import.name
-    );
-    const api = `${importRadarExternalInciterApi}`;
-    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-      return response;
-    }).catch((error) => {
-      return error.response;
-    });
-    if (res.status === 200) {
-      SuccessToastMessage(res.data.message, "success1");
-      setRadarExternalInciter(radarExternalInciterInitialState);
-      refRadarExternalInciter.current.value = null;
-    } else if (res.status === 401) {
-      ErrorToastMessage(res.data.error.csv_import[0], "failed");
-      setRadarExternalInciter(radarExternalInciterInitialState);
-      refRadarExternalInciter.current.value = null;
-    } else {
-      if (res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message, "failedasdasda");
-        setRadarExternalInciter(radarExternalInciterInitialState);
-        refRadarExternalInciter.current.value = null;
-      }
-    }
-  }
+  // const btnImportRadarExternalInciter = async () => {
+  //   setRadarExternalInciter({ ...radarExternalInciter, ['isDisabled']: true, ['isLoader']: true });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "csv_import",
+  //     radarExternalInciter.csv_import,
+  //     radarExternalInciter.csv_import.name
+  //   );
+  //   const api = `${importRadarExternalInciterApi}`;
+  //   const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+  //     return response;
+  //   }).catch((error) => {
+  //     return error.response;
+  //   });
+  //   if (res.status === 200) {
+  //     SuccessToastMessage(res.data.message, "success1");
+  //     setRadarExternalInciter(radarExternalInciterInitialState);
+  //     refRadarExternalInciter.current.value = null;
+  //   } else if (res.status === 401) {
+  //     ErrorToastMessage(res.data.error.csv_import[0], "failed");
+  //     setRadarExternalInciter(radarExternalInciterInitialState);
+  //     refRadarExternalInciter.current.value = null;
+  //   } else {
+  //     if (res.data.message !== undefined) {
+  //       ErrorToastMessage(res.data.message, "failedasdasda");
+  //       setRadarExternalInciter(radarExternalInciterInitialState);
+  //       refRadarExternalInciter.current.value = null;
+  //     }
+  //   }
+  // }
 
   /* Radar  Negative Area  */
-  const radarNegativeAreaInitialState = {
-    isLoader: false,
-    isDisabled: true,
-    csv_import: null
-  }
+  // const radarNegativeAreaInitialState = {
+  //   isLoader: false,
+  //   isDisabled: true,
+  //   csv_import: null
+  // }
 
-  const [radarNegativeArea, setRadarNegativeArea] = useState(radarNegativeAreaInitialState);
-  const changeImportRadarNegativeAreaCsv = (event) => {
-    if (event.target.files[0] && event.target.files[0] !== undefined) {
-      setRadarNegativeArea({ ...radarNegativeArea, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-    } else {
-      setRadarNegativeArea({ ...radarNegativeArea, ['csv_import']: null, ['isDisabled']: true });
-    }
-  }
+  // const [radarNegativeArea, setRadarNegativeArea] = useState(radarNegativeAreaInitialState);
+  // const changeImportRadarNegativeAreaCsv = (event) => {
+  //   if (event.target.files[0] && event.target.files[0] !== undefined) {
+  //     setRadarNegativeArea({ ...radarNegativeArea, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+  //   } else {
+  //     setRadarNegativeArea({ ...radarNegativeArea, ['csv_import']: null, ['isDisabled']: true });
+  //   }
+  // }
 
-  const btnImportRadarNegativeArea = async () => {
-    setRadarNegativeArea({ ...radarNegativeArea, ['isDisabled']: true, ['isLoader']: true });
-    const formData = new FormData();
-    formData.append(
-      "csv_import",
-      radarNegativeArea.csv_import,
-      radarNegativeArea.csv_import.name
-    );
-    const api = `${importRadarNegativeAreaApi}`;
-    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-      return response;
-    }).catch((error) => {
-      return error.response;
-    });
-    if (res.status === 200) {
-      SuccessToastMessage(res.data.message, "success1");
-      setRadarNegativeArea(radarNegativeAreaInitialState);
-      refRadarNegativeArea.current.value = null;
-    } else if (res.status === 401) {
-      ErrorToastMessage(res.data.error.csv_import[0], "failed");
-      setRadarNegativeArea(radarNegativeAreaInitialState);
-      refRadarNegativeArea.current.value = null;
-    } else {
-      if (res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message, "failedasdasda");
-        setRadarNegativeArea(radarNegativeAreaInitialState);
-        refRadarNegativeArea.current.value = null;
-      }
-    }
-  }
+  // const btnImportRadarNegativeArea = async () => {
+  //   setRadarNegativeArea({ ...radarNegativeArea, ['isDisabled']: true, ['isLoader']: true });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "csv_import",
+  //     radarNegativeArea.csv_import,
+  //     radarNegativeArea.csv_import.name
+  //   );
+  //   const api = `${importRadarNegativeAreaApi}`;
+  //   const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+  //     return response;
+  //   }).catch((error) => {
+  //     return error.response;
+  //   });
+  //   if (res.status === 200) {
+  //     SuccessToastMessage(res.data.message, "success1");
+  //     setRadarNegativeArea(radarNegativeAreaInitialState);
+  //     refRadarNegativeArea.current.value = null;
+  //   } else if (res.status === 401) {
+  //     ErrorToastMessage(res.data.error.csv_import[0], "failed");
+  //     setRadarNegativeArea(radarNegativeAreaInitialState);
+  //     refRadarNegativeArea.current.value = null;
+  //   } else {
+  //     if (res.data.message !== undefined) {
+  //       ErrorToastMessage(res.data.message, "failedasdasda");
+  //       setRadarNegativeArea(radarNegativeAreaInitialState);
+  //       refRadarNegativeArea.current.value = null;
+  //     }
+  //   }
+  // }
 
   /* Radar  Risky Area  */
-  const radarRiskyAreaInitialState = {
-    isLoader: false,
-    isDisabled: true,
-    csv_import: null
-  }
+  // const radarRiskyAreaInitialState = {
+  //   isLoader: false,
+  //   isDisabled: true,
+  //   csv_import: null
+  // }
 
-  const [radarRiskyArea, setRadarRiskyArea] = useState(radarRiskyAreaInitialState);
-  const changeImportRadarRiskyAreaCsv = (event) => {
-    if (event.target.files[0] && event.target.files[0] !== undefined) {
-      setRadarRiskyArea({ ...radarRiskyArea, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-    } else {
-      setRadarRiskyArea({ ...radarRiskyArea, ['csv_import']: null, ['isDisabled']: true });
-    }
-  }
+  // const [radarRiskyArea, setRadarRiskyArea] = useState(radarRiskyAreaInitialState);
+  // const changeImportRadarRiskyAreaCsv = (event) => {
+  //   if (event.target.files[0] && event.target.files[0] !== undefined) {
+  //     setRadarRiskyArea({ ...radarRiskyArea, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+  //   } else {
+  //     setRadarRiskyArea({ ...radarRiskyArea, ['csv_import']: null, ['isDisabled']: true });
+  //   }
+  // }
 
-  const btnImportRadarRiskyArea = async () => {
-    setRadarRiskyArea({ ...radarRiskyArea, ['isDisabled']: true, ['isLoader']: true });
-    const formData = new FormData();
-    formData.append(
-      "csv_import",
-      radarRiskyArea.csv_import,
-      radarRiskyArea.csv_import.name
-    );
-    const api = `${importRadarRiskyAreaApi}`;
-    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-      return response;
-    }).catch((error) => {
-      return error.response;
-    });
-    if (res.status === 200) {
-      SuccessToastMessage(res.data.message, "success1");
-      setRadarRiskyArea(radarRiskyAreaInitialState);
-      refRadarRiskyArea.current.value = null;
-    } else if (res.status === 401) {
-      ErrorToastMessage(res.data.error.csv_import[0], "failed");
-      setRadarRiskyArea(radarRiskyAreaInitialState);
-      refRadarRiskyArea.current.value = null;
-    } else {
-      if (res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message, "failedasdasda");
-        setRadarRiskyArea(radarRiskyAreaInitialState);
-        refRadarRiskyArea.current.value = null;
-      }
-    }
-  }
+  // const btnImportRadarRiskyArea = async () => {
+  //   setRadarRiskyArea({ ...radarRiskyArea, ['isDisabled']: true, ['isLoader']: true });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "csv_import",
+  //     radarRiskyArea.csv_import,
+  //     radarRiskyArea.csv_import.name
+  //   );
+  //   const api = `${importRadarRiskyAreaApi}`;
+  //   const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+  //     return response;
+  //   }).catch((error) => {
+  //     return error.response;
+  //   });
+  //   if (res.status === 200) {
+  //     SuccessToastMessage(res.data.message, "success1");
+  //     setRadarRiskyArea(radarRiskyAreaInitialState);
+  //     refRadarRiskyArea.current.value = null;
+  //   } else if (res.status === 401) {
+  //     ErrorToastMessage(res.data.error.csv_import[0], "failed");
+  //     setRadarRiskyArea(radarRiskyAreaInitialState);
+  //     refRadarRiskyArea.current.value = null;
+  //   } else {
+  //     if (res.data.message !== undefined) {
+  //       ErrorToastMessage(res.data.message, "failedasdasda");
+  //       setRadarRiskyArea(radarRiskyAreaInitialState);
+  //       refRadarRiskyArea.current.value = null;
+  //     }
+  //   }
+  // }
 
   /* Radar  Rink Leader  */
-  const radarRingLeaderInitialState = {
-    isLoader: false,
-    isDisabled: true,
-    csv_import: null
-  }
+  // const radarRingLeaderInitialState = {
+  //   isLoader: false,
+  //   isDisabled: true,
+  //   csv_import: null
+  // }
 
-  const [radarRingLeader, setRadarRingLeader] = useState(radarRingLeaderInitialState);
-  const changeImportRadarRingLeaderCsv = (event) => {
-    if (event.target.files[0] && event.target.files[0] !== undefined) {
-      setRadarRingLeader({ ...radarRingLeader, ['csv_import']: event.target.files[0], ['isDisabled']: false });
-    } else {
-      setRadarRingLeader({ ...radarRingLeader, ['csv_import']: null, ['isDisabled']: true });
-    }
-  }
+  // const [radarRingLeader, setRadarRingLeader] = useState(radarRingLeaderInitialState);
+  // const changeImportRadarRingLeaderCsv = (event) => {
+  //   if (event.target.files[0] && event.target.files[0] !== undefined) {
+  //     setRadarRingLeader({ ...radarRingLeader, ['csv_import']: event.target.files[0], ['isDisabled']: false });
+  //   } else {
+  //     setRadarRingLeader({ ...radarRingLeader, ['csv_import']: null, ['isDisabled']: true });
+  //   }
+  // }
 
-  const btnImportRadarRingLeader = async () => {
-    setRadarRingLeader({ ...radarRingLeader, ['isLoader']: true, ['isDisabled']: true });
-    const formData = new FormData();
-    formData.append(
-      "csv_import",
-      radarRingLeader.csv_import,
-      radarRingLeader.csv_import.name
-    );
-    const api = `${importRadarRingLeaderApi}`;
-    const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
-      return response;
-    }).catch((error) => {
-      return error.response;
-    });
-    if (res.status === 200) {
-      SuccessToastMessage(res.data.message, "success1");
-      setRadarRingLeader(radarRingLeaderInitialState);
-      refRadarRingLeader.current.value = null;
-    } else if (res.status === 401) {
-      ErrorToastMessage(res.data.error.csv_import[0], "failed");
-      setRadarRingLeader(radarRingLeaderInitialState);
-      refRadarRingLeader.current.value = null;
-    } else {
-      if (res.data.message !== undefined) {
-        ErrorToastMessage(res.data.message, "failedasdasda");
-        setRadarRingLeader(radarRingLeaderInitialState);
-        refRadarRingLeader.current.value = null;
-      }
-    }
-  }
+  //  const btnImportRadarRingLeader = async () => {
+  //   setRadarRingLeader({ ...radarRingLeader, ['isLoader']: true, ['isDisabled']: true });
+  //   const formData = new FormData();
+  //   formData.append(
+  //     "csv_import",
+  //     radarRingLeader.csv_import,
+  //     radarRingLeader.csv_import.name
+  //   );
+  //   const api = `${importRadarRingLeaderApi}`;
+  //   const res = await axios.post(`${BaseUrl}/${api}`, formData, { headers: authHeaders() }).then((response) => {
+  //     return response;
+  //   }).catch((error) => {
+  //     return error.response;
+  //   });
+  //   if (res.status === 200) {
+  //     SuccessToastMessage(res.data.message, "success1");
+  //     setRadarRingLeader(radarRingLeaderInitialState);
+  //     refRadarRingLeader.current.value = null;
+  //   } else if (res.status === 401) {
+  //     ErrorToastMessage(res.data.error.csv_import[0], "failed");
+  //     setRadarRingLeader(radarRingLeaderInitialState);
+  //     refRadarRingLeader.current.value = null;
+  //   } else {
+  //     if (res.data.message !== undefined) {
+  //       ErrorToastMessage(res.data.message, "failedasdasda");
+  //       setRadarRingLeader(radarRingLeaderInitialState);
+  //       refRadarRingLeader.current.value = null;
+  //     }
+  //   }
+  // }
 
   /* Micrometer state master */
   const mmStateMasterInitialState = {
@@ -2102,7 +2108,7 @@ const ImportTables = () => {
 
               {/* Mudra Import Start from Here */}
 
-              <Grid container spacing={2}>
+              {/* <Grid container spacing={2}>
                 <Grid xs={12} sm={12} md={12}>
                   <Typography gutterBottom className={classes.headingText} variant="h3" component="div">
                     Mudra & Miscellaneous - Import <hr className={classes.headingHR}></hr>
@@ -2421,8 +2427,7 @@ const ImportTables = () => {
                   </Card>
                 </Grid>
 
-                 {/* dri map data */}
-
+ 
               <Grid xs={12} sm={12} md={3}>
                   <Card style={{ padding: "8px" }}>
                     <CardActionArea>
@@ -2440,8 +2445,7 @@ const ImportTables = () => {
                             inputProps={{ accept: ".csv" }}
                             inputRef={refDRIMapData}
                             autoFocus
-                            // onChange={changeImportDRIDistrictCsv}
-                            onChange={changeImportDRIMapDataCsv}
+                             onChange={changeImportDRIMapDataCsv}
                           />
                           <Loader loader={DRIMapData.isLoader} size={40} />
                         </Grid>
@@ -2485,11 +2489,7 @@ const ImportTables = () => {
                     <CardActions></CardActions>
                   </Card>
                 </Grid>
-              </Grid>
-
-             
-
-
+              </Grid> */}
 
 
 

@@ -228,7 +228,7 @@ const Dashboard = () => {
                     <div className="col-sm-6 text-end button-group">
                       <button
                         type="button"
-                        className="action-button"
+                        className="css-1vhaqj4-MuiButtonBase-root-MuiButton-root  w-auto m-0"
                         onClick={() => navigate("/form-entry")}
                       >
                         Add Activity <i className="bi bi-plus"></i>
@@ -236,9 +236,8 @@ const Dashboard = () => {
 
                       <button
                         type="button"
-                        className="action-button"
+                        className="css-1vhaqj4-MuiButtonBase-root-MuiButton-root  w-auto m-0"
                         onClick={handleDownloadMeeting}
-                        style={{backgroundColor:"#0cb341"}}
                       >
                         Download All Meetings <i className="bi bi-download"></i>
                       </button>

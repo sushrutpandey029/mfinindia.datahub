@@ -604,6 +604,76 @@ const FormEntry = () => {
         label: "HOD Observation",
       },
     ],
+    VSCM: [
+      { name: "region", type: "dropdown", label: "Region", required: true },
+      { name: "state", type: "dropdown", label: "State", required: true },
+      {
+        name: "districts",
+        type: "multiselect",
+        label: "District",
+        required: true,
+      },
+
+      {
+        name: "dateOfMeeting",
+        type: "date",
+        label: "Meeting Date",
+        required: true,
+      },
+      {
+        name: "type",
+        type: "dropdown",
+        options: ["Planned", "Unplanned"],
+        label: "Planned/Unplanned",
+      },
+      {
+        name: "mode",
+        type: "dropdown",
+        options: ["Online"],
+        label: "Online/Physical",
+      },
+      {
+        name: "placeOfMeeting",
+        type: "text",
+        label: "Meeting Place"
+      },
+      {
+        name: "uploadFile",
+        type: "file",
+        label: "Upload File",
+        helperText: "(audio, video, image, doc, pdf)",
+        multiple: true,
+      },
+      {
+        name: "url",
+        type: "text",
+        label: "Link"
+      },
+      {
+        name: "activityDetails",
+        type: "textarea",
+        // helperText:
+        // "SCM & DFM - Indicate critical issue(s) raised & MFIN action points; SKM - indicate the officer(s) details, purpose & outcome of the engagement; Critical Issues - Indicate source of Information, date reported to MFIN, MFIs affected, #Borrowers duped, amount, #Outstanding loans etc.",
+        label: "Activity Details",
+      },
+      {
+        name: "importantDecision",
+        type: "textarea",
+        label: "Important Decision",
+      },
+      { name: "statusUpdate", type: "textarea", label: "Status Update" },
+      {
+        name: "headAndSiRemark",
+        type: "textarea",
+        label: "Head,SI Remark",
+      },
+      {
+        name: "hodObservation",
+        type: "dropdown",
+        options: ["Open", "Closed"],
+        label: "HOD Observation",
+      },
+    ],
     DFM: [
       { name: "region", type: "dropdown", label: "Region", required: true },
       { name: "state", type: "dropdown", label: "State", required: true },
@@ -1154,6 +1224,7 @@ const FormEntry = () => {
                 >
                   <option value="SKM">SKM (Stakeholder Engagement)</option>
                   <option value="SCM">SCM (State Chapter Meeting)</option>
+                  <option value="VSCM">VSCM (Virtual State Chapter Meeting)</option>
                   <option value="SCC">
                     SCC (State Coordination Committee)
                   </option>

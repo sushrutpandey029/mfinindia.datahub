@@ -19,7 +19,7 @@ import "../../ContactDetail/contact.css";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { Dropdown, DropdownMenuItem } from '../../Mudra/dropdown';
+// import { Dropdown, DropdownMenuItem } from '../../Mudra/dropdown';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Table from 'react-bootstrap/Table'
 import axios from "axios";
@@ -86,7 +86,7 @@ const PortfolioQuality = () => {
     fromMonth: new Date("Aug-2018"),
     toMonth: new Date("Mar-2019"),
     dateSeries: "2017",
-    maxDate: new Date("Mar-2020"),
+    maxDate: new Date("Feb-2025"),
     region: 0,
     states: 0,
     isLoader: false,

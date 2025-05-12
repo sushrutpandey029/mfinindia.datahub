@@ -199,7 +199,7 @@ const SroMaster = () => {
   const graphFilterInitialState = {
     fromMonth: new Date("Aug-2018"),
     toMonth: new Date("Mar-2019"),
-    maxDate: new Date("Mar-2020"),
+    maxDate: new Date("Feb-2025"),
     Quatar: "Mar-23",
     Period: "Q4 FY 22-23",
     dateSeries: "2017",
@@ -999,6 +999,7 @@ const SroMaster = () => {
                                   fullWidth
                                   value={formState.toMonth}
                                   onChange={handleToDateChange}
+                                  maxDate={graphFilter.maxDate}
                                 />
                               </Grid>
                             </MuiPickersUtilsProvider>
@@ -1120,6 +1121,7 @@ const SroMaster = () => {
                                   fullWidth
                                   value={formState.toMonth}
                                   onChange={handleToDateChange}
+                                  maxDate={graphFilter.maxDate}
                                 />
                               </Grid>
                             </MuiPickersUtilsProvider>
@@ -1258,6 +1260,7 @@ const SroMaster = () => {
                                   fullWidth
                                   value={formState.toMonth}
                                   onChange={handleToDateChange}
+                                  maxDate={graphFilter.maxDate}
                                 />
                               </Grid>
                             </MuiPickersUtilsProvider>
@@ -1272,6 +1275,7 @@ const SroMaster = () => {
                                 sx={{ mt: 3, mb: 2 }}
                                 disabled={formState.isDisabled}
                                 onClick={filterQARHandler}
+                                maxDate={graphFilter.maxDate}
                               >
                                 Filter
                                 <Loader loader={formState.isLoader} size={15} />

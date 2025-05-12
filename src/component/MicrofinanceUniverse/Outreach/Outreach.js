@@ -352,9 +352,9 @@ const Outreach = () => {
   const [pieMicroOutsLabels, setpieMicroOutsLabels] = useState([]);
   const [pieMicroOutsTitle, setpieMicroOutsTitle] = useState([]);
 
-  const[topTenStateSeries,setTopTenStateSeries] = useState([]);
-  const[topTenStateLabels,setTopTenStateLabels] = useState([]);
-  const[topTenStateTitle,setTopTenStateTitle] = useState([]);
+  const [topTenStateSeries, setTopTenStateSeries] = useState([]);
+  const [topTenStateLabels, setTopTenStateLabels] = useState([]);
+  const [topTenStateTitle, setTopTenStateTitle] = useState([]);
 
   const portfolioOutstandingIndusryGraph = async (startMonth = 0, endMonth = 0) => {
     const api = `api/auth/outreach-portfolio-outstanding-graph-data?fromMonth=${startMonth}&toMonth=${endMonth}`;
@@ -521,7 +521,7 @@ const Outreach = () => {
               <CardContent>
                 <Grid container>
                   <Grid xs={12} sm={12} md={12}>
-                    <TopTenPortfolioStates 
+                    <TopTenPortfolioStates
                       topTenStateSeries={topTenStateSeries}
                       topTenStateLabels={topTenStateLabels}
                       topTenStateTitle={topTenStateTitle}

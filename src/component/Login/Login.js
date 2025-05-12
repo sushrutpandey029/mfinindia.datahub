@@ -20,6 +20,9 @@ import { CircularProgress } from '@mui/material';
 import { SuccessFailedMessage, SuccessToastMessage, ErrorToastMessage } from '../common/SuccessFailedMessage';
 import bgImage from '../../../src/newimages/Datareport.gif';
 import '../Login/Login.css';
+import authHeaders from '../Service/AuthHeaders';
+import { BaseUrl } from '../url/url';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
@@ -98,10 +101,39 @@ export default function Login() {
       console.log("Login Error", error);
 
       if (error.response) {
-        if (error.response.data && error.response.data.access_status === false) {
+        if (error.response.data && error.response.data.access_status === false && error.response.data.status === 200) {
           alert(error.response.data.message);
         }
       }
+
+      // if (error.response) {
+      //   if (error.response.data && error.response.data.access_status === false && error.response.data.status === 200) {
+      //     const userConfirmed = window.confirm(error.response.data.message + "\n\nClick OK to proceed or Cancel to abort");
+      //     if (userConfirmed) {
+      //       try {
+      //         // Call your API here
+      //         await axios.get(`${BaseUrl}/api/auth/loginLogout?user_id=${user_id}`,
+      //           { headers: authHeaders() })
+      //           .then((response) => {
+      //             localStorage.setItem("access_token", "");
+      //             localStorage.setItem("user", "");
+      //             localStorage.setItem("loggedIn", "");
+      //             localStorage.setItem("mobile_verify", "");
+      //             localStorage.clear();
+      //             window.location.assign("/");
+
+      //             // window.location.reload(true);
+      //             console.log('logout api call');
+      //           }).catch((error) => {
+      //             console.log('err', error);
+      //           });
+
+      //       } catch (apiError) {
+      //         console.error("API call failed:", apiError);
+      //       }
+      //     }
+      //   }
+      // }
       // window.location.reload();
     }
 
@@ -125,6 +157,7 @@ export default function Login() {
       window.location.reload(true)
     }
   }
+  
   return (
     <div className="form-body iofrm-layout">
       <div className="img-holder">

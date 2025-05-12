@@ -28,7 +28,6 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import BiotechIcon from '@mui/icons-material/Biotech';
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MBankWise from "../Mudra/MBankWise";
 import { Route, Routes, Link, useNavigate } from 'react-router-dom'
 
 import GlpTrendsGrowth from "../MicrofinanceUniverse/Details/GlpTrendsGrowth";
@@ -235,12 +234,12 @@ const menuItems = [
     link: "/dri-states",
     checked: true,
   },
-  {
-    title: "Mudra",
-    icon: "bi-currency-exchange",
-    link: "/mudra",
-    checked: true,
-  },
+  // {
+  //   title: "Mudra",
+  //   icon: "bi-currency-exchange",
+  //   link: "/mudra",
+  //   checked: true,
+  // },
   {
     title: "SRO",
     icon: "bi-person-lines-fill",
@@ -369,8 +368,8 @@ class MiniDrawer extends React.Component {
 
         // Check if admin user needs to update logout time
         if (
-         ( role_name === "Admin" || role_name === "Vertical-Head") &&
-          ["Alok Misra","Rama Kamaraju", "Sushrut Pandey"].includes(
+          (role_name === "Admin" || role_name === "Vertical-Head") &&
+          ["Alok Misra", "Rama Kamaraju", "Sushrut Pandey"].includes(
             userName
           )
         ) {
@@ -401,7 +400,7 @@ class MiniDrawer extends React.Component {
           });
 
         // Redirect to home
-       
+
       } catch (error) {
         console.error("Logout error:", error);
       }
@@ -562,16 +561,16 @@ class MiniDrawer extends React.Component {
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose} className={classes.menuItem}>
-                  <Link to="/change-password" style={{ color: "#000", textDecoration: "none" ,fontWeight:"100"}}>
+                  <Link to="/change-password" style={{ color: "#000", textDecoration: "none", fontWeight: "100" }}>
                     Change Password
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={this.handleClose} className={classes.menuItem}>
-                  <Link to="/change-phone" style={{ color: "#000", textDecoration: "none",fontWeight:"100" }}>
+                  <Link to="/change-phone" style={{ color: "#000", textDecoration: "none", fontWeight: "100" }}>
                     Change Phone
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={this.handleLogout} className={classes.menuItem}  style={{ color: "#000", textDecoration: "none",fontWeight:"100"}}>
+                <MenuItem onClick={this.handleLogout} className={classes.menuItem} style={{ color: "#000", textDecoration: "none", fontWeight: "100" }}>
                   Logout
                 </MenuItem>
               </Menu>
@@ -640,7 +639,7 @@ class MiniDrawer extends React.Component {
             <Route path="/micro-finance-universe/disbursement-trend" element={<DisbursementTrend />} />
             <Route path="/micro-finance-universe/par-analysis" element={<ParAnalysis />} />
             <Route path="/micro-finance-universe/par-bucket-analysis" element={<ParBucketAnalysis />} />
-            <Route path="/mudra-bank" element={<MBankWise />} />
+            {/* <Route path="/mudra-bank" element={<MBankWise />} /> */}
             {/* Micrometer Routes */}
             <Route path="/micrometer/:graphID" element={<OverviewGraphDetails />} />
             <Route path="/update-dri/" element={<DRIFormUpdate />} />

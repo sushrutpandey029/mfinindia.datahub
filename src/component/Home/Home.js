@@ -33,7 +33,7 @@ const Home = () => {
     },
     {
       title: "MFIN Members",
-      description: "Data on Microfinance operations of all MFIN member NBFC-MFIs across the country on a quarterly Frequency.",
+      description: "Data on Microfinance operations of all MFIN member NBFC-MFIs and Other RE's across the country on a quarterly Frequency.",
       link: "/Mfinmembersmodule",
       icon: <i className="bi bi-file-earmark-text"></i>,
       checked: true
@@ -59,20 +59,20 @@ const Home = () => {
       icon: <i className="bi bi-map"></i>,
       checked: true
     },
-    {
-      title: "Mudra",
-      description: "Data from MUDRA MIS on financial inclusion supported by MUDRA.",
-      link: "/mudra",
-      icon: <i className="bi bi-currency-exchange"></i>,
-      checked: true
-    },
-    {
-      title: "Mudra (Bank Wise)",
-      description: "Financial services for microenterprises and low-income individuals. Empowering economic growth and financial inclusion.",
-      link: "/mudra-bank",
-      icon: <i className="bi bi-currency-exchange"></i>,
-      checked: true
-    },
+    // {
+    //   title: "Mudra",
+    //   description: "Data from MUDRA MIS on financial inclusion supported by MUDRA.",
+    //   link: "/mudra",
+    //   icon: <i className="bi bi-currency-exchange"></i>,
+    //   checked: true
+    // },
+    // {
+    //   title: "Mudra (Bank Wise)",
+    //   description: "Financial services for microenterprises and low-income individuals. Empowering economic growth and financial inclusion.",
+    //   link: "/mudra-bank",
+    //   icon: <i className="bi bi-currency-exchange"></i>,
+    //   checked: true
+    // },
     {
       title: "SRO",
       description: "Updates on Employee Bureau, Credit Bureau, and QAR.",
@@ -183,7 +183,7 @@ const Home = () => {
                   <h1><i class="bi bi-database-fill"></i></h1>
                   <div class="ag-courses-item_title"><h3>Data Reporting</h3></div>
                   <div class="ag-courses-item_date-box">
-                  <p>Report quarterly data.</p>
+                  <p>Data collection tool for Micrometer-Quarterly.</p>
                   </div>
                 </Link>
               </div> 

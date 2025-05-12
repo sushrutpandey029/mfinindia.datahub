@@ -3,7 +3,7 @@ import Home from "../Home/Home";
 import ImportTables from "../ImportTables/ImportTables";
 import MicrofinanceUniverse from "../MicrofinanceUniverse/MicrofinanceUniverse";
 import ContactDetail from "../ContactDetail/ContactDetail";
-import MDistrictWise from "../Mudra/MDistrictWise";
+// import MDistrictWise from "../Mudra/MDistrictWise";
 import MBankWise from "../Mudra/MBankWise";
 import Micrometer from "../Micrometer/Micrometer";
 import Mfinmembersmodule from "../Micrometer/mfin_members_module";
@@ -92,13 +92,13 @@ export const RolePermissionList= [
     componentName:<DRIStatesMap />
   },
 
-  {
-    key: "Mudra",
-    subkey: [],
-    checked: true,
-    linkName:"/mudra",
-    componentName:<MDistrictWise />
-  },
+  // {
+  //   key: "Mudra",
+  //   subkey: [],
+  //   checked: true,
+  //   linkName:"/mudra",
+  //   componentName:<MDistrictWise />
+  // },
 
   // {
   //   key: "Radar",

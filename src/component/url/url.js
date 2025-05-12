@@ -24,12 +24,12 @@ export const importMemberAssociateMaster = "api/auth/member-associate-master";
 
 // mudra
 
-export const importMudraBankWise = "api/auth/mudrabankwise";
-export const importMudraDistrictWise = "api/auth/mudradistrictwise";
-export const importRadarExternalInciterApi = "api/auth/rader-external-inciter";
-export const importRadarNegativeAreaApi = "api/auth/rader-negative-area";
-export const importRadarRiskyAreaApi = "api/auth/rader-risky-area";
-export const importRadarRingLeaderApi = "api/auth/rader-ring-leader";
+// export const importMudraBankWise = "api/auth/mudrabankwise";
+// export const importMudraDistrictWise = "api/auth/mudradistrictwise";
+// export const importRadarExternalInciterApi = "api/auth/rader-external-inciter";
+// export const importRadarNegativeAreaApi = "api/auth/rader-negative-area";
+// export const importRadarRiskyAreaApi = "api/auth/rader-risky-area";
+// export const importRadarRingLeaderApi = "api/auth/rader-ring-leader";
 
 //micrometer import
 export const importMmMasterDataApi = "api/auth/mm-import-master-data";

@@ -243,7 +243,7 @@ const Micrometer = () => {
   const handleChange1 = (event, newValue) => {
     setValue(newValue);
   };
-  const graphFilterInitialState ={
+  const graphFilterInitialState = {
     fromMonth: new Date("Aug-2018"),
     toMonth: new Date("Mar-2019"),
     maxDate: new Date("Mar-2020"),
@@ -1326,8 +1326,7 @@ const Micrometer = () => {
                               className={classes.headingTitle}
                               component="div"
                             >
-                              Portfolio at Risk for Top 15 States in Terms of
-                              AUM {pqRiskTopFifteenStateTitle}
+                              Portfolio at risk for top 15 states in terms of AUM {pqRiskTopFifteenStateTitle}
                             </Typography>
                             <div className="main" style={{ marginTop: "15px" }}>
                               <Table striped bordered hover>

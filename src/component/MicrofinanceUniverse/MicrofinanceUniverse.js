@@ -99,7 +99,7 @@ const MicrofinanceUniverse = () => {
   };
 
   const [activityEntities, setActivityEntities] = useState([]);
-  const [activeEntityTitle,setActiveEntityTitle] = useState('');
+  const [activeEntityTitle, setActiveEntityTitle] = useState('');
   useEffect(() => {
     getCommonGraphApiData();
     getActiveEntityRecord();
@@ -258,21 +258,21 @@ const MicrofinanceUniverse = () => {
                   <TabList onChange={handleChange1} aria-label="Contact Information" centered textColor="secondary"
                     indicatorColor="secondary">
 
-                  { userRole[1]['subkey'][0]['subkey_name'] == 'Overview' &&  userRole[1]['subkey'][0]['subkey_checked'] == true? 
-                  <Tab icon={<AnalyticsIcon />} label="Overview" value="1" />
-                    : "" }
-                   
-                   { userRole[1]['subkey'][1]['subkey_name'] == 'Outreach' &&  userRole[1]['subkey'][1]['subkey_checked'] == true? 
-                  <Tab icon={<TableChartIcon />} label="Outreach" value="2" />
-                    : "" }
+                    {userRole[1]['subkey'][0]['subkey_name'] == 'Overview' && userRole[1]['subkey'][0]['subkey_checked'] == true ?
+                      <Tab icon={<AnalyticsIcon />} label="Overview" value="1" />
+                      : ""}
 
-{ userRole[1]['subkey'][2]['subkey_name'] == 'Disbursement' &&  userRole[1]['subkey'][2]['subkey_checked'] == true? 
-                  <Tab icon={<PaymentsIcon />} label="Disbursement" value="3" />
-                    : "" }
+                    {userRole[1]['subkey'][1]['subkey_name'] == 'Outreach' && userRole[1]['subkey'][1]['subkey_checked'] == true ?
+                      <Tab icon={<TableChartIcon />} label="Outreach" value="2" />
+                      : ""}
 
-{ userRole[1]['subkey'][3]['subkey_name'] == 'Portfolio Quality' &&  userRole[1]['subkey'][3]['subkey_checked'] == true? 
-                  <Tab icon={<MiscellaneousServicesIcon />} label="Portfolio Quality" value="4" />
-                    : "" }
+                    {userRole[1]['subkey'][2]['subkey_name'] == 'Disbursement' && userRole[1]['subkey'][2]['subkey_checked'] == true ?
+                      <Tab icon={<PaymentsIcon />} label="Disbursement" value="3" />
+                      : ""}
+
+                    {userRole[1]['subkey'][3]['subkey_name'] == 'Portfolio Quality' && userRole[1]['subkey'][3]['subkey_checked'] == true ?
+                      <Tab icon={<MiscellaneousServicesIcon />} label="Portfolio Quality" value="4" />
+                      : ""}
 
                   </TabList>
                 </Box>
@@ -370,35 +370,35 @@ const MicrofinanceUniverse = () => {
                       </Card>
                     </Grid>
                     <Grid xs={12} sm={12} md={6}>
-                      <Card style={{ padding: "8px" }} > 
+                      <Card style={{ padding: "8px" }} >
 
-                      
+
                         <CardActionArea>
                           <CardContent>
-                            <Typography gutterBottom variant="h5" className={classes.headingTitle}  component="div">
-                             Active Entities as on {activeEntityTitle}
+                            <Typography gutterBottom variant="h5" className={classes.headingTitle} component="div">
+                              Active Entities as on {activeEntityTitle}
                             </Typography>
                             <div className="main tableMinHieht">
-                            <Table striped bordered hover>
-                    <tbody>
-                      <tr>
-                        <th>Sr.</th>
-                        <th>Type of entity</th>
-                        <th>No. active entities</th>
-                      </tr>
-                      {
-                        activityEntities.map((v, i) => {
-                          return (
-                            <tr>
-                              <td>{v.serial_number === 6 ? 'Total' : v.serial_number}</td>
-                              <td>{v.type_of_entity}</td>
-                              <td>{v.no_active_entities}</td>
-                            </tr>
-                          )
-                        })
-                      }
-                    </tbody>
-                  </Table>
+                              <Table striped bordered hover>
+                                <tbody>
+                                  <tr>
+                                    <th>Sr.</th>
+                                    <th>Type of entity</th>
+                                    <th>No. active entities</th>
+                                  </tr>
+                                  {
+                                    activityEntities.map((v, i) => {
+                                      return (
+                                        <tr>
+                                          <td style={{textAlign:"center"}}>{v.serial_number === 6 ? 'Total' : v.serial_number}</td>
+                                          <td>{v.type_of_entity}</td>
+                                          <td style={{textAlign:"right"}}>{v.no_active_entities}</td>
+                                        </tr>
+                                      )
+                                    })
+                                  }
+                                </tbody>
+                              </Table>
                             </div>
                           </CardContent>
                         </CardActionArea>
@@ -458,7 +458,7 @@ const MicrofinanceUniverse = () => {
 
               </TabContext>
 
-              <Typography style={{textAlign:"left", fontWeight:500}}><strong>Data Source:</strong> Data up to 30 June 2023 sourced from Equifax, post 30 June 2023 data sourced from CRIF</Typography>
+              <Typography style={{ textAlign: "left", fontWeight: 500 }}><strong>Data Source:</strong> Data up to 30 June 2023 sourced from Equifax, post 30 June 2023 data sourced from CRIF</Typography>
 
             </Box>
 
