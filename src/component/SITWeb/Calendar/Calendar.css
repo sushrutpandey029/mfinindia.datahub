@@ -106,7 +106,7 @@
 /* Download Button */
 .mfin-calendar-download-all-button {
   padding: 8px 12px;
-  background-color: #52c41a;
+  background-color: #39B1AC;
   color: white;
   border: none;
   border-radius: 4px;
@@ -115,9 +115,9 @@
   transition: all 0.3s;
 }
 
-.mfin-calendar-download-all-button:hover {
-  background-color: #3da813;
-}
+/* .mfin-calendar-download-all-button:hover {
+  background-color:#39B1AC;
+} */
 
 /* FullCalendar Styling */
 .mfin-calendar-fc {
@@ -171,6 +171,7 @@
   font-size: 28px;
   color: #333;
 }
+
 
 .mfin-calendar-close-button {
   background: none;
@@ -310,18 +311,30 @@
 }
 
 .fc .fc-daygrid-day-number {
-  padding: 4px;
-  position: relative;
-  z-index: 4;
-  text-align: center;
-  margin: 0 auto;
- 
+  padding: 18px;
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 28px;
+    margin-top: 27px;
 }
+
+/* Make date numbers white for days with events */
+.fc-day-with-meeting .fc-daygrid-day-number {
+  color: white !important;
+}
+
+.event-date-white {
+  color: white !important;
+}
+
+
 .fc .fc-daygrid-day-bg .fc-bg-event {
-  z-index: 2;
-  height: 20px;
-  width: 20px;
-  margin-top: 5px
+ z-index: 0;
+    height: 40px;
+    width: 40px;
+    margin-top: 44px;
 }
 a {
   color: rgb(22 23 24);
@@ -355,8 +368,14 @@ a {
 }
 
 .mfin-solid-event {
-  background-color: #52c41a !important;
+  background-color: #3387ad !important;
   opacity: 1 !important;
+  color: #fff;
+}
+
+.mfin-solid-event a{
+
+  color: #fff;
 }
 .mfin-calendar-meeting-table {
   width: 100%;
@@ -375,11 +394,11 @@ a {
 }
 
 .mfin-calendar-meeting-table th {
-  background-color: #8a9eb3;
+  background-color: #2B60AD;
   /* background-color: white; */
 
   font-weight: 600;
-  color: #333;
+  color: white;
 }
 
 .mfin-calendar-meeting-table tr {
@@ -389,3 +408,4 @@ a {
 .mfin-calendar-meeting-table tr:hover {
   background-color: #f5f5f5;
 }
+

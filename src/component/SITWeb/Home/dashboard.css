@@ -72,6 +72,7 @@
     border-radius: 25px;
     border: 1px solid #ccc;
     transition: all 0.5s ease-out;
+   
 
   }
   .ag-courses-item_link {
@@ -453,4 +454,16 @@
 
 .action-button:hover {
   background-color: #0056b3;
+}
+
+.chart-container {
+  margin-bottom: 20px;
+}
+.sit{
+     height: 196px !important;
+    padding: 10px 10px;
+}
+.sittitle h3{
+margin: 0px 0px 10px !important;
+    
 }

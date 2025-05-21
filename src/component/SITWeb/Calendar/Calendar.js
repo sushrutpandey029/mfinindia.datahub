@@ -119,10 +119,10 @@ const Calendar = () => {
     const meetingText = `Meeting Details:
 ID: ${meeting.id}
 Activity Type: ${meeting.activity_type}
+Date: ${meeting.date}
 Region: ${meeting.region}
 State: ${meeting.state}
 District: ${meeting.district}
-Date: ${meeting.date}
 Type: ${meeting.type || "N/A"}
 Mode: ${meeting.mode || "N/A"}`;
 
@@ -140,10 +140,10 @@ Mode: ${meeting.mode || "N/A"}`;
     const excelData = meetings.map((meeting, index) => ({
       // "ID": meeting.id,
       "Activity Type": meeting.activity_type,
+      Date: meeting.date,
       Region: meeting.region,
       State: meeting.state,
       District: meeting.district,
-      Date: meeting.date,
       Type: meeting.type || "N/A",
       Mode: meeting.mode || "N/A",
       "Important Decision": meeting.important_decision || "N/A",
@@ -311,7 +311,8 @@ Mode: ${meeting.mode || "N/A"}`;
                 </button>
               </div>
 
-              <FullCalendar
+
+              { <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView={currentView}
@@ -324,7 +325,9 @@ Mode: ${meeting.mode || "N/A"}`;
                 eventBackgroundColor="#52c41a"
                 eventBorderColor="transparent"
                 eventClassNames="mfin-solid-event"
-              />
+              /> }
+
+              
 
               {showModal && selectedMeetings.length > 0 && (
                 <div className="mfin-calendar-modal-overlay ">

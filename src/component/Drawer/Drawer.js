@@ -93,6 +93,7 @@ import MeetingUpdate from "../SITWeb/addMeeting/MeetingUpdate";
 import SCM from "../SITWeb/SCM/SCM";
 import DFM from "../SITWeb/DFM/DFM";
 import CriticalEvent from "../SITWeb/Critical Events/CriticalEvent";
+import CriticalEventList from "../SITWeb/Critical Events/CriticalEventList";
 import SCC from "../SITWeb/SCC/SCC";
 import MFAP from "../SITWeb/MFAP/MFAP";
 import FormEntry from "../SITWeb/FormEntry";
@@ -106,7 +107,9 @@ import EditMeeting from "../SITWeb/EditMeeting";
 import ViewUpdate from "../SITWeb/ViewUpdate";
 import ViewContent from "../SITWeb/ViewContent";
 import UpdateMeeting from "../SITWeb/UpdateMeeting";
-import Calendar from "../SITWeb/Calendar/Calendar"
+import Calendar from "../SITWeb/Calendar/Calendar";
+import VSCM from "../SITWeb/VSCM/VSCM";
+import VSCMList from "../SITWeb/VSCM/VSCMList";
 
 
 const drawerWidth = 250;
@@ -672,13 +675,16 @@ class MiniDrawer extends React.Component {
             <Route path="/meetinglisting" element={<MeetingListing />} />
 
             <Route path="/scm" element={<SCM />} />
+            <Route path="/vscm" element={<VSCM />} />
             <Route path="/skm" element={<SKM />} />
             <Route path="/dfm" element={<DFM />} />
-            <Route path="/critical-event" element={<CriticalEvent />} />
+            <Route path="/ci" element={<CriticalEvent />} />
+            <Route path="/ci-lists" element={<CriticalEventList />} />
             <Route path="/scc" element={<SCC />} />
             <Route path="/mfap" element={<MFAP />} />
             <Route path="/form-entry" element={<FormEntry />} />
             <Route path="/scm-lists" element={<SCMList />} />
+            <Route path="/vscm-lists" element={<VSCMList />} />
             <Route path="/skm-lists" element={<SKMList />} />
             <Route path="/dfm-lists" element={<DFMList />} />
             <Route path="/scc-lists" element={<SCCList />} />

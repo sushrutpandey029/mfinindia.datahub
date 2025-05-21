@@ -49,5 +49,10 @@ export const importALMDataApi = "api/auth/alm";
 export const importRBIMasterDataApi = "api/auth/rbi";
 
 //data publication
-export const uploadDataApi = "https://api.mfinindia.org/api/auth"
+export const uploadDataApi = "https://api.mfinindia.org/api/auth";
+
+
+export const getPieCountData = "api/auth/meetings/count/pie_activity_type";
+
+export const getBarCountData = "api/auth/meetings/count/year/month";
 

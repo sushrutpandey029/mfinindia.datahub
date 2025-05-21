@@ -324,7 +324,7 @@ const SKMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" ),
     },
     {
       name: "Update",
@@ -347,7 +347,7 @@ const SKMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" ),
     },
     {
       name: "Delete",
@@ -484,7 +484,7 @@ const SKMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" ),
     },
   ];
 
@@ -579,7 +579,7 @@ const SKMList = () => {
                 {/* Filter Dropdown and Button */}
 
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {(userRole === "Admin" || userRole === "Vertical-Head") && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head" ) && (
                     <>
                       <select
                         value={selectedRegionalHead}

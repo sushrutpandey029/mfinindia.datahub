@@ -72,3 +72,34 @@
   .btn-delete:hover {
     background-color: #d32f2f;
   }
+
+  .bullet-list-container {
+    margin-bottom: 16px;
+  }
+  
+  .bullet-list-title {
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .bullet-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  
+  .bullet-item {
+    display: flex;
+    margin-bottom: 4px;
+    align-items: flex-start;
+  }
+  
+  .bullet-point {
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  
+  .plain-text {
+    white-space: pre-wrap;
+    margin: 0 0 8px 0;
+  }

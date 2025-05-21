@@ -164,7 +164,7 @@ const DFMList = () => {
       selector: (row) => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"  ),
     },
     {
       name: "State",
@@ -311,7 +311,7 @@ const DFMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"  ),
     },
     {
       name: "Update",
@@ -334,7 +334,7 @@ const DFMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"  ),
     },
     {
       name: "Delete",
@@ -469,7 +469,7 @@ const DFMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head"  ),
     },
   ];
 
@@ -573,7 +573,7 @@ const DFMList = () => {
               >
                 {/* Filter Dropdown and Button */}
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {(userRole === "Admin" || userRole === "Vertical-Head") && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head"  ) && (
                     <>
                       <select
                         value={selectedRegionalHead}

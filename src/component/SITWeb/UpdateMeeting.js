@@ -619,6 +619,76 @@ const UpdateMeeting = () => {
                 label: "HOD Observation",
             },
         ],
+        VSCM: [
+            { name: "region", type: "dropdown", label: "Region", required: true },
+            { name: "state", type: "dropdown", label: "State", required: true },
+            {
+              name: "districts",
+              type: "multiselect",
+              label: "District",
+              required: true,
+            },
+      
+            {
+              name: "dateOfMeeting",
+              type: "date",
+              label: "Meeting Date",
+              required: true,
+            },
+            {
+              name: "type",
+              type: "dropdown",
+              options: ["Planned", "Unplanned"],
+              label: "Planned/Unplanned",
+            },
+            {
+              name: "mode",
+              type: "dropdown",
+              options: ["Online"],
+              label: "Online/Physical",
+            },
+            {
+              name: "placeOfMeeting",
+              type: "text",
+              label: "Meeting Place"
+            },
+            {
+              name: "uploadFile",
+              type: "file",
+              label: "Upload File",
+              helperText: "(audio, video, image, doc, pdf)",
+              multiple: true,
+            },
+            {
+              name: "url",
+              type: "text",
+              label: "Link"
+            },
+            {
+              name: "activityDetails",
+              type: "textarea",
+              // helperText:
+              // "SCM & DFM - Indicate critical issue(s) raised & MFIN action points; SKM - indicate the officer(s) details, purpose & outcome of the engagement; Critical Issues - Indicate source of Information, date reported to MFIN, MFIs affected, #Borrowers duped, amount, #Outstanding loans etc.",
+              label: "Activity Details",
+            },
+            {
+              name: "importantDecision",
+              type: "textarea",
+              label: "Important Decision",
+            },
+            { name: "statusUpdate", type: "textarea", label: "Status Update" },
+            {
+              name: "headAndSiRemark",
+              type: "textarea",
+              label: "Head,SI Remark",
+            },
+            {
+              name: "hodObservation",
+              type: "dropdown",
+              options: ["Open", "Closed"],
+              label: "HOD Observation",
+            },
+          ],
         DFM: [
             { name: "region", type: "dropdown", label: "Region", required: true, disabled: true },
             { name: "state", type: "dropdown", label: "State", required: true, disabled: true },
@@ -1191,6 +1261,7 @@ const UpdateMeeting = () => {
                                 >
                                     <option value="SKM">SKM (Stakeholder Engagement)</option>
                                     <option value="SCM">SCM (State Chapter Meeting)</option>
+                                    <option value="VSCM">VSCM (Virtual State Chapter Meeting)</option>
                                     <option value="SCC">
                                         SCC (State Coordination Committee)
                                     </option>
@@ -1210,7 +1281,7 @@ const UpdateMeeting = () => {
                                     value={formData.regional_head}
                                     onChange={handleChange}
                                     className="form-select"
-                                    disabled={!(userRole === "Admin" || userRole === "Vertical-Head")}
+                                    disabled={!(userRole === "Admin" || userRole === "Vertical-Head" )}
                                     required
                                 >
                                     <option value="">Select</option>
@@ -1238,7 +1309,7 @@ const UpdateMeeting = () => {
                                         return formData.dynamicFields.mode === "Physical";
                                     }
                                     // Show all fields for Admin
-                                    if (userRole === "Admin" || userRole === "Vertical-Head") return true
+                                    if (userRole === "Admin" || userRole === "Vertical-Head" ) return true
                                     // Hide these two fields for non-Admins
                                     return !["headAndSiRemark", "hodObservation"].includes(
                                         field.name

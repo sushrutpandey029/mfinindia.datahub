@@ -14,18 +14,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-const regionalHeads = [
-  "Sushrut Pandey",
-  "Habib Shaikh",
-  "PM Kamalesh",
-  "Sanjay Kumar",
-  "Dhiraj Soni",
-  "Devendra Shahapurkar",
-  "Vijay Wadhwa",
-  "M S Manjunatha",
-];
 
-const SCMList = () => {
+
+const VSCMList = () => {
   const user = localStorage.getItem("user");
   const userData = JSON.parse(user);
   const userName = userData.data.user.name || "";
@@ -60,7 +51,7 @@ const SCMList = () => {
             params: {
               user_role: userRole,
               username: userName,
-              activity_type: "SCM",
+              activity_type: "VSCM",
             },
           }
         );
@@ -522,7 +513,7 @@ const SCMList = () => {
 
     const randomNum = Math.floor(Math.random() * 9000) + 1000;
     const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    const filename = `SIT_SCM${timestamp}_${randomNum}.xlsx`;
+    const filename = `SIT_VSCM${timestamp}_${randomNum}.xlsx`;
 
     XLSX.writeFile(wb, filename);
   };
@@ -571,7 +562,7 @@ const SCMList = () => {
             </div>
             <div style={{ padding: "20px", position: "relative" }}>
               <h3 style={{ position: "sticky", left: 0 }}>
-                SCM Meetings - {status.charAt(0).toUpperCase() + status.slice(1)}
+                VSCM Meetings - {status.charAt(0).toUpperCase() + status.slice(1)}
               </h3>
 
               {error && (
@@ -689,4 +680,4 @@ const SCMList = () => {
   );
 };
 
-export default SCMList;
+export default VSCMList;
