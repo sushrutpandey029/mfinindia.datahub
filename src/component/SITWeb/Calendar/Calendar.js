@@ -25,7 +25,7 @@ const Calendar = () => {
     const fetchMeetings = async () => {
       try {
         const response = await axios.get(
-          "https://api.mfinindia.org/api/auth/meetings/allmeetings"
+          "https://api.mfinindia.org/api/auth/meetings/allmeetingscalendar"
         );
         if (response.data.success) {
           const processed = response.data.meetings.map((meeting, idx) => ({
@@ -122,9 +122,7 @@ Activity Type: ${meeting.activity_type}
 Date: ${meeting.date}
 Region: ${meeting.region}
 State: ${meeting.state}
-District: ${meeting.district}
-Type: ${meeting.type || "N/A"}
-Mode: ${meeting.mode || "N/A"}`;
+District: ${meeting.district}`;
 
     const element = document.createElement("a");
     const file = new Blob([meetingText], { type: "text/plain" });
@@ -144,10 +142,6 @@ Mode: ${meeting.mode || "N/A"}`;
       Region: meeting.region,
       State: meeting.state,
       District: meeting.district,
-      Type: meeting.type || "N/A",
-      Mode: meeting.mode || "N/A",
-      "Important Decision": meeting.important_decision || "N/A",
-      "Activity Details": meeting.activity_details || "N/A",
     }));
 
     // Create a worksheet
@@ -312,7 +306,7 @@ Mode: ${meeting.mode || "N/A"}`;
               </div>
 
 
-              { <FullCalendar
+              {/* {<FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView={currentView}
@@ -325,15 +319,56 @@ Mode: ${meeting.mode || "N/A"}`;
                 eventBackgroundColor="#52c41a"
                 eventBorderColor="transparent"
                 eventClassNames="mfin-solid-event"
-              /> }
+              />} */}
 
-              
+              <FullCalendar
+                ref={calendarRef}
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView={currentView}
+                events={meetings}
+                dateClick={handleDateClick}
+                height="auto"
+                eventDisplay="background"
+                headerToolbar={false}
+                dayCellClassNames="mfin-calendar-white-background"
+                eventBackgroundColor="#52c41a"
+                eventBorderColor="transparent"
+                eventClassNames={(arg) => {
+                  const eventDate = new Date(arg.event.start);
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  eventDate.setHours(0, 0, 0, 0);
+
+                  if (eventDate < today) {
+                    return ['event-past']; // current date se pehle
+                  } else if (eventDate > today) {
+                    return ['event-future']; // current date ke baad
+                  } else {
+                    return ['event-today']; // exactly today
+                  }
+                }}
+              />
+
+
+
+
 
               {showModal && selectedMeetings.length > 0 && (
                 <div className="mfin-calendar-modal-overlay ">
                   <div className="mfin-calendar-modal-content mt-5">
                     <div className="mfin-calendar-modal-header">
-                      <h4>Meetings on {selectedMeetings[0].date.split("T")[0]}</h4>
+                      <h4>
+                        Meetings on {
+                          (() => {
+                            const dateObj = new Date(selectedMeetings[0].date);
+                            return dateObj.toLocaleDateString('en-GB', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            });
+                          })()
+                        }
+                      </h4>
                       <button
                         className="mfin-calendar-close-button"
                         onClick={() => setShowModal(false)}
@@ -349,8 +384,6 @@ Mode: ${meeting.mode || "N/A"}`;
                             <th>Region</th>
                             <th>State</th>
                             <th>District</th>
-                            <th>Planned/Unplanned</th>
-                            <th>Physical/Online</th>
                             {/* <th>Important Decision</th>
                     <th>Activity Details</th> */}
                           </tr>
@@ -360,15 +393,13 @@ Mode: ${meeting.mode || "N/A"}`;
                             <tr key={idx}>
                               <td>{meeting.activity_type || "N/A"}</td>
 
-                              <td>{meeting.region || "N/A"}</td>
-                              <td>{meeting.state || "N/A"}</td>
+                              <td>{meeting.region || ""}</td>
+                              <td>{meeting.state || ""}</td>
                               <td>
                                 {meeting.district && meeting.activity_type === "SCM"
                                   ? "All"
                                   : meeting.district || "N/A"}
                               </td>
-                              <td>{meeting.type || "N/A"}</td>
-                              <td>{meeting.mode || "N/A"}</td>
                               {/* <td>{meeting.important_decision || "N/A"}</td>
                       <td>{meeting.activity_details || "N/A"}</td> */}
                             </tr>

@@ -18,7 +18,7 @@
   gap: 15px;
   padding: 15px;
   background-color: white;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   /* position: sticky; */
@@ -38,7 +38,7 @@
   padding: 8px 12px;
   background-color: #f0f0f0;
   border: 1px solid #d9d9d9;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s;
@@ -332,10 +332,13 @@
 
 .fc .fc-daygrid-day-bg .fc-bg-event {
  z-index: 0;
-    height: 40px;
-    width: 40px;
-    margin-top: 44px;
+    height: 65px;
+    width: 65px;
+    margin-top: 34px;
 }
+
+
+
 a {
   color: rgb(22 23 24);
   text-decoration: underline;
@@ -368,7 +371,7 @@ a {
 }
 
 .mfin-solid-event {
-  background-color: #3387ad !important;
+  background-color: #ffa78b4d!important;
   opacity: 1 !important;
   color: #fff;
 }
@@ -408,4 +411,21 @@ a {
 .mfin-calendar-meeting-table tr:hover {
   background-color: #f5f5f5;
 }
+
+
+.event-past {
+  background-color: #ffa78b4d !important; /* Green */
+  border-color: transparent !important;
+}
+
+.event-future {
+  background-color: #ffc0cb !important; /* Pink */
+  border-color: transparent !important;
+}
+
+.event-today {
+  background-color: #ffd700 !important; /* Gold for today, optional */
+  border-color: transparent !important;
+}
+
 

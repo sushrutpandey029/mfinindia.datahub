@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -13,8 +12,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-
 
 const VSCMList = () => {
   const user = localStorage.getItem("user");
@@ -107,18 +104,15 @@ const VSCMList = () => {
         console.log("regionalhead-err", err.response);
       }
     };
-
     fetchRegionalHead();
   }, []);
-
   const handleEdit = (row) => {
     navigate(`/edit-meeting/${row.id}`);
   };
-
+  
   const handleUpdateClick = (row) => {
     navigate(`/update-meeting/${row.id}`)
   }
-
   const handleDelete = async (row) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this? This action cannot be undone."
@@ -156,6 +150,12 @@ const VSCMList = () => {
   };
 
   const columns = [
+     {
+      name: "M.ID",
+      selector: (row) => row.id,
+      sortable: true,
+      width: "100px",
+    },
     {
       name: "Region",
       selector: (row) => row.region || "-",
@@ -167,7 +167,7 @@ const VSCMList = () => {
       selector: (row) => row.regional_head || "-",
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "State",
@@ -184,9 +184,17 @@ const VSCMList = () => {
     },
     {
       name: "Meeting Date",
-      selector: (row) => row.dateOfMeeting || "-",
-      sortable: true,
-      width: "126px",
+  selector: row => row.dateOfMeeting,
+  sortable: true,
+  cell: row =>
+    row.dateOfMeeting
+      ? new Date(row.dateOfMeeting).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+      : '-',
+  width: "160px",
     },
     {
       name: "Planned/Unplanned",
@@ -325,7 +333,7 @@ const VSCMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "Update",
@@ -348,7 +356,7 @@ const VSCMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"|| userRole === "SI_Admin" ),
     },
     {
       name: "Delete",
@@ -396,7 +404,7 @@ const VSCMList = () => {
       center: true,
     },
     {
-      name: "Admin Update",
+      name: "HOD_SI_Remark",
       cell: (row) => {
         const [comment, setComment] = useState(row.comment || "");
         const [status, setStatus] = useState(row.status || "");
@@ -483,7 +491,7 @@ const VSCMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
   ];
 
@@ -500,7 +508,7 @@ const VSCMList = () => {
   );
 
   const exportToExcel = () => {
-    const columnsToExclude = ['id', 'created_at', 'updated_at'];
+    const columnsToExclude = ['created_at', 'updated_at'];
     const filteredExportData = filteredData.map(item => {
       const newItem = { ...item };
       columnsToExclude.forEach(col => delete newItem[col]);
@@ -580,7 +588,7 @@ const VSCMList = () => {
                 }}
               >
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {(userRole === "Admin" || userRole === "Vertical-Head" ) && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin") && (
                     <>
                       <select
                         value={selectedRegionalHead}

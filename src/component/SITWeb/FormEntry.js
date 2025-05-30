@@ -1436,10 +1436,10 @@ const FormEntry = () => {
                   value={formData.regional_head}
                   onChange={handleChange}
                   className="form-select"
-                  disabled={!(userRole === "Admin" || userRole === "Vertical-Head" )}
+                  disabled={!(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin")}
                   required
                 >
-                  {(userRole === "Admin" || userRole === "Vertical-Head" ) ? (
+                  {(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin") ? (
                     <>
                       <option value="">Select</option>
                       {regionalHead.map((option) => (
@@ -1468,7 +1468,7 @@ const FormEntry = () => {
                       return formData.dynamicFields.mode === "Physical";
                     }
                     // Show all fields for Admin
-                    if (userRole === "Admin" || userRole === "Vertical-Head" ) return true;
+                    if (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin") return true;
                     // Hide these two fields for non-Admins
                     return !["headAndSiRemark", "hodObservation"].includes(
                       field.name

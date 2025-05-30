@@ -572,47 +572,105 @@ const Dashboard = () => {
   };
 
   // Handle meeting data download
-  const handleDownloadMeeting = async () => {
-    try {
-      const response = await axios.get(
-        "https://api.mfinindia.org/api/auth/meetings/count/activity_type",
-        {
-          params: {
-            user_role: userRole,
-            username: userName,
-          },
+  // const handleDownloadMeeting = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://api.mfinindia.org/api/auth/meetings/count/allmeeting",
+  //       {
+  //         params: {
+  //           user_role: userRole,
+  //           username: userName,
+  //         },
+  //       }
+  //     );
+  //     console.log("all meetings data", response.data);
+
+  //     // Define columns you want to exclude
+  //     const columnsToExclude = [
+  //       "created_at",
+  //       "updated_at",
+  //       "logout_time",
+  //     ];
+
+  //     // Filter the data to exclude unwanted columns
+  //     const filteredExportData = response.data.data.map((item) => {
+  //       const newItem = { ...item };
+  //       columnsToExclude.forEach((col) => delete newItem[col]);
+  //       return newItem;
+  //     });
+
+  //     const ws = XLSX.utils.json_to_sheet(filteredExportData);
+  //     const wb = XLSX.utils.book_new();
+  //     XLSX.utils.book_append_sheet(wb, ws, "SIT");
+
+  //     const randomNum = Math.floor(Math.random() * 9000) + 1000;
+  //     // const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  //     const filename = `SIT_Meetings_${randomNum}.xlsx`;
+
+  //     XLSX.writeFile(wb, filename);
+  //   } catch (err) {
+  //     console.log("error in downloading all meetings.", err);
+  //   }
+  // };
+
+
+const handleDownloadMeeting = async () => {
+  try {
+    const response = await axios.get(
+      "https://api.mfinindia.org/api/auth/meetings/count/allmeeting",
+      {
+        params: {
+          user_role: userRole,
+          username: userName,
+        },
+      }
+    );
+    console.log("all meetings data", response.data);
+
+    const columnsToExclude = [
+      "created_at",
+      "updated_at",
+      "logout_time",
+    ];
+
+    const filteredExportData = response.data.data.map((item) => {
+      const newItem = { ...item };
+
+      // Exclude unwanted columns
+      columnsToExclude.forEach((col) => delete newItem[col]);
+
+      // Rename head_and_si_remark to Head_SI_Remark
+      if (newItem.hasOwnProperty("head_and_si_remark")) {
+        newItem["Head_SI_Remark"] = newItem["head_and_si_remark"];
+        delete newItem["head_and_si_remark"];
+      }
+      
+      // Reorder keys: put Head_SI_Remark right after status_update
+      const reorderedItem = {};
+      for (const key in newItem) {
+        reorderedItem[key] = newItem[key];
+        if (key === "status_update" && newItem["Head_SI_Remark"] !== undefined) {
+          reorderedItem["Head_SI_Remark"] = newItem["Head_SI_Remark"];
         }
-      );
-      console.log("all meetings data", response.data);
+      }
 
-      // Define columns you want to exclude
-      const columnsToExclude = [
-        "id",
-        "created_at",
-        "updated_at",
-        "logout_time",
-      ];
+      return reorderedItem;
+    });
 
-      // Filter the data to exclude unwanted columns
-      const filteredExportData = response.data.data.map((item) => {
-        const newItem = { ...item };
-        columnsToExclude.forEach((col) => delete newItem[col]);
-        return newItem;
-      });
+    const ws = XLSX.utils.json_to_sheet(filteredExportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "SIT");
 
-      const ws = XLSX.utils.json_to_sheet(filteredExportData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "SIT");
+    const randomNum = Math.floor(Math.random() * 9000) + 1000;
+    const filename = `SIT_Meetings_${randomNum}.xlsx`;
 
-      const randomNum = Math.floor(Math.random() * 9000) + 1000;
-      // const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-      const filename = `SIT_Meetings_${randomNum}.xlsx`;
+    XLSX.writeFile(wb, filename);
+  } catch (err) {
+    console.log("error in downloading all meetings.", err);
+  }
+};
 
-      XLSX.writeFile(wb, filename);
-    } catch (err) {
-      console.log("error in downloading all meetings.", err);
-    }
-  };
+
 
   // Close modal
   const closeModal = () => {

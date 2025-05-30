@@ -333,10 +333,10 @@
 
 // export default BarChart;
 
-
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import PropTypes from "prop-types";
+import { Padding } from "@mui/icons-material";
 
 const BarChart = ({ data = {}, onFilterChange }) => {
   const currentYear = new Date().getFullYear();
@@ -349,9 +349,14 @@ const BarChart = ({ data = {}, onFilterChange }) => {
     (_, i) => currentYear - i
   );
 
-  const monthOptions = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+  const shortMonthOptions = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const fullMonthOptions = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
   const handleMonthChange = (month) => {
@@ -378,6 +383,9 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             reset: true,
           },
         },
+      },
+      grid: {
+        show: false, // ✅ This hides horizontal and vertical grid lines
       },
       title: {
         text: `Monthly Meetings in ${currentYear}`,
@@ -414,7 +422,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: monthOptions,
+        categories: shortMonthOptions,
         labels: {
           style: {
             fontSize: "12px",
@@ -427,9 +435,6 @@ const BarChart = ({ data = {}, onFilterChange }) => {
         show: true,
         labels: {
           show: false,
-        },
-        grid: {
-          show: false, // This removes the horizontal grid lines
         },
         title: {
           text: "",
@@ -511,12 +516,15 @@ const BarChart = ({ data = {}, onFilterChange }) => {
     try {
       if (data.view === "month_wise_count") {
         const monthDataMap = {};
-        
+
         data.data.forEach((item) => {
-          monthDataMap[item.month] = item.total_meetings;
+          const monthIndex = fullMonthOptions.indexOf(item.month);
+          if (monthIndex !== -1) {
+            monthDataMap[shortMonthOptions[monthIndex]] = item.total_meetings;
+          }
         });
 
-        const seriesData = monthOptions.map(
+        const seriesData = shortMonthOptions.map(
           (month) => monthDataMap[month] || 0
         );
 
@@ -526,14 +534,14 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             ...chartState.options,
             title: {
               text: selectedMonth
-                ? `Meetings by Type (${selectedMonth} ${selectedYear})`
+                ? `Meetings by Type (${fullMonthOptions[shortMonthOptions.indexOf(selectedMonth)]} ${selectedYear})`
                 : `Monthly meetings during ${selectedYear}`,
               align: "center",
               style: { fontSize: "16px", fontWeight: "bold" },
             },
             xaxis: {
               ...chartState.options.xaxis,
-              categories: monthOptions,
+              categories: shortMonthOptions,
             },
           },
         });
@@ -551,7 +559,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
           options: {
             ...chartState.options,
             title: {
-              text: `Meetings by Type (${selectedMonth} ${selectedYear})`,
+              text: `Meetings by Type (${fullMonthOptions[shortMonthOptions.indexOf(selectedMonth)]} ${selectedYear})`,
               align: "center",
               style: { fontSize: "16px", fontWeight: "bold" },
             },
@@ -577,7 +585,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
     <div className="bg-white p-4 rounded-lg shadow h-full">
       <div className="mb-4 flex flex-wrap md:flex-nowrap gap-4 items-end">
         <div className="w-32">
-          <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 mb-1 px-3">
             Year
           </label>
           <select
@@ -597,7 +605,8 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             ))}
           </select>
 
-          <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 mb-1">
+
+          <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 mb-1 px-3">
             Month
           </label>
           <select
@@ -607,13 +616,15 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             className="w-full p-2 border border-gray-300 rounded-md"
           >
             <option value="">All Months</option>
-            {monthOptions.map((month) => (
-              <option key={month} value={month}>
+            {fullMonthOptions.map((month, index) => (
+              <option key={month} value={shortMonthOptions[index]}>
                 {month}
               </option>
             ))}
           </select>
         </div>
+
+
         <div className="h-[500px]">
           {showChart ? (
             <ReactApexChart
@@ -660,4 +671,5 @@ BarChart.defaultProps = {
 };
 
 export default BarChart;
+
 

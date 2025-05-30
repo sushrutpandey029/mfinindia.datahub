@@ -20,7 +20,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // import "./ViewUpdate.css"
 
-
 const ViewUpdate = () => {
   const { id } = useParams();
   const [baseMeetingData, setBaseMeetingData] = useState(null);
@@ -167,7 +166,7 @@ const ViewUpdate = () => {
     //   sortable: true,
     // },
     {
-      name: "Status Update",
+      name: "HOD_SI_Remark",
       selector: (row) => row.status_update || "-",
       sortable: true,
       wrap: true,
@@ -246,7 +245,7 @@ const ViewUpdate = () => {
       </Box>
     );
   }
-
+  
   if (error) {
     return (
       <Box textAlign="center" mt={4}>

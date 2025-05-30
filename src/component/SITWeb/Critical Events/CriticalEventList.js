@@ -89,18 +89,18 @@ const CriticalEventList = () => {
         }
       );
 
-        // Filter data based on status (case-insensitive)
-        const statusFilteredData = response.data.data.filter(item =>
-            item.hod_observation &&
-            item.hod_observation.toLowerCase() === status.toLowerCase()
-          );
-  
-          console.log("Filtered Data:", statusFilteredData);
-  
-          setData(statusFilteredData);
-        //   setFilteredData(statusFilteredData);
+      // Filter data based on status (case-insensitive)
+      const statusFilteredData = response.data.data.filter(item =>
+        item.hod_observation &&
+        item.hod_observation.toLowerCase() === status.toLowerCase()
+      );
 
-    //   setData(response.data.data);
+      console.log("Filtered Data:", statusFilteredData);
+
+      setData(statusFilteredData);
+      //   setFilteredData(statusFilteredData);
+
+      //   setData(response.data.data);
 
       // Update filter options, ensuring we don't overwrite with empty arrays if not provided
       setFilterOptions(prev => ({
@@ -222,26 +222,72 @@ const CriticalEventList = () => {
     }
   };
 
+  // const exportToExcel = () => {
+  //   if (data.length === 0) {
+  //     alert("No data to export");
+  //     return;
+  //   }
+
+  //   // Define columns to exclude
+  //   const columnsToExclude = ['created_at', 'updated_at'];
+
+  //   // Filter data and format dates
+  //   const exportData = data.map(item => {
+  //     const newItem = { ...item };
+  //     columnsToExclude.forEach(col => delete newItem[col]);
+
+  //     // Format date if exists
+  //     if (newItem.dateOfMeeting) {
+  //       newItem.dateOfMeeting = new Date(newItem.dateOfMeeting).toLocaleDateString();
+  //     }
+
+  //     return newItem;
+  //   });
+
+  //   const ws = XLSX.utils.json_to_sheet(exportData);
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "Critical_Incidents");
+
+  //   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  //   const randomNum = Math.floor(Math.random() * 9000) + 1000;
+  //   const filename = `Critical_Incidents_${timestamp}_${randomNum}.xlsx`;
+
+  //   XLSX.writeFile(wb, filename);
+  // };
+
   const exportToExcel = () => {
     if (data.length === 0) {
       alert("No data to export");
       return;
     }
 
-    // Define columns to exclude
-    const columnsToExclude = ['id', 'created_at', 'updated_at'];
+    const columnsToExclude = ['created_at', 'updated_at'];
 
-    // Filter data and format dates
     const exportData = data.map(item => {
       const newItem = { ...item };
       columnsToExclude.forEach(col => delete newItem[col]);
 
-      // Format date if exists
+      // Format date
       if (newItem.dateOfMeeting) {
         newItem.dateOfMeeting = new Date(newItem.dateOfMeeting).toLocaleDateString();
       }
 
-      return newItem;
+      // Rename head_and_si_remark → Head_SI_Remark
+      if (newItem.hasOwnProperty("head_and_si_remark")) {
+        newItem["Head_SI_Remark"] = newItem["head_and_si_remark"];
+        delete newItem["head_and_si_remark"];
+      }
+
+      // Reorder keys to place Head_SI_Remark after status_update
+      const reorderedItem = {};
+      for (const key in newItem) {
+        reorderedItem[key] = newItem[key];
+        if (key === "status_update" && newItem["Head_SI_Remark"] !== undefined) {
+          reorderedItem["Head_SI_Remark"] = newItem["Head_SI_Remark"];
+        }
+      }
+
+      return reorderedItem;
     });
 
     const ws = XLSX.utils.json_to_sheet(exportData);
@@ -257,6 +303,12 @@ const CriticalEventList = () => {
 
   const columns = [
     {
+      name: "M.ID",
+      selector: row => row.id,
+      sortable: true,
+      width: "100px",
+    },
+    {
       name: "Region",
       selector: row => row.region,
       sortable: true,
@@ -267,7 +319,7 @@ const CriticalEventList = () => {
       selector: row => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"  ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "State",
@@ -315,9 +367,17 @@ const CriticalEventList = () => {
       name: "Meeting Date",
       selector: row => row.dateOfMeeting,
       sortable: true,
-      cell: row => row.dateOfMeeting ? new Date(row.dateOfMeeting).toLocaleDateString() : '-',
-      width: "126px",
+      cell: row =>
+        row.dateOfMeeting
+          ? new Date(row.dateOfMeeting).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })
+          : '-',
+      width: "160px", // increased width to accommodate longer text like "23 April 2025"
     },
+
     {
       name: "HOD Observation",
       selector: row => row.hod_observation,
@@ -409,7 +469,7 @@ const CriticalEventList = () => {
       ignoreRowClick: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "Update",
@@ -427,7 +487,7 @@ const CriticalEventList = () => {
       ignoreRowClick: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "Delete",
@@ -464,7 +524,7 @@ const CriticalEventList = () => {
       center: true,
     },
     {
-      name: "Admin Update",
+      name: "HOD_SI_Remark",
       cell: row => {
         const [comment, setComment] = useState(row.comment || "");
         const [status, setStatus] = useState(row.status || "");
@@ -481,6 +541,7 @@ const CriticalEventList = () => {
             await axios.post(
               `https://api.mfinindia.org/api/auth/meetings/archmeeting_update_new/${row.id}`,
               {
+                id: row.id,
                 regional_head: row.regional_head,
                 hodObservation: status,
                 statusUpdate: comment,
@@ -549,7 +610,7 @@ const CriticalEventList = () => {
       ignoreRowClick: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"  ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
   ];
 
@@ -607,7 +668,7 @@ const CriticalEventList = () => {
               <Grid container spacing={2} alignItems="center">
 
                 {
-                  (userRole === "Admin" || userRole === "Vertical-Head"  ) && (
+                  (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin") && (
                     <Grid item xs={12} sm={6} md={2}>
                       <FormControl fullWidth size="small">
                         <InputLabel>Regional Head</InputLabel>

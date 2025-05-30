@@ -154,6 +154,12 @@ const DFMList = () => {
 
   const columns = [
     {
+      name: "M.ID",
+      selector: (row) => row.id,
+      sortable: true,
+      width: "100px",
+    },
+    {
       name: "Region",
       selector: (row) => row.region,
       sortable: true,
@@ -164,7 +170,7 @@ const DFMList = () => {
       selector: (row) => row.regional_head,
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"  ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin" ),
     },
     {
       name: "State",
@@ -180,9 +186,17 @@ const DFMList = () => {
     },
     {
       name: "Meeting Date",
-      selector: (row) => row.dateOfMeeting,
-      sortable: true,
-      width: "126px",
+  selector: row => row.dateOfMeeting,
+  sortable: true,
+  cell: row =>
+    row.dateOfMeeting
+      ? new Date(row.dateOfMeeting).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+      : '-',
+  width: "160px",
     },
     {
       name: "Planned/Unplanned",
@@ -311,7 +325,7 @@ const DFMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"  ),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin" ),
     },
     {
       name: "Update",
@@ -334,7 +348,7 @@ const DFMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head"  ),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"  || userRole === "SI_Admin"),
     },
     {
       name: "Delete",
@@ -382,7 +396,7 @@ const DFMList = () => {
       center: true,
     },
     {
-      name: "Admin Update",
+      name: "HOD_SI_Remark",
       cell: (row) => {
         const [comment, setComment] = useState(row.comment || "");
         const [status, setStatus] = useState(row.status || "");
@@ -469,7 +483,7 @@ const DFMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head"  ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin" ),
     },
   ];
 
@@ -487,7 +501,7 @@ const DFMList = () => {
 
   const exportToExcel = () => {
     // Define columns you want to exclude
-    const columnsToExclude = ['id', 'created_at', 'updated_at']; // replace with your actual column names
+    const columnsToExclude = ['created_at', 'updated_at']; // replace with your actual column names
 
     // Filter the data to exclude unwanted columns
     const filteredExportData = filteredData.map(item => {
@@ -573,7 +587,7 @@ const DFMList = () => {
               >
                 {/* Filter Dropdown and Button */}
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {(userRole === "Admin" || userRole === "Vertical-Head"  ) && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head"  || userRole === "SI_Admin") && (
                     <>
                       <select
                         value={selectedRegionalHead}

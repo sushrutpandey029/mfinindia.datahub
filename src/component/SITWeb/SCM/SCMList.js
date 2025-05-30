@@ -166,6 +166,12 @@ const SCMList = () => {
 
   const columns = [
     {
+      name: "M.ID",
+      selector: (row) => row.id,
+      sortable: true,
+      width: "100px",
+    },
+    {
       name: "Region",
       selector: (row) => row.region || "-",
       sortable: true,
@@ -176,7 +182,7 @@ const SCMList = () => {
       selector: (row) => row.regional_head || "-",
       sortable: true,
       width: "165px",
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "State",
@@ -193,9 +199,17 @@ const SCMList = () => {
     },
     {
       name: "Meeting Date",
-      selector: (row) => row.dateOfMeeting || "-",
-      sortable: true,
-      width: "126px",
+  selector: row => row.dateOfMeeting,
+  sortable: true,
+  cell: row =>
+    row.dateOfMeeting
+      ? new Date(row.dateOfMeeting).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+      : '-',
+  width: "160px",
     },
     {
       name: "Planned/Unplanned",
@@ -334,7 +348,7 @@ const SCMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
     {
       name: "Update",
@@ -357,7 +371,7 @@ const SCMList = () => {
       button: true,
       width: "80px",
       center: true,
-      omit: (userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: (userRole === "Admin" || userRole === "Vertical-Head"|| userRole === "SI_Admin" ),
     },
     {
       name: "Delete",
@@ -405,7 +419,7 @@ const SCMList = () => {
       center: true,
     },
     {
-      name: "Admin Update",
+      name: "HOD_SI_Remark",
       cell: (row) => {
         const [comment, setComment] = useState(row.comment || "");
         const [status, setStatus] = useState(row.status || "");
@@ -492,7 +506,7 @@ const SCMList = () => {
       allowOverflow: true,
       width: "400px",
       center: true,
-      omit: !(userRole === "Admin" || userRole === "Vertical-Head" ),
+      omit: !(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin"),
     },
   ];
 
@@ -509,7 +523,7 @@ const SCMList = () => {
   );
 
   const exportToExcel = () => {
-    const columnsToExclude = ['id', 'created_at', 'updated_at'];
+    const columnsToExclude = ['created_at', 'updated_at'];
     const filteredExportData = filteredData.map(item => {
       const newItem = { ...item };
       columnsToExclude.forEach(col => delete newItem[col]);
@@ -589,7 +603,7 @@ const SCMList = () => {
                 }}
               >
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {(userRole === "Admin" || userRole === "Vertical-Head" ) && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin" ) && (
                     <>
                       <select
                         value={selectedRegionalHead}

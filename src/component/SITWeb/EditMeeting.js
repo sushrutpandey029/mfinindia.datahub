@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -201,7 +199,7 @@ const EditMeeting = () => {
         setIsLoading((prev) => ({ ...prev, districts: true }));
         try {
           const response = await axios.get(
-            `https://api.mfinindia.org/api/auth/meetings/districts/${formData.dynamicFields.state}`
+           `https://api.mfinindia.org/api/auth/meetings/districts/${formData.dynamicFields.state}`
           );
           if (response.data && response.data.districts) {
             setDistricts(response.data.districts);
@@ -1110,168 +1108,20 @@ const EditMeeting = () => {
             </select>
           );
         }
-      // case "multiselect":
-      //   if (field.name === "districts") {
-      //     return (
-      //       <div className="district-select-container">
-      //         <button
-      //           type="button"
-      //           className="district-select-toggle"
-      //           onClick={() =>
-      //             setIsDistrictDropdownOpen(!isDistrictDropdownOpen)
-      //           }
-      //           disabled={!formData.dynamicFields.state || isLoading.districts}
-      //         >
-      //           {formData.dynamicFields.districts &&
-      //             formData.dynamicFields.districts.length > 0
-      //             ? `${formData.dynamicFields.districts.length} selected`
-      //             : "Select Districts"}
-      //           <span className="dropdown-arrow">
-      //             {isDistrictDropdownOpen ? "▲" : "▼"}
-      //           </span>
-      //         </button>
-
-      //         {isDistrictDropdownOpen && (
-      //           <div className="district-dropdown">
-      //             <div className="district-search">
-      //               <input
-      //                 type="text"
-      //                 placeholder="Search districts..."
-      //                 value={searchTerm}
-      //                 onChange={(e) => setSearchTerm(e.target.value)}
-      //               />
-      //             </div>
-      //             <div className="district-actions">
-      //               <button type="button" onClick={selectAllDistricts}>
-      //                 Select All
-      //               </button>
-      //               <button type="button" onClick={unselectAllDistricts}>
-      //                 Unselect All
-      //               </button>
-      //             </div>
-      //             <div className="district-list">
-      //               {filteredDistricts.length > 0 ? (
-      //                 filteredDistricts.map((district) => (
-      //                   <div key={district} className="district-item">
-      //                     <label>
-      //                       <input
-      //                         type="checkbox"
-      //                         checked={
-      //                           formData.dynamicFields.districts &&
-      //                           formData.dynamicFields.districts.includes(
-      //                             district
-      //                           )
-      //                         }
-      //                         onChange={() => handleDistrictSelect(district)}
-      //                       />
-      //                       {district}
-      //                     </label>
-      //                   </div>
-      //                 ))
-      //               ) : (
-      //                 <div className="no-districts">No districts found</div>
-      //               )}
-      //             </div>
-      //           </div>
-      //         )}
-
-
-      //       </div>
-      //     );
-      //   }
-      //   break;
-
       case "multiselect":
         if (field.name === "districts") {
-          const dropdownRef = React.useRef(null);
-          const searchInputRef = React.useRef(null);
-          const districtListRef = React.useRef(null);
-
-          // Handle click outside to close dropdown
-          useEffect(() => {
-            const handleClickOutside = (event) => {
-              if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target)
-              ) {
-                setIsDistrictDropdownOpen(false);
-              }
-            };
-
-            document.addEventListener("mousedown", handleClickOutside);
-            return () => {
-              document.removeEventListener("mousedown", handleClickOutside);
-            };
-          }, []);
-
-          // Focus search input when dropdown opens
-          useEffect(() => {
-            if (isDistrictDropdownOpen && searchInputRef.current) {
-              searchInputRef.current.focus();
-            }
-          }, [isDistrictDropdownOpen]);
-
-          // Handle keyboard navigation
-          const handleKeyDown = (e) => {
-            if (!isDistrictDropdownOpen) return;
-
-            // Close dropdown on Escape or Tab
-            if (e.key === "Escape" || e.key === "Tab") {
-              setIsDistrictDropdownOpen(false);
-              // Don't prevent default for Tab so focus moves to next element
-              if (e.key === "Escape") e.preventDefault();
-              return;
-            }
-
-            // Focus search input on any letter/number key
-            if (/^[a-z0-9]$/i.test(e.key) && searchInputRef.current) {
-              e.preventDefault();
-              searchInputRef.current.focus();
-              setSearchTerm((prev) => prev + e.key);
-            }
-          };
-
-          // Scroll to matching district when typing
-          useEffect(() => {
-            if (searchTerm && districtListRef.current) {
-              const firstMatch = districtListRef.current.querySelector(
-                '.district-item input[type="checkbox"]'
-              );
-              if (firstMatch) {
-                firstMatch.scrollIntoView({
-                  behavior: "smooth",
-                  block: "nearest",
-                });
-              }
-            }
-          }, [searchTerm]);
-
           return (
-            <div
-              className="district-select-container"
-              ref={dropdownRef}
-              onKeyDown={handleKeyDown}
-            >
+            <div className="district-select-container">
               <button
                 type="button"
                 className="district-select-toggle"
-                onClick={() => {
-                  setIsDistrictDropdownOpen(!isDistrictDropdownOpen);
-                  setSearchTerm("");
-                }}
+                onClick={() =>
+                  setIsDistrictDropdownOpen(!isDistrictDropdownOpen)
+                }
                 disabled={!formData.dynamicFields.state || isLoading.districts}
-                aria-haspopup="listbox"
-                aria-expanded={isDistrictDropdownOpen}
-                onKeyDown={(e) => {
-                  // Open dropdown on Enter or Space when button is focused
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setIsDistrictDropdownOpen(true);
-                  }
-                }}
               >
                 {formData.dynamicFields.districts &&
-                formData.dynamicFields.districts.length > 0
+                  formData.dynamicFields.districts.length > 0
                   ? `${formData.dynamicFields.districts.length} selected`
                   : "Select Districts"}
                 <span className="dropdown-arrow">
@@ -1287,59 +1137,20 @@ const EditMeeting = () => {
                       placeholder="Search districts..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      ref={searchInputRef}
-                      onKeyDown={(e) => {
-                        if (e.key === "Escape") {
-                          e.preventDefault();
-                          setIsDistrictDropdownOpen(false);
-                        } else if (e.key === "Tab") {
-                          // Let Tab close the dropdown and move to next element
-                          setIsDistrictDropdownOpen(false);
-                        }
-                      }}
                     />
                   </div>
                   <div className="district-actions">
-                    <button
-                      type="button"
-                      onClick={selectAllDistricts}
-                      onKeyDown={(e) => {
-                        if (e.key === "Tab") {
-                          setIsDistrictDropdownOpen(false);
-                        }
-                      }}
-                    >
+                    <button type="button" onClick={selectAllDistricts}>
                       Select All
                     </button>
-                    <button
-                      type="button"
-                      onClick={unselectAllDistricts}
-                      onKeyDown={(e) => {
-                        if (e.key === "Tab") {
-                          setIsDistrictDropdownOpen(false);
-                        }
-                      }}
-                    >
+                    <button type="button" onClick={unselectAllDistricts}>
                       Unselect All
                     </button>
                   </div>
-                  <div
-                    className="district-list"
-                    ref={districtListRef}
-                    role="listbox"
-                    aria-multiselectable="true"
-                  >
+                  <div className="district-list">
                     {filteredDistricts.length > 0 ? (
                       filteredDistricts.map((district) => (
-                        <div
-                          key={district}
-                          className="district-item"
-                          role="option"
-                          aria-selected={
-                            formData.dynamicFields.districts &&
-                            formData.dynamicFields.districts.includes(district)
-                          }
-                        >
+                        <div key={district} className="district-item">
                           <label>
                             <input
                               type="checkbox"
@@ -1350,14 +1161,6 @@ const EditMeeting = () => {
                                 )
                               }
                               onChange={() => handleDistrictSelect(district)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  handleDistrictSelect(district);
-                                  e.preventDefault();
-                                } else if (e.key === "Tab") {
-                                  setIsDistrictDropdownOpen(false);
-                                }
-                              }}
                             />
                             {district}
                           </label>
@@ -1369,12 +1172,12 @@ const EditMeeting = () => {
                   </div>
                 </div>
               )}
+
+
             </div>
           );
         }
         break;
-
-
       case "file":
         return (
           <input
@@ -1448,11 +1251,11 @@ const EditMeeting = () => {
                   value={formData.regional_head}
                   onChange={handleChange}
                   className="form-select"
-                  disabled={!(userRole === "Admin" || userRole === "Vertical-Head" )}
+                  disabled={!(userRole === "Admin" || userRole === "Vertical-Head")}
                   required
                 >
                   <option value="">Select</option>
-                  {(userRole === "Admin" || userRole === "Vertical-Head" ) ? (
+                  {(userRole === "Admin" || userRole === "Vertical-Head") ? (
                     <>
                       {regionalHead.map((option) => (
                         <option key={option} value={option}>
@@ -1478,7 +1281,7 @@ const EditMeeting = () => {
                     return formData.dynamicFields.mode === "Physical";
                   }
                   // Show all fields for Admin
-                  if (userRole === "Admin" || userRole === "Vertical-Head" ) return true;
+                  if (userRole === "Admin" || userRole === "Vertical-Head") return true;
                   // Hide these two fields for non-Admins
                   return !["headAndSiRemark", "hodObservation"].includes(
                     field.name
