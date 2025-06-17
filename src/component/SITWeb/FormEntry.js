@@ -1164,65 +1164,111 @@ const FormEntry = () => {
           const dropdownRef = React.useRef(null);
           const searchInputRef = React.useRef(null);
           const districtListRef = React.useRef(null);
+          const [lastPressedKey, setLastPressedKey] = React.useState("");
+          const [keyPressCount, setKeyPressCount] = React.useState(0);
+          const [currentlyHighlighted, setCurrentlyHighlighted] = React.useState(null);
 
           // Handle click outside to close dropdown
           useEffect(() => {
             const handleClickOutside = (event) => {
-              if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target)
-              ) {
+              if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDistrictDropdownOpen(false);
+                setCurrentlyHighlighted(null);
               }
             };
-
             document.addEventListener("mousedown", handleClickOutside);
             return () => {
               document.removeEventListener("mousedown", handleClickOutside);
             };
           }, []);
 
-          // Focus search input when dropdown opens
-          useEffect(() => {
-            if (isDistrictDropdownOpen && searchInputRef.current) {
-              searchInputRef.current.focus();
-            }
-          }, [isDistrictDropdownOpen]);
-
-          // Handle keyboard navigation
+          // Handle keyboard navigation for letter jumping and selection
           const handleKeyDown = (e) => {
             if (!isDistrictDropdownOpen) return;
+
+            // Don't handle if search input is focused
+            if (document.activeElement === searchInputRef.current) return;
 
             // Close dropdown on Escape or Tab
             if (e.key === "Escape" || e.key === "Tab") {
               setIsDistrictDropdownOpen(false);
-              // Don't prevent default for Tab so focus moves to next element
               if (e.key === "Escape") e.preventDefault();
               return;
             }
 
-            // Focus search input on any letter/number key
-            if (/^[a-z0-9]$/i.test(e.key) && searchInputRef.current) {
+            // Handle selection with Spacebar or Enter
+            if ((e.key === " " || e.key === "Enter") && currentlyHighlighted) {
               e.preventDefault();
-              searchInputRef.current.focus();
-              setSearchTerm((prev) => prev + e.key);
+              handleDistrictSelect(currentlyHighlighted);
+              return;
             }
-          };
 
-          // Scroll to matching district when typing
-          useEffect(() => {
-            if (searchTerm && districtListRef.current) {
-              const firstMatch = districtListRef.current.querySelector(
-                '.district-item input[type="checkbox"]'
-              );
-              if (firstMatch) {
-                firstMatch.scrollIntoView({
-                  behavior: "smooth",
-                  block: "nearest",
+            // Handle letter key presses for jumping to districts
+            if (/^[a-z0-9]$/i.test(e.key)) {
+              e.preventDefault();
+              const key = e.key.toLowerCase();
+
+              if (key === lastPressedKey) {
+                setKeyPressCount((prev) => prev + 1);
+              } else {
+                setLastPressedKey(key);
+                setKeyPressCount(1);
+              }
+
+              // Safely filter districts
+              const matchingDistricts = (filteredDistricts || []).filter((district) => {
+                return district && typeof district === 'string' && district.toLowerCase().startsWith(key);
+              });
+
+              if (matchingDistricts.length > 0) {
+                const matchIndex = (keyPressCount - 1) % matchingDistricts.length;
+                const districtToHighlight = matchingDistricts[matchIndex];
+
+                // Validate district before proceeding
+                if (!districtToHighlight || typeof districtToHighlight !== 'string') {
+                  return;
+                }
+
+                setCurrentlyHighlighted(districtToHighlight);
+
+                // Safely get DOM elements
+                const districtElements = districtListRef.current
+                  ? Array.from(districtListRef.current.querySelectorAll(".district-item"))
+                  : [];
+
+                // Clear previous highlights
+                districtElements.forEach((el) => {
+                  if (el && el.classList) {
+                    el.classList.remove("keyboard-highlighted");
+                  }
                 });
+
+                // Find matching element with error handling
+                let elementToHighlight = null;
+                try {
+                  elementToHighlight = districtElements.find((el) => {
+                    if (!el) return false;
+                    const label = el.querySelector("label");
+                    if (!label || !label.textContent) return false;
+
+                    const labelText = label.textContent.trim().toLowerCase();
+                    return labelText === districtToHighlight.toLowerCase();
+                  });
+                } catch (error) {
+                  console.error("Error finding district element:", error);
+                }
+
+                // Apply highlight and scroll if found
+                if (elementToHighlight) {
+                  elementToHighlight.classList.add("keyboard-highlighted");
+                  elementToHighlight.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                  });
+                }
               }
             }
-          }, [searchTerm]);
+          };
 
           return (
             <div
@@ -1236,12 +1282,14 @@ const FormEntry = () => {
                 onClick={() => {
                   setIsDistrictDropdownOpen(!isDistrictDropdownOpen);
                   setSearchTerm("");
+                  setLastPressedKey("");
+                  setKeyPressCount(0);
+                  setCurrentlyHighlighted(null);
                 }}
                 disabled={!formData.dynamicFields.state || isLoading.districts}
                 aria-haspopup="listbox"
                 aria-expanded={isDistrictDropdownOpen}
                 onKeyDown={(e) => {
-                  // Open dropdown on Enter or Space when button is focused
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     setIsDistrictDropdownOpen(true);
@@ -1251,7 +1299,7 @@ const FormEntry = () => {
                 {formData.dynamicFields.districts &&
                   formData.dynamicFields.districts.length > 0
                   ? `${formData.dynamicFields.districts.length} selected`
-                  : "Select Districts"}
+            : "Select Districts"}
                 <span className="dropdown-arrow">
                   {isDistrictDropdownOpen ? "▲" : "▼"}
                 </span>
@@ -1271,7 +1319,6 @@ const FormEntry = () => {
                           e.preventDefault();
                           setIsDistrictDropdownOpen(false);
                         } else if (e.key === "Tab") {
-                          // Let Tab close the dropdown and move to next element
                           setIsDistrictDropdownOpen(false);
                         }
                       }}
@@ -1307,39 +1354,42 @@ const FormEntry = () => {
                     role="listbox"
                     aria-multiselectable="true"
                   >
-                    {filteredDistricts.length > 0 ? (
-                      filteredDistricts.map((district) => (
-                        <div
-                          key={district}
-                          className="district-item"
-                          role="option"
-                          aria-selected={
-                            formData.dynamicFields.districts &&
-                            formData.dynamicFields.districts.includes(district)
-                          }
-                        >
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={
-                                formData.dynamicFields.districts &&
-                                formData.dynamicFields.districts.includes(
-                                  district
-                                )
-                              }
-                              onChange={() => handleDistrictSelect(district)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  handleDistrictSelect(district);
-                                  e.preventDefault();
-                                } else if (e.key === "Tab") {
-                                  setIsDistrictDropdownOpen(false);
+                    {(filteredDistricts || []).length > 0 ? (
+                      (filteredDistricts || []).map((district) => (
+                        district && typeof district === 'string' ? (
+                          <div
+                            key={district}
+                            className={`district-item ${currentlyHighlighted === district
+                                ? "keyboard-highlighted"
+                                : ""
+                              }`}
+                            role="option"
+                            aria-selected={
+                              formData.dynamicFields.districts &&
+                              formData.dynamicFields.districts.includes(district)
+                            }
+                          >
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={
+                                  formData.dynamicFields.districts &&
+                                  formData.dynamicFields.districts.includes(district)
                                 }
-                              }}
-                            />
-                            {district}
-                          </label>
-                        </div>
+                                onChange={() => handleDistrictSelect(district)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    handleDistrictSelect(district);
+                                    e.preventDefault();
+                                  } else if (e.key === "Tab") {
+                                    setIsDistrictDropdownOpen(false);
+                                  }
+                                }}
+                              />
+                              {district}
+                            </label>
+                          </div>
+                        ) : null
                       ))
                     ) : (
                       <div className="no-districts">No districts found</div>
@@ -1451,8 +1501,6 @@ const FormEntry = () => {
                   ) : (
                     <option value={userName}>{userName}</option>
                   )}
-
-
                 </select>
               </div>
 
@@ -1473,7 +1521,6 @@ const FormEntry = () => {
                     return !["headAndSiRemark", "hodObservation"].includes(
                       field.name
                     );
-
                   })
                   .map((field) => (
                     <div

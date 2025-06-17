@@ -52,7 +52,7 @@ export const importRBIMasterDataApi = "api/auth/rbi";
 export const uploadDataApi = "https://api.mfinindia.org/api/auth";
 
 
-export const getPieCountData = "api/auth/meetings/count/pie_activity_type";
+export const getPieCountData = "api/auth/meetings/newcount/newpie_activity_type";
 
-export const getBarCountData = "api/auth/meetings/count/year/month";
+export const getBarCountData = "api/auth/meetings/newcount/newyear/newmonth";
 

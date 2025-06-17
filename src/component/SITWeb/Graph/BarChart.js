@@ -336,28 +336,45 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import PropTypes from "prop-types";
-import { Padding } from "@mui/icons-material";
 
 const BarChart = ({ data = {}, onFilterChange }) => {
-  const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [showChart, setShowChart] = useState(true);
-
-  const yearOptions = Array.from(
-    { length: currentYear - 2019 },
-    (_, i) => currentYear - i
-  );
-
   const shortMonthOptions = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+    "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"
   ];
+
 
   const fullMonthOptions = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+    "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"
   ];
+
+  // ✅ FY format: FY 25-26
+  const getCurrentFinancialYear = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    return month >= 4
+      ? `FY ${String(year).slice(2)}-${String(year + 1).slice(2)}`
+      : `FY ${String(year - 1).slice(2)}-${String(year).slice(2)}`;
+  };
+
+  const generateFinancialYears = () => {
+    const currentYear = new Date().getFullYear();
+    const startYear = 2020;
+    const options = [];
+
+    for (let y = currentYear + 1; y >= startYear; y--) {
+      options.push(`FY ${String(y - 1).slice(2)}-${String(y).slice(2)}`);
+    }
+
+    return options;
+  };
+
+  const [selectedYear, setSelectedYear] = useState(getCurrentFinancialYear());
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [showChart, setShowChart] = useState(true);
+  const yearOptions = generateFinancialYears();
 
   const handleMonthChange = (month) => {
     setSelectedMonth(month);
@@ -384,37 +401,25 @@ const BarChart = ({ data = {}, onFilterChange }) => {
           },
         },
       },
-      grid: {
-        show: false, // ✅ This hides horizontal and vertical grid lines
-      },
+      grid: { show: false },
       title: {
-        text: `Monthly Meetings in ${currentYear}`,
+        text: `Monthly meetings in ${getCurrentFinancialYear()}`,
         align: "center",
-        style: {
-          fontSize: "16px",
-          fontWeight: "bold",
-        },
+        style: { fontSize: "16px", fontWeight: "bold" },
       },
       plotOptions: {
         bar: {
           horizontal: false,
           columnWidth: "55%",
           endingShape: "rounded",
-          dataLabels: {
-            position: "top",
-          },
+          dataLabels: { position: "top" },
         },
       },
       dataLabels: {
         enabled: true,
-        formatter: function (val) {
-          return val;
-        },
+        formatter: (val) => val,
         offsetY: -20,
-        style: {
-          fontSize: "12px",
-          colors: ["#000"],
-        },
+        style: { fontSize: "12px", colors: ["#000"] },
       },
       stroke: {
         show: true,
@@ -424,30 +429,19 @@ const BarChart = ({ data = {}, onFilterChange }) => {
       xaxis: {
         categories: shortMonthOptions,
         labels: {
-          style: {
-            fontSize: "12px",
-            fontWeight: 600,
-          },
+          style: { fontSize: "12px", fontWeight: 600 },
           rotate: -45,
         },
       },
       yaxis: {
         show: true,
-        labels: {
-          show: false,
-        },
-        title: {
-          text: "",
-        },
+        labels: { show: false },
+        title: { text: "" },
       },
-      fill: {
-        opacity: 1,
-      },
+      fill: { opacity: 1 },
       tooltip: {
         y: {
-          formatter: function (val) {
-            return val + (val === 1 ? " meeting" : " meetings");
-          },
+          formatter: (val) => val + (val === 1 ? " meeting" : " meetings"),
         },
       },
       colors: ["#3B82F6"],
@@ -455,26 +449,10 @@ const BarChart = ({ data = {}, onFilterChange }) => {
         {
           breakpoint: 768,
           options: {
-            chart: {
-              height: 200,
-            },
-            dataLabels: {
-              style: {
-                fontSize: "10px",
-              },
-            },
-            xaxis: {
-              labels: {
-                rotate: -45,
-              },
-            },
-            yaxis: {
-              title: {
-                style: {
-                  fontSize: "10px",
-                },
-              },
-            },
+            chart: { height: 200 },
+            dataLabels: { style: { fontSize: "10px" } },
+            xaxis: { labels: { rotate: -45 } },
+            yaxis: { title: { style: { fontSize: "10px" } } },
           },
         },
       ],
@@ -482,7 +460,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
   });
 
   useEffect(() => {
-    onFilterChange(currentYear.toString(), "");
+    onFilterChange(getCurrentFinancialYear(), "");
   }, []);
 
   useEffect(() => {
@@ -535,7 +513,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             title: {
               text: selectedMonth
                 ? `Meetings by Type (${fullMonthOptions[shortMonthOptions.indexOf(selectedMonth)]} ${selectedYear})`
-                : `Monthly meetings during ${selectedYear}`,
+                : `Monthly meetings in ${selectedYear}`,
               align: "center",
               style: { fontSize: "16px", fontWeight: "bold" },
             },
@@ -559,7 +537,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
           options: {
             ...chartState.options,
             title: {
-              text: `Meetings by Type (${fullMonthOptions[shortMonthOptions.indexOf(selectedMonth)]} ${selectedYear})`,
+              text: `Meetings by Type (${selectedMonth} ${selectedYear})`,
               align: "center",
               style: { fontSize: "16px", fontWeight: "bold" },
             },
@@ -592,9 +570,10 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             id="year-select"
             value={selectedYear}
             onChange={(e) => {
-              setSelectedYear(e.target.value);
+              const selected = e.target.value;
+              setSelectedYear(selected);
               setSelectedMonth("");
-              onFilterChange(e.target.value, "");
+              onFilterChange(selected, "");
             }}
             className="w-full p-2 border border-gray-300 rounded-md"
           >
@@ -605,8 +584,7 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             ))}
           </select>
 
-
-          <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 mb-1 px-3">
+          <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 mb-1 px-3 mt-2">
             Month
           </label>
           <select
@@ -623,7 +601,6 @@ const BarChart = ({ data = {}, onFilterChange }) => {
             ))}
           </select>
         </div>
-
 
         <div className="h-[500px]">
           {showChart ? (

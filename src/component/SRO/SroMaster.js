@@ -1000,6 +1000,7 @@ const SroMaster = () => {
                                   value={formState.toMonth}
                                   onChange={handleToDateChange}
                                   maxDate={graphFilter.maxDate}
+                                  minDate={new Date("2017-01-01")}
                                 />
                               </Grid>
                             </MuiPickersUtilsProvider>
@@ -1121,6 +1122,7 @@ const SroMaster = () => {
                                   fullWidth
                                   value={formState.toMonth}
                                   onChange={handleToDateChange}
+                                  minDate={new Date("2017-01-01")}
                                   maxDate={graphFilter.maxDate}
                                 />
                               </Grid>
@@ -1137,7 +1139,7 @@ const SroMaster = () => {
                                 disabled={formState.isDisabled}
                                 onClick={filterEBHandler}
                               >
-                                Filter
+                                Filters
                                 <Loader loader={formState.isLoader} size={15} />
                               </Button>
                             </Grid>
@@ -1260,6 +1262,7 @@ const SroMaster = () => {
                                   fullWidth
                                   value={formState.toMonth}
                                   onChange={handleToDateChange}
+                                  minDate={new Date("2017-01-01")}
                                   maxDate={graphFilter.maxDate}
                                 />
                               </Grid>

@@ -1336,25 +1336,25 @@ const Micrometer = () => {
                                       States
                                     </th>
                                     <th >
-                                      PAR
-                                      <Chip
+                                      PAR {">"}30
+                                      {/* <Chip
                                         label=">30"
                                         style={{ backgroundColor: "transparent", paddingLeft: "0px" }}
-                                      />
+                                      /> */}
                                     </th>
                                     <th >
-                                      PAR{" "}
-                                      <Chip
+                                      PAR {">"}90
+                                      {/* <Chip
                                         label=">90"
                                         style={{ backgroundColor: "transparent", paddingLeft: "0px" }}
-                                      />
+                                      /> */}
                                     </th>
                                     <th >
-                                      PAR{" "}
-                                      <Chip
+                                      PAR {">"}180
+                                      {/* <Chip
                                         label=">180"
                                         style={{ backgroundColor: "transparent", paddingLeft: "0px" }}
-                                      />
+                                      /> */}
                                     </th>
                                   </tr>
                                 </thead>

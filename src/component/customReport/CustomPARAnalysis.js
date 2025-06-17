@@ -173,7 +173,6 @@ class CustomPARAnalysis extends React.Component {
           toMonth: childData.toMonth,
           entities: childData.entities
         },
-
       })
     );
     await this.getParAnalysisGraphData(childData.fromMonth, childData.toMonth, childData.entities)

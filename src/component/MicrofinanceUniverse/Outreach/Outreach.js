@@ -404,21 +404,22 @@ const Outreach = () => {
                   </MuiPickersUtilsProvider> */}
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Grid xs={12} sm={12} md={9}>
-                      <DatePicker
-                        margin="normal"
-                        variant="standard"
-                        openTo="year"
-                        error={false}
-                        minDateMessage=' '
-                        maxDateMessage=' '
-                        views={["year", "month"]}
-                        maxDate={new Date(graphFilter.maxDate)}
-                        label="Choose Date"
-                        fullWidth
-                        value={graphFilter.toMonth}
-                        onChange={handleGraphToDateChange}
-                      />
-                    </Grid>
+  <DatePicker
+    margin="normal"
+    variant="standard"
+    openTo="year"
+    views={["year", "month"]}
+    label="Choose Date"
+    fullWidth
+    value={graphFilter.toMonth}
+    onChange={handleGraphToDateChange}
+    minDate={new Date("2017-01-01")}       // 👈 Minimum allowed date
+    maxDate={new Date(graphFilter.maxDate)} // Your existing maxDate
+    minDateMessage=""                      // Optional: clear default messages
+    maxDateMessage=""
+    error={false}
+  />
+</Grid>
                   </MuiPickersUtilsProvider>
                   <Grid xs={12} sm={12} md={3}>
                     <Button

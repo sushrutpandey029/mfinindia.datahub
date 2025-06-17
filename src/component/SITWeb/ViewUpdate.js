@@ -167,7 +167,7 @@ const ViewUpdate = () => {
     // },
     {
       name: "HOD_SI_Remark",
-      selector: (row) => row.status_update || "-",
+      selector: (row) => row.head_and_si_remark|| "-",
       sortable: true,
       wrap: true,
       // width: "180px",

@@ -42,18 +42,21 @@ import Loader from "../common/Loader";
 import ReactHTMLTableToExcel from "react-html-table-to-excel-3"
 import jsPDF from "jspdf";
 import "jspdf-autotable"
+import dayjs from "dayjs";
 import { SuccessFailedMessage, SuccessToastMessage, ErrorToastMessage } from "../common/SuccessFailedMessage";
 const useStyle = makeStyles((theme) => createStyles({}));
 const CustomizeReport = () => {
   const classes = useStyle();
   const [open, setOpen] = useState(false);
-  
+
   const handleFromDateChange = (date) => {
-    setFormState({ ...formState, ['fromMonth']: date })
+    const parsedDate = dayjs(date).startOf("month").toDate(); // Normalize to 1st of month
+    setFormState({ ...formState, fromMonth: parsedDate });
   };
 
   const handleToDateChange = (date) => {
-    setFormState({ ...formState, ['toMonth']: date })
+    const parsedDate = dayjs(date).startOf("month").toDate(); // Normalize to 1st of month
+    setFormState({ ...formState, toMonth: parsedDate });
   };
 
   const TimeLineData = ["Monthly", "Yearly"];
@@ -117,7 +120,7 @@ const CustomizeReport = () => {
         ['entityTwo']: []
       }));
     }
-    if(e.target.name=="geography"){
+    if (e.target.name == "geography") {
       setFormState((prevState) => ({
         ...prevState,
         ['region']: "",
@@ -190,7 +193,7 @@ const CustomizeReport = () => {
   const [StateData, setStateData] = useState("");
   const [DistrictData, setDistrictData] = useState("");
 
-  
+
 
   const getCBRowWiseData = async (state) => {
     if (formState.rowWiseOption == "Entity" && formState.entityOne.length == 0) {
@@ -273,7 +276,7 @@ const CustomizeReport = () => {
     });
     pdf.save("customreportexcelpdf")
   }
-console.log("Test", formState.entityOne);
+  console.log("Test", formState.entityOne);
   return (
     <Box sx={{ flexGrow: 1 }} mt={10}>
       <Breadcrumb title="Custom Report" icon={GrassIcon} />
@@ -288,7 +291,7 @@ console.log("Test", formState.entityOne);
         <SuccessFailedMessage />
       </Grid>
       <Typography gutterBottom variant="h4" className="Filter-heading" component="div">
-      Generate Custom Report
+        Generate Custom Report
       </Typography>
       <Grid xs={12} sm={12} md={12}>
         <Card style={{ marginBottom: "20px" }}>
@@ -325,7 +328,7 @@ console.log("Test", formState.entityOne);
                     >
                       {EntitiesArr.map((EntityVal, i) => (
                         <MenuItem key={EntityVal} sx={{ justifyContent: "space-between" }} value={EntityVal}>{EntityVal}
-                        {formState.entityOne.includes(EntityVal) ? <CheckIcon color="info" /> : null}
+                          {formState.entityOne.includes(EntityVal) ? <CheckIcon color="info" /> : null}
                         </MenuItem>
                       ))}
                     </Select>
@@ -337,42 +340,42 @@ console.log("Test", formState.entityOne);
                 formState.rowWiseOption == "Timeline" ? <Grid xs={12} sm={12} md={4}>
                   <FormControl variant="standard" sx={{ m: 2, minWidth: 430 }}>
                     <InputLabel id="demo-simple-select-standard-label">Select Timeline</InputLabel>
-                    {formState.entityOne.includes("MFIN Members") || formState.entityTwo.includes("MFIN Members")?
-                    <Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
-                      label="Select Timeline"
-                      name="timelineOne"
-                      value={formState.timelineOne}
-                      onChange={(e) => onValueChange(e)}
-                    >
+                    {formState.entityOne.includes("MFIN Members") || formState.entityTwo.includes("MFIN Members") ?
+                      <Select
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        label="Select Timeline"
+                        name="timelineOne"
+                        value={formState.timelineOne}
+                        onChange={(e) => onValueChange(e)}
+                      >
                         {
-                        MFINTimeLineData.map((TimeLineDataVal, i) => (
-                        <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
-                        </MenuItem>
-                      ))
-                      
-                      }
-                    </Select> : 
-<>
-<Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
-                      label="Select Timeline"
-                      name="timelineOne"
-                      value={formState.timelineOne}
-                      onChange={(e) => onValueChange(e)}
-                    >
-                        {
-                        TimeLineData.map((TimeLineDataVal, i) => (
-                        <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
-                        </MenuItem>
-                      ))
-                      
-                      }
-                    </Select>
-</>
-}
+                          MFINTimeLineData.map((TimeLineDataVal, i) => (
+                            <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
+                            </MenuItem>
+                          ))
+
+                        }
+                      </Select> :
+                      <>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          label="Select Timeline"
+                          name="timelineOne"
+                          value={formState.timelineOne}
+                          onChange={(e) => onValueChange(e)}
+                        >
+                          {
+                            TimeLineData.map((TimeLineDataVal, i) => (
+                              <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
+                              </MenuItem>
+                            ))
+
+                          }
+                        </Select>
+                      </>
+                    }
                   </FormControl>
                 </Grid> : ''
               }
@@ -413,7 +416,7 @@ console.log("Test", formState.entityOne);
                     >
                       {EntitiesArr.map((EntityVal, i) => (
                         <MenuItem key={EntityVal} sx={{ justifyContent: "space-between" }} value={EntityVal}>{EntityVal}
-                        {formState.entityTwo.includes(EntityVal) ? <CheckIcon color="info" /> : null}
+                          {formState.entityTwo.includes(EntityVal) ? <CheckIcon color="info" /> : null}
                         </MenuItem>
                       ))}
                     </Select>
@@ -424,39 +427,39 @@ console.log("Test", formState.entityOne);
                 formState.columnWiseOption == "Timeline" ? <Grid xs={12} sm={12} md={4}>
                   <FormControl variant="standard" sx={{ m: 2, minWidth: 430 }}>
                     <InputLabel id="demo-simple-select-standard-label">Select Timeline</InputLabel>
-                    {formState.entityOne.includes("MFIN Members") || formState.entityTwo.includes("MFIN Members")?
-                    <Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
-                      label="Select Timeline"
-                      name="timelineTwo"
-                      value={formState.timelineTwo}
-                      onChange={(e) => onValueChange(e)}
-                    >
+                    {formState.entityOne.includes("MFIN Members") || formState.entityTwo.includes("MFIN Members") ?
+                      <Select
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        label="Select Timeline"
+                        name="timelineTwo"
+                        value={formState.timelineTwo}
+                        onChange={(e) => onValueChange(e)}
+                      >
                         {MFINTimeLineData.map((TimeLineDataVal, i) => (
-                        <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
-                        </MenuItem>
-                      ))}
-                    </Select> : 
-<>
-<Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
-                      label="Select Timeline"
-                      name="timelineTwo"
-                      value={formState.timelineTwo}
-                      onChange={(e) => onValueChange(e)}
-                    >
-                        {TimeLineData.map((TimeLineDataVal, i) => (
-                        <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
-                        </MenuItem>
-                      ))}
-{/*                       <MenuItem value={"Monthly"}>Monthly</MenuItem>
+                          <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
+                          </MenuItem>
+                        ))}
+                      </Select> :
+                      <>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          label="Select Timeline"
+                          name="timelineTwo"
+                          value={formState.timelineTwo}
+                          onChange={(e) => onValueChange(e)}
+                        >
+                          {TimeLineData.map((TimeLineDataVal, i) => (
+                            <MenuItem key={TimeLineDataVal} sx={{ justifyContent: "space-between" }} value={TimeLineDataVal}>{TimeLineDataVal}
+                            </MenuItem>
+                          ))}
+                          {/*                       <MenuItem value={"Monthly"}>Monthly</MenuItem>
                       <MenuItem value={"Quarterly"}>Quarterly</MenuItem>
                       <MenuItem value={"Yearly"}>Yearly</MenuItem> */}
-                    </Select>
-</>
-}
+                        </Select>
+                      </>
+                    }
                   </FormControl>
                 </Grid> : ""
               }
@@ -465,39 +468,39 @@ console.log("Test", formState.entityOne);
               <Grid xs={12} sm={12} md={4}>
                 <FormControl variant="standard" sx={{ m: 2, minWidth: 430 }}>
                   <InputLabel id="demo-simple-select-standard-label">Select Data Point</InputLabel>
-                  {formState.entityOne.includes("MFIN Members") || formState.entityTwo.includes("MFIN Members")?
-                 <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    label="Select Data Point"
-                    name="dataPoint"
-                    value={formState.dataPoint}
-                    onChange={(e) => onValueChange(e)}
-                  >
-                    {
-                      MFINdataPointsRecords.map((val) => {
-                        return (<MenuItem value={val.value}>{val.text}</MenuItem>)
-                      })
-                    }
-                  </Select> : 
-<>
-<Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    label="Select Data Point"
-                    name="dataPoint"
-                    value={formState.dataPoint}
-                    onChange={(e) => onValueChange(e)}
-                  >
-                    {
-                      dataPointsRecords.map((val) => {
-                        return (<MenuItem value={val.value}>{val.text}</MenuItem>)
-                      })
-                    }
-                  </Select>
-</>
-      
-      }
+                  {formState.entityOne.includes("MFIN Members") || formState.entityTwo.includes("MFIN Members") ?
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      label="Select Data Point"
+                      name="dataPoint"
+                      value={formState.dataPoint}
+                      onChange={(e) => onValueChange(e)}
+                    >
+                      {
+                        MFINdataPointsRecords.map((val) => {
+                          return (<MenuItem value={val.value}>{val.text}</MenuItem>)
+                        })
+                      }
+                    </Select> :
+                    <>
+                      <Select
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        label="Select Data Point"
+                        name="dataPoint"
+                        value={formState.dataPoint}
+                        onChange={(e) => onValueChange(e)}
+                      >
+                        {
+                          dataPointsRecords.map((val) => {
+                            return (<MenuItem value={val.value}>{val.text}</MenuItem>)
+                          })
+                        }
+                      </Select>
+                    </>
+
+                  }
                 </FormControl>
               </Grid>
               <Grid xs={12} sm={12} md={4}>
@@ -542,8 +545,8 @@ console.log("Test", formState.entityOne);
                   </FormControl>
                 </Grid> : ""
               }
-              {/* Region dropdown */}
-              {/* state dropdown */}
+              {/* Region dropdown end */}
+              {/* state dropdown start */}
               {
                 (formState.geography === "State" || formState.geography === "District") ? <Grid xs={12} sm={12} md={4}>
                   <FormControl variant="standard" sx={{ m: 2, minWidth: 430 }}>
@@ -568,13 +571,16 @@ console.log("Test", formState.entityOne);
               }
               {/* state dropdown */}
 
-              {/* district dropdown */}
-              {
-         /*        (formState.geography === "District") ? <Grid xs={12} sm={12} md={4}>
+              {/* district dropdown start */}
+
+
+              {formState.geography === "District" ? (
+                <Grid xs={12} sm={12} md={4}>
                   <FormControl variant="standard" sx={{ m: 2, minWidth: 430 }}>
-                    <InputLabel id="demo-simple-select-standard-label">Select District</InputLabel>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      Select District
+                    </InputLabel>
                     <Select
-                      multiple
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
                       name="districts"
@@ -583,14 +589,45 @@ console.log("Test", formState.entityOne);
                       label="Select District"
                     >
                       <MenuItem value={0}>All</MenuItem>
-                      {
-                        districtList.map((val) => {
-                          return (<MenuItem value={val.District_Equifax}>{val.District_Equifax}</MenuItem>)
-                        })
-                      }
+                      {districtList.map((val) => {
+                        return (
+                          <MenuItem value={val.District_Equifax}>
+                            {val.District_Equifax}
+                          </MenuItem>
+                        );
+                      })}
                     </Select>
                   </FormControl>
-                </Grid> : "" */
+                </Grid>
+              ) : (
+                ""
+              )}
+
+              {/* district dropdown ebd */}
+
+              {/* district dropdown */}
+              {
+                /*        (formState.geography === "District") ? <Grid xs={12} sm={12} md={4}>
+                         <FormControl variant="standard" sx={{ m: 2, minWidth: 430 }}>
+                           <InputLabel id="demo-simple-select-standard-label">Select District</InputLabel>
+                           <Select
+                             multiple
+                             labelId="demo-simple-select-standard-label"
+                             id="demo-simple-select-standard"
+                             name="districts"
+                             value={formState.districts}
+                             onChange={(e) => onValueChange(e)}
+                             label="Select District"
+                           >
+                             <MenuItem value={0}>All</MenuItem>
+                             {
+                               districtList.map((val) => {
+                                 return (<MenuItem value={val.District_Equifax}>{val.District_Equifax}</MenuItem>)
+                               })
+                             }
+                           </Select>
+                         </FormControl>
+                       </Grid> : "" */
               }
               {/* district dropdown */}
               <Grid xs={12} sm={12} md={4}>
@@ -639,38 +676,38 @@ console.log("Test", formState.entityOne);
       <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
         <Grid xs={12} sm={12} md={12}>
           {
-            checkRecord>1 && (<Typography gutterBottom variant="h6" component="div">
-            <span style={{ float: "right", marginRight: "10px" }}>
-            <Dropdown
-                    keepOpen
-                    open={open}
-                    trigger={<Button style={{ borderBottom: "2px solid", color: "#000000" }} endIcon={<ArrowDropDownIcon />}>
-                      Download
-                    </Button>}
-                    menu={[
-                      <DropdownMenuItem>
-                        <Button style={{ color: "#000000" }} endIcon={<FileDownloadIcon />}>
-                          <ReactHTMLTableToExcel
-                            id="test-table-xls-button"
-                            className="htmlToExcel"
-                            table="table-to-xls"
-                            filename="custom-report-export-excel"
-                            filetype="xls"
-                            sheet="Custom Report"
-                            buttonText="Excel Format" />
-                        </Button>
-                      </DropdownMenuItem>,
-                      <DropdownMenuItem>
-                        <Button onClick={downloadPdfCustomReport} style={{ color: "#000000" }} endIcon={<PictureAsPdfIcon />}>
-                          PDF Format
-                        </Button>
-                      </DropdownMenuItem>,
-                    ]}
-                  />
-            </span>
-          </Typography>)
+            checkRecord > 1 && (<Typography gutterBottom variant="h6" component="div">
+              <span style={{ float: "right", marginRight: "10px" }}>
+                <Dropdown
+                  keepOpen
+                  open={open}
+                  trigger={<Button style={{ borderBottom: "2px solid", color: "#000000" }} endIcon={<ArrowDropDownIcon />}>
+                    Download
+                  </Button>}
+                  menu={[
+                    <DropdownMenuItem>
+                      <Button style={{ color: "#000000" }} endIcon={<FileDownloadIcon />}>
+                        <ReactHTMLTableToExcel
+                          id="test-table-xls-button"
+                          className="htmlToExcel"
+                          table="table-to-xls"
+                          filename="custom-report-export-excel"
+                          filetype="xls"
+                          sheet="Custom Report"
+                          buttonText="Excel Format" />
+                      </Button>
+                    </DropdownMenuItem>,
+                    <DropdownMenuItem>
+                      <Button onClick={downloadPdfCustomReport} style={{ color: "#000000" }} endIcon={<PictureAsPdfIcon />}>
+                        PDF Format
+                      </Button>
+                    </DropdownMenuItem>,
+                  ]}
+                />
+              </span>
+            </Typography>)
           }
-          
+
         </Grid>
         {DataPointData ?
           <Grid xs={12} sm={12} md={12}>

@@ -261,7 +261,7 @@ const CriticalEventList = () => {
       return;
     }
 
-    const columnsToExclude = ['created_at', 'updated_at'];
+    const columnsToExclude = ['updated_at'];
 
     const exportData = data.map(item => {
       const newItem = { ...item };
@@ -278,13 +278,38 @@ const CriticalEventList = () => {
         delete newItem["head_and_si_remark"];
       }
 
-      // Reorder keys to place Head_SI_Remark after status_update
+      let dateOfEntry = null;
+      if (newItem.hasOwnProperty("created_at")) {
+        const utcDate = new Date(newItem["created_at"]);
+        dateOfEntry = utcDate.toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        delete newItem["created_at"];
+      }
+
+      // Reorder keys
       const reorderedItem = {};
       for (const key in newItem) {
+        if (key === "dateOfMeeting" && dateOfEntry) {
+          reorderedItem["Date of entry"] = dateOfEntry;
+        }
         reorderedItem[key] = newItem[key];
+
+        // Place Head_SI_Remark after status_update
         if (key === "status_update" && newItem["Head_SI_Remark"] !== undefined) {
           reorderedItem["Head_SI_Remark"] = newItem["Head_SI_Remark"];
         }
+      }
+
+      // If dateOfMeeting doesn't exist, still add Date of entry at start
+      if (!newItem.dateOfMeeting && dateOfEntry) {
+        reorderedItem["Date of entry"] = dateOfEntry;
       }
 
       return reorderedItem;
@@ -300,6 +325,7 @@ const CriticalEventList = () => {
 
     XLSX.writeFile(wb, filename);
   };
+
 
   const columns = [
     {
@@ -364,6 +390,23 @@ const CriticalEventList = () => {
       width: "180px",
     },
     {
+      name: "Date Of Entry",
+      selector: row => row.created_at,
+      sortable: true,
+      cell: row =>
+        row.created_at
+          ? new Date(row.created_at).toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true, // ✅ 12-hour format
+          }) : '-',
+      width: "160px",  // increased width to accommodate longer text like "23 April 2025"
+    },
+    {
       name: "Meeting Date",
       selector: row => row.dateOfMeeting,
       sortable: true,
@@ -377,6 +420,7 @@ const CriticalEventList = () => {
           : '-',
       width: "160px", // increased width to accommodate longer text like "23 April 2025"
     },
+
 
     {
       name: "HOD Observation",

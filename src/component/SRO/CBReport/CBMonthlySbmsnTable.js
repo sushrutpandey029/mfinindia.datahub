@@ -68,22 +68,22 @@ function CBMonthlySbmsnTable(props) {
                 </span>
               </Typography>
               <Table striped bordered hover style={{ marginTop: "30px" }}>
-                 {(props.memberRecords)} 
+                {(props.memberRecords)}
               </Table>
-               
+
             </CardContent>
           </CardActionArea>
         </Card>
         <Typography
-                gutterBottom
-                variant="h5"
-                style={{ textAlign: "left", fontSize: "16px", color: "#000" }}
-                component="div"
-              >
-<strong>Note: </strong>MFIN directs its members to submit/update data to the credit bureaus, latest by 07th of the subsequent month with submission of atleast 20 daily files in a month.
+          gutterBottom
+          variant="h5"
+          style={{ textAlign: "left", fontSize: "16px", color: "#000" }}
+          component="div"
+        >
+          <strong>Note: </strong>MFIN directs its members to submit/update data to the credit bureaus, latest by 07th of the subsequent month with submission of atleast 20 daily files in a month.
 
 
-             </Typography> 
+        </Typography>
       </Grid>
 
       <Grid xs={12} sm={12} md={12}>
@@ -128,7 +128,7 @@ function CBMonthlySbmsnTable(props) {
                 </span>
               </Typography>
               <Table striped bordered hover style={{ marginTop: "30px" }}>
-              {(props.industryRecords)}
+                {(props.industryRecords)}
               </Table>
             </CardContent>
           </CardActionArea>

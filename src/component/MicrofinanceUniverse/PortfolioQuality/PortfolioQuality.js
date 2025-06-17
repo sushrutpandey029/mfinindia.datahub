@@ -478,22 +478,24 @@ const PortfolioQuality = () => {
                     </Grid>
                   </MuiPickersUtilsProvider> */}
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Grid xs={12} sm={12} md={3}>
-                      <DatePicker
-                        margin="normal"
-                        variant="standard"
-                        openTo="year"
-                        error={false}
-                        minDateMessage=' '
-                        maxDateMessage=' '
-                        views={["year", "month"]}
-                        label="Choose Date"
-                        fullWidth
-                        value={graphFilter.toMonth}
-                        maxDate={new Date(graphFilter.maxDate)}
-                        onChange={handleGraphToDateChange}
-                      />
-                    </Grid>
+                   <Grid xs={12} sm={12} md={3}>
+  <DatePicker
+    margin="normal"
+    variant="standard"
+    openTo="year"
+    views={["year", "month"]}
+    label="Choose Date"
+    fullWidth
+    value={graphFilter.toMonth}
+    onChange={handleGraphToDateChange}
+    minDate={new Date("2017-01-01")}          
+    maxDate={new Date(graphFilter.maxDate)}   
+    minDateMessage=""                        
+    maxDateMessage=""
+    error={false}
+  />
+</Grid>
+
                   </MuiPickersUtilsProvider>
                   <Grid xs={12} sm={12} md={3}>
                     <Button

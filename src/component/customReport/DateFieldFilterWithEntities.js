@@ -117,6 +117,7 @@ const DateFieldFilter = (props) => {
                                         value={graphFilter.toMonth}
                                         onChange={handleGraphToDateChange}
                                         maxDate={currentDate}
+                                        minDate={new Date("2017-01-01")}
                                     />
                                 </Grid>
                             </MuiPickersUtilsProvider>

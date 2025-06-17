@@ -6,7 +6,7 @@
 // import axios from "axios";
 // import Breadcrumb from "../../common/Breadcrumb";
 // import SecurityIcon from "@mui/icons-material/Security";
-// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import ArrowBackIcon from "@mui/icons-mat+erial/ArrowBack";
 // import * as XLSX from "xlsx";
 // import { BaseUrl, getPieCountData } from "../../url/url";
 // import PieChart from "../Graph/PieChart";
@@ -614,61 +614,77 @@ const Dashboard = () => {
   // };
 
 
-const handleDownloadMeeting = async () => {
-  try {
-    const response = await axios.get(
-      "https://api.mfinindia.org/api/auth/meetings/count/allmeeting",
-      {
-        params: {
-          user_role: userRole,
-          username: userName,
-        },
-      }
-    );
-    console.log("all meetings data", response.data);
-
-    const columnsToExclude = [
-      "created_at",
-      "updated_at",
-      "logout_time",
-    ];
-
-    const filteredExportData = response.data.data.map((item) => {
-      const newItem = { ...item };
-
-      // Exclude unwanted columns
-      columnsToExclude.forEach((col) => delete newItem[col]);
-
-      // Rename head_and_si_remark to Head_SI_Remark
-      if (newItem.hasOwnProperty("head_and_si_remark")) {
-        newItem["Head_SI_Remark"] = newItem["head_and_si_remark"];
-        delete newItem["head_and_si_remark"];
-      }
-      
-      // Reorder keys: put Head_SI_Remark right after status_update
-      const reorderedItem = {};
-      for (const key in newItem) {
-        reorderedItem[key] = newItem[key];
-        if (key === "status_update" && newItem["Head_SI_Remark"] !== undefined) {
-          reorderedItem["Head_SI_Remark"] = newItem["Head_SI_Remark"];
+  const handleDownloadMeeting = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.mfinindia.org/api/auth/meetings/count/allmeeting",
+        {
+          params: {
+            user_role: userRole,
+            username: userName,
+          },
         }
-      }
+      );
+      console.log("all meetings data", response.data);
 
-      return reorderedItem;
-    });
+      const columnsToExclude = [
+        "updated_at",
+        "logout_time",
+      ];
 
-    const ws = XLSX.utils.json_to_sheet(filteredExportData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "SIT");
+      const filteredExportData = response.data.data.map((item) => {
+        const newItem = { ...item };
 
-    const randomNum = Math.floor(Math.random() * 9000) + 1000;
-    const filename = `SIT_Meetings_${randomNum}.xlsx`;
+        // Exclude unwanted columns
+        columnsToExclude.forEach((col) => delete newItem[col]);
 
-    XLSX.writeFile(wb, filename);
-  } catch (err) {
-    console.log("error in downloading all meetings.", err);
-  }
-};
+        // Rename head_and_si_remark to Head_SI_Remark
+        if (newItem.hasOwnProperty("head_and_si_remark")) {
+          newItem["Head_SI_Remark"] = newItem["head_and_si_remark"];
+          delete newItem["head_and_si_remark"];
+        }
+
+        if (newItem.hasOwnProperty("created_at")) {
+          const utcDate = new Date(newItem["created_at"]);
+
+          const istDate = utcDate.toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true, // ✅ 12-hour format
+          });
+
+          newItem["Date of entry"] = istDate;
+          delete newItem["created_at"];
+        }
+
+        // Reorder keys: put Head_SI_Remark right after status_update
+        const reorderedItem = {};
+        for (const key in newItem) {
+          reorderedItem[key] = newItem[key];
+          if (key === "status_update" && newItem["Head_SI_Remark"] !== undefined) {
+            reorderedItem["Head_SI_Remark"] = newItem["Head_SI_Remark"];
+          }
+        }
+
+        return reorderedItem;
+      });
+
+      const ws = XLSX.utils.json_to_sheet(filteredExportData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "SIT");
+
+      const randomNum = Math.floor(Math.random() * 9000) + 1000;
+      const filename = `SIT_Meetings_${randomNum}.xlsx`;
+
+      XLSX.writeFile(wb, filename);
+    } catch (err) {
+      console.log("error in downloading all meetings.", err);
+    }
+  };
 
 
 
@@ -749,8 +765,8 @@ const handleDownloadMeeting = async () => {
                     {/* Bar Chart - Right Side */}
 
                     <Grid container spacing={2}>
-                      {/* Bar Chart - 60% Width */}
-                      <Grid item xs={12} md={7}>
+                      {/* Bar Chart - 50% Width */}
+                      <Grid item xs={12} md={6}>
                         <div className="chart-container">
                           <BarChart
                             data={countBarData}
@@ -765,10 +781,15 @@ const handleDownloadMeeting = async () => {
                         </div>
                       </Grid>
 
-                      {/* Pie Chart - 40% Width */}
-                      <Grid item xs={12} md={5}>
+                      {/* Pie Chart - 50% Width */}
+                      <Grid item xs={12} md={6}>
                         <div className="chart-container">
-                          <PieChart data={countPieData} />
+                          <PieChart
+                            BaseUrl={BaseUrl}
+                            userRole={userRole}
+                            userName={userName}
+                            endpoint={getPieCountData}
+                          />
                         </div>
                       </Grid>
                     </Grid>

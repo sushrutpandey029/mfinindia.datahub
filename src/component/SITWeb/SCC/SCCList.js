@@ -175,19 +175,37 @@ const SCCList = () => {
       width: "150px",
     },
     {
-      name: "Meeting Date",
-  selector: row => row.dateOfMeeting,
-  sortable: true,
-  cell: row =>
-    row.dateOfMeeting
-      ? new Date(row.dateOfMeeting).toLocaleDateString('en-GB', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        })
-      : '-',
-  width: "160px",
+      name: "Date Of Entry",
+      selector: row => row.created_at,
+      sortable: true,
+      cell: row =>
+        row.created_at
+          ? new Date(row.created_at).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true, // ✅ 12-hour format
+        }): '-',
+      width: "160px",  // increased width to accommodate longer text like "23 April 2025"
     },
+    {
+      name: "Meeting Date",
+      selector: row => row.dateOfMeeting,
+      sortable: true,
+      cell: row =>
+        row.dateOfMeeting
+          ? new Date(row.dateOfMeeting).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })
+          : '-',
+      width: "160px",
+    },
+    
     {
       name: "Planned/Unplanned",
       selector: (row) => row.type,
@@ -496,25 +514,99 @@ const SCCList = () => {
     </Button>
   );
 
+  // const exportToExcel = () => {
+  //   // Define columns you want to exclude
+  //   const columnsToExclude = ['created_at', 'updated_at']; // replace with your actual column names
+
+  //   // Filter the data to exclude unwanted columns
+  //   const filteredExportData = filteredData.map(item => {
+  //     const newItem = { ...item };
+  //     columnsToExclude.forEach(col => delete newItem[col]);
+  //     return newItem;
+  //   });
+
+  //   const ws = XLSX.utils.json_to_sheet(filteredExportData);
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "SIT");
+
+  //   const randomNum = Math.floor(Math.random() * 9000) + 1000;
+  //   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  //   const filename = `SIT_SCC${timestamp}_${randomNum}.xlsx`;
+
+  //   XLSX.writeFile(wb, filename);
+  // };
+
+
   const exportToExcel = () => {
-    // Define columns you want to exclude
-    const columnsToExclude = ['created_at', 'updated_at']; // replace with your actual column names
-
-    // Filter the data to exclude unwanted columns
-    const filteredExportData = filteredData.map(item => {
-      const newItem = { ...item };
-      columnsToExclude.forEach(col => delete newItem[col]);
-      return newItem;
-    });
-
-    const ws = XLSX.utils.json_to_sheet(filteredExportData);
+   if (data.length === 0) {
+         alert("No data to export");
+         return;
+       }
+   
+       const columnsToExclude = ['updated_at'];
+   
+       const exportData = data.map(item => {
+         const newItem = { ...item };
+         columnsToExclude.forEach(col => delete newItem[col]);
+   
+         // Format date
+         if (newItem.dateOfMeeting) {
+           newItem.dateOfMeeting = new Date(newItem.dateOfMeeting).toLocaleDateString();
+         }
+   
+         // Rename head_and_si_remark → Head_SI_Remark
+         if (newItem.hasOwnProperty("head_and_si_remark")) {
+           newItem["Head_SI_Remark"] = newItem["head_and_si_remark"];
+           delete newItem["head_and_si_remark"];
+         }
+   
+         let dateOfEntry = null;
+         if (newItem.hasOwnProperty("created_at")) {
+           const utcDate = new Date(newItem["created_at"]);
+           dateOfEntry = utcDate.toLocaleString("en-IN", {
+             timeZone: "Asia/Kolkata",
+             day: "2-digit",
+             month: "long",
+             year: "numeric",
+             hour: "2-digit",
+             minute: "2-digit",
+             hour12: true,
+           });
+           delete newItem["created_at"];
+         }
+   
+         // Reorder keys
+         const reorderedItem = {};
+         for (const key in newItem) {
+           if (key === "dateOfMeeting" && dateOfEntry) {
+             reorderedItem["Date of entry"] = dateOfEntry;
+           }
+           reorderedItem[key] = newItem[key];
+   
+           // Place Head_SI_Remark after status_update
+           if (key === "status_update" && newItem["Head_SI_Remark"] !== undefined) {
+             reorderedItem["Head_SI_Remark"] = newItem["Head_SI_Remark"];
+           }
+         }
+   
+         // If dateOfMeeting doesn't exist, still add Date of entry at start
+         if (!newItem.dateOfMeeting && dateOfEntry) {
+           reorderedItem["Date of entry"] = dateOfEntry;
+         }
+   
+         return reorderedItem;
+       });
+   
+       const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "SIT");
 
+    // Create filename with timestamp and random number
     const randomNum = Math.floor(Math.random() * 9000) + 1000;
     const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
     const filename = `SIT_SCC${timestamp}_${randomNum}.xlsx`;
 
+    // Export the file
     XLSX.writeFile(wb, filename);
   };
 
@@ -578,7 +670,7 @@ const SCCList = () => {
               >
                 {/* Filter Dropdown and Button */}
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin" ) && (
+                  {(userRole === "Admin" || userRole === "Vertical-Head" || userRole === "SI_Admin") && (
                     <>
                       <select
                         value={selectedRegionalHead}
